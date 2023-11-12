@@ -1,10 +1,12 @@
-import './App.css'
 import React from 'react'
+import Navbar from './components/Navbar.tsx'
+import HomePage from './pages/HomePage.tsx'
 
 function App() {
   return (
-    <div className="App">
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+    <div>
+      <Navbar />
+      <HomePage />
     </div>
   )
 }
