@@ -10,6 +10,7 @@ module.exports = {
         green: '#49A078',
         'light-green': '#9CC5A1',
         grey: '#DCE1DE',
+        ashGrey: '#E7EBE9',
       },
       fontFamily: {
         workSans: ['Work Sans', 'sans-serif'],
