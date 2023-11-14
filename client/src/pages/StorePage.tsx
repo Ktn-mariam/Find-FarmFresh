@@ -1,14 +1,17 @@
 import React from 'react'
+import ProductCard from '../components/ProductCard'
+import ProductSlider from '../components/ProductSlider'
+import Product from '../components/Product'
 
 const StorePage = () => {
   return (
     <div>
-      <div className="md:px-36 px-14 py-5 text-xs md:text-sm font-serif">
+      <div className="bg-gray-100 md:px-36 px-14 py-5 text-xs md:text-sm font-serif">
         <nav>
           <ul className="grid grid-cols-4 md:grid-cols-8 gap-y-5 justify-between items-start font-roboto">
             <li className="flex flex-col items-center">
               <img
-                className="md:h-28 h-14 rounded-full"
+                className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
                 src="/store-navbar/fruit.jpg"
                 alt="fruit"
               />
@@ -16,7 +19,7 @@ const StorePage = () => {
             </li>
             <li className="flex flex-col items-center">
               <img
-                className="md:h-28 h-14 rounded-full"
+                className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
                 src="/store-navbar/vegetable.jpg"
                 alt="fruit"
               />
@@ -24,7 +27,7 @@ const StorePage = () => {
             </li>
             <li className="flex flex-col items-center">
               <img
-                className="md:h-28 h-14 rounded-full"
+                className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
                 src="/store-navbar/coffee.png"
                 alt="fruit"
               />
@@ -32,7 +35,7 @@ const StorePage = () => {
             </li>
             <li className="flex flex-col items-center">
               <img
-                className="md:h-28 h-14 rounded-full"
+                className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
                 src="/store-navbar/milk.png"
                 alt="fruit"
               />
@@ -40,7 +43,7 @@ const StorePage = () => {
             </li>
             <li className="flex flex-col items-center">
               <img
-                className="md:h-28 h-14 rounded-full"
+                className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
                 src="/store-navbar/meat.png"
                 alt="fruit"
               />
@@ -48,7 +51,7 @@ const StorePage = () => {
             </li>
             <li className="flex flex-col items-center">
               <img
-                className="md:h-28 h-14 rounded-full"
+                className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
                 src="/store-navbar/honey.png"
                 alt="fruit"
               />
@@ -56,7 +59,7 @@ const StorePage = () => {
             </li>
             <li className="flex flex-col items-center">
               <img
-                className="md:h-28 h-14 rounded-full"
+                className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
                 src="/store-navbar/flower.png"
                 alt="fruit"
               />
@@ -64,7 +67,7 @@ const StorePage = () => {
             </li>
             <li className="flex flex-col items-center">
               <img
-                className="md:h-28 h-14 rounded-full"
+                className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
                 src="/store-navbar/dried-fruit.png"
                 alt="fruit"
               />
@@ -72,6 +75,9 @@ const StorePage = () => {
             </li>
           </ul>
         </nav>
+      </div>
+      <div className="flex flex-col gap-4 mb-32">
+        <ProductSlider />
       </div>
       <div className="pt-96"></div>
     </div>
