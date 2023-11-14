@@ -1,8 +1,8 @@
 import React from 'react'
-import Navbar from './components/Navbar.tsx'
-import HomePage from './pages/HomePage.tsx'
-import Footer from './components/Footer.tsx'
-import StorePage from './pages/StorePage.tsx'
+import Navbar from './components/Navbar'
+import HomePage from './pages/HomePage'
+import Footer from './components/Footer'
+import StorePage from './pages/StorePage'
 
 function App() {
   return (
