@@ -19,11 +19,17 @@ function ProductCard() {
             </p>
           </div>
           <div className="flex items-center">
-            <StarOutlinedIcon style={{ fontSize: '15px' }} />
-            <StarOutlinedIcon style={{ fontSize: '15px' }} />
-            <StarHalfOutlinedIcon style={{ fontSize: '15px' }} />
-            <StarBorderOutlinedIcon style={{ fontSize: '15px' }} />
-            <StarBorderOutlinedIcon style={{ fontSize: '15px' }} />
+            <StarOutlinedIcon style={{ fontSize: '15px', color: '#ffc300' }} />
+            <StarOutlinedIcon style={{ fontSize: '15px', color: '#ffc300' }} />
+            <StarHalfOutlinedIcon
+              style={{ fontSize: '15px', color: '#ffc300' }}
+            />
+            <StarBorderOutlinedIcon
+              style={{ fontSize: '15px', color: '#ffc300' }}
+            />
+            <StarBorderOutlinedIcon
+              style={{ fontSize: '15px', color: '#ffc300' }}
+            />
             <p className="text-xs pl-1">5</p>
           </div>
         </div>
