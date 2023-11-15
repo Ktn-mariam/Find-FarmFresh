@@ -1,11 +1,20 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ['./src/**/*.{html,js,tsx,ts}'],
+const withMT = require('@material-tailwind/react/utils/withMT')
+module.exports = withMT({
+  content: [
+    './src/**/*.{html,js,jsx,tsx,ts}',
+    './node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}',
+  ],
   theme: {
     extend: {
+      width: {
+        '88': '340px',
+      },
       height: {
         '30': '120px',
         '76': '290px',
+        '110': '470px',
       },
       colors: {
         lightGrey: '#f8f9fa',
@@ -25,4 +34,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+})
