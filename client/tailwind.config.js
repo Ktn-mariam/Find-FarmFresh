@@ -24,6 +24,7 @@ module.exports = withMT({
         'light-green': '#9CC5A1',
         grey: '#DCE1DE',
         ashGrey: '#E7EBE9',
+        lightGreen: '2b9348',
       },
       fontFamily: {
         workSans: ['Work Sans', 'sans-serif'],
