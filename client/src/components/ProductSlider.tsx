@@ -89,10 +89,10 @@ const ProductSlider = () => {
   }
   return (
     <div className="my-5">
-      <h1 className=" font-noto font-bold mb-4 text-lg md:px-36 px-14">
+      <h1 className=" font-noto font-bold mb-4 text-lg">
         Recommended for you...
       </h1>
-      <div className="md:px-36 px-14">
+      <div>
         <Slider {...settings}>
           <ProductCard />
           <ProductCard />
