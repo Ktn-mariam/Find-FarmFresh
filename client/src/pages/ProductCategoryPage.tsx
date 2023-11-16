@@ -20,7 +20,7 @@ const ProductCategoryPage = () => {
     'Cherimoya',
   ]
   return (
-    <div>
+    <div className="mb-20">
       <StoreNavbar />
       <div className="md:px-36 px-14 flex">
         <div className="w-40 md:w-64 py-14 font-workSans">
@@ -79,7 +79,7 @@ const ProductCategoryPage = () => {
           <div className="pl-14 font-workSans">
             <h1 className="text-xl font-bold">Results</h1>
           </div>
-          <div className="grid grid-cols-1 justify-center sm:grid-cols-2 md:grid-cols-3 pl-10 gap-x-4 gap-y-4">
+          <div className="grid grid-cols-1 justify-center sm:grid-cols-2 md:grid-cols-3 pl-10 gap-x-4 gap-y-1">
             <Product />
             <Product />
             <Product />
