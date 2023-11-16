@@ -1,7 +1,5 @@
 import React from 'react'
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
-import StarOutlinedIcon from '@mui/icons-material/StarOutlined'
-import StarHalfOutlinedIcon from '@mui/icons-material/StarHalfOutlined'
+import Rating from '@mui/material/Rating'
 
 function Product() {
   return (
@@ -23,42 +21,8 @@ function Product() {
             </p>
           </div>
           <div className="flex items-center">
-            <StarOutlinedIcon
-              style={{
-                fontSize: '16px',
-                color: '#ffc300',
-                borderColor: '#fca311',
-              }}
-            />
-            <StarOutlinedIcon
-              style={{
-                fontSize: '16px',
-                color: '#ffc300',
-                borderColor: '#fca311',
-              }}
-            />
-            <StarHalfOutlinedIcon
-              style={{
-                fontSize: '16px',
-                color: '#ffc300',
-                borderColor: '#fca311',
-              }}
-            />
-            <StarBorderOutlinedIcon
-              style={{
-                fontSize: '16px',
-                color: '#ffc300',
-                borderColor: '#fca311',
-              }}
-            />
-            <StarBorderOutlinedIcon
-              style={{
-                fontSize: '16px',
-                color: '#ffc300',
-                borderColor: '#fca311',
-              }}
-            />
-            <p className="text-xs pl-1">5</p>
+            <Rating defaultValue={3.5} precision={0.5} size="small" readOnly />
+            <p className="text-sm pl-1">5</p>
           </div>
         </div>
       </div>

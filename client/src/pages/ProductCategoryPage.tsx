@@ -3,6 +3,7 @@ import Product from '../components/Product'
 import StoreNavbar from '../components/StoreNavbar'
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined'
+import Rating from '@mui/material/Rating'
 
 const ProductCategoryPage = () => {
   const categories = [
@@ -50,27 +51,25 @@ const ProductCategoryPage = () => {
               Customer reviews
             </h3>
             <div className="py-2">
-              <div className="flex pb-2 items-center">
-                <input title="4" type="radio" />
-                <div className="flex items-center pl-1">
-                  <StarOutlinedIcon style={{ fontSize: '16px' }} />
-                  <StarOutlinedIcon style={{ fontSize: '16px' }} />
-                  <StarOutlinedIcon style={{ fontSize: '16px' }} />
-                  <StarOutlinedIcon style={{ fontSize: '16px' }} />
-                  <StarBorderOutlinedIcon style={{ fontSize: '16px' }} />
-                </div>
-                <p className="text-md pl-1">& up</p>
+              <div className="flex pb-2 items-center gap-1">
+                <input className="pt-1" title="4" type="radio" />
+                <Rating
+                  defaultValue={3.5}
+                  precision={0.5}
+                  size="small"
+                  readOnly
+                />
+                <p className="text-md">& up</p>
               </div>
-              <div className="flex pb-2 items-center">
-                <input title="4" type="radio" />
-                <div className="flex items-center pl-1">
-                  <StarOutlinedIcon style={{ fontSize: '16px' }} />
-                  <StarOutlinedIcon style={{ fontSize: '16px' }} />
-                  <StarOutlinedIcon style={{ fontSize: '16px' }} />
-                  <StarBorderOutlinedIcon style={{ fontSize: '16px' }} />
-                  <StarBorderOutlinedIcon style={{ fontSize: '16px' }} />
-                </div>
-                <p className="text-md pl-1">& up</p>
+              <div className="flex pb-2 items-center gap-1">
+                <input className="pt-1" title="4" type="radio" />
+                <Rating
+                  defaultValue={3.5}
+                  precision={0.5}
+                  size="small"
+                  readOnly
+                />
+                <p className="text-md">& up</p>
               </div>
             </div>
           </div>
