@@ -13,7 +13,7 @@ interface ArrowProps {
 const PrevArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   return (
     <button
-      className="border p-2 rounded-full bg-white border-gray-300 hover:shadow-md"
+      className="border p-2 rounded-full bg-gray-300 border-gray-300 hover:shadow-md"
       title="left"
       onClick={onClick}
       style={{
@@ -32,7 +32,7 @@ const PrevArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
 const NextArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   return (
     <button
-      className="border bg-white p-2 rounded-full border-gray-300 hover:shadow-md"
+      className="border bg-gray-300 p-2 rounded-full border-gray-300 hover:shadow-md"
       title="right"
       onClick={onClick}
       style={{

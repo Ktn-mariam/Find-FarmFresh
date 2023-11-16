@@ -6,7 +6,7 @@ import StarHalfOutlinedIcon from '@mui/icons-material/StarHalfOutlined'
 function ProductCard() {
   return (
     <div className="m-1">
-      <div className="py-5 flex flex-col items-center bg-gray-100 rounded-md font-noto hover:shadow-md hover:cursor-pointer">
+      <div className="py-5 flex flex-col items-center rounded-md font-noto hover:cursor-pointer">
         {/* 4:5 ratio */}
         <img className="h-48 mb-3" src="/apple.png" alt="" />
         <div>
