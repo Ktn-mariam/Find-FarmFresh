@@ -1,8 +1,6 @@
 import React from 'react'
 import Product from '../components/Product'
 import StoreNavbar from '../components/StoreNavbar'
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
-import StarOutlinedIcon from '@mui/icons-material/StarOutlined'
 import Rating from '@mui/material/Rating'
 
 const ProductCategoryPage = () => {
