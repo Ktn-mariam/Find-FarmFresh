@@ -1,25 +1,25 @@
 import React from 'react'
-import SpaIcon from '@mui/icons-material/Spa' // organic farming
-import LocalShippingIcon from '@mui/icons-material/LocalShipping' // Free Delivery?
-import SecurityIcon from '@mui/icons-material/Security' //secure transaction?
-import CachedIcon from '@mui/icons-material/Cached' // returnable
+import ProductSlider from '../components/ProductSlider'
+import StoreNavbar from '../components/StoreNavbar'
+import CommentSection from '../components/CommentSection'
+import LocationMap from '../components/LocationMap'
+import RatingStats from '../components/RatingStats'
+import SpaIcon from '@mui/icons-material/Spa'
+import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import SecurityIcon from '@mui/icons-material/Security'
+import CachedIcon from '@mui/icons-material/Cached'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
-import StoreNavbar from '../components/StoreNavbar'
-import Slider from 'react-slick'
-import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import Rating from '@mui/material/Rating'
 import StorefrontIcon from '@mui/icons-material/Storefront'
 import PhonelinkRingIcon from '@mui/icons-material/PhonelinkRing'
+import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined'
+import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import Pagination from '@mui/material/Pagination'
-import { Progress } from '@material-tailwind/react'
-import ProductSlider from '../components/ProductSlider'
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -138,7 +138,7 @@ function ProductDetailPage() {
                 Secure Transaction
               </div>
               <div className="flex flex-col items-center w-14 text-center gap-2">
-                <VolunteerActivismIcon />
+                <PaymentsOutlinedIcon />
                 Cash On Delivery
               </div>
               <div className="flex flex-col items-center w-14 text-center gap-2">
@@ -173,41 +173,7 @@ function ProductDetailPage() {
           <div className="right-36">
             <div className="font-noto w-88">
               <div className="px-5 py-8 border border-1 border-zinc-300 rounded-2xl">
-                <h1 className="text-lg font-bold">Product's Rating</h1>
-                <div className="flex items-center mt-1 gap-2">
-                  <Rating defaultValue={3.5} precision={0.5} readOnly />
-                  <h3>3.5 out of 5</h3>
-                </div>
-                <p className="mt-3 text-sm text-gray-800">
-                  3,44 ratings overall
-                </p>
-                <div className="flex flex-col gap-2 mt-4">
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-sm whitespace-nowrap">5 stars</h1>
-                    <Progress value={75} size="lg" color="amber" />
-                    <h1 className="text-sm">75</h1>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-sm whitespace-nowrap">4 stars</h1>
-                    <Progress value={15} size="lg" color="amber" />
-                    <h1 className="text-sm">15</h1>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-sm whitespace-nowrap">3 stars</h1>
-                    <Progress value={2} size="lg" color="amber" />
-                    <h1 className="text-sm">02</h1>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-sm whitespace-nowrap">2 stars</h1>
-                    <Progress value={2} size="lg" color="amber" />
-                    <h1 className="text-sm">02</h1>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-sm whitespace-nowrap">1 stars</h1>
-                    <Progress value={1} size="lg" color="amber" />
-                    <h1 className="text-sm">01</h1>
-                  </div>
-                </div>
+                <RatingStats />
                 <div className="mt-6 border-t-1 border-gray-200">
                   <h1 className="text-lg font-bold">Farmer's Rating</h1>
                   <div className="flex items-center mt-1 gap-2">
@@ -220,87 +186,8 @@ function ProductDetailPage() {
           </div>
         </div>
         <div className="flex gap-16">
-          <div className="w-1/2 font-noto">
-            <h1 className="text-xl font-bold mb-4  pt-10">Reviews</h1>
-            <div className="flex flex-col gap-10">
-              <div>
-                <div className="flex items-center gap-1">
-                  <AccountCircleIcon fontSize="medium" />
-                  <h1>Mariam Khatoon</h1>
-                </div>
-                <div className="flex items-center mt-0.5 gap-2">
-                  <Rating
-                    defaultValue={3.5}
-                    precision={0.5}
-                    size="small"
-                    readOnly
-                  />
-                  <h3 className="pt-0.5 text-sm">3.5 out of 5</h3>
-                  <h1 className="text-gray-500 text-sm pt-0.5 ">
-                    Reviewed on Nov 15, 2023
-                  </h1>
-                </div>
-                <div className="mt-2">
-                  <h1 className="font-bold">Fresh and tasty</h1>
-                  <h1 className="text-sm">
-                    good as described. doubt the weight as very few
-                  </h1>
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  <AccountCircleIcon fontSize="medium" />
-                  <h1>Mariam Khatoon</h1>
-                </div>
-                <div className="flex items-center mt-0.5 gap-2">
-                  <Rating
-                    defaultValue={3.5}
-                    precision={0.5}
-                    size="small"
-                    readOnly
-                  />
-                  <h3 className="pt-0.5 text-sm">3.5 out of 5</h3>
-                  <h1 className="text-gray-500 text-sm pt-0.5 ">
-                    Reviewed on Nov 15, 2023
-                  </h1>
-                </div>
-                <div className="mt-2">
-                  <h1 className="font-bold">Fresh and tasty</h1>
-                  <h1 className="text-sm">
-                    good as described. doubt the weight as very few organges
-                    arrived
-                  </h1>
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  <AccountCircleIcon fontSize="medium" />
-                  <h1>Mariam Khatoon</h1>
-                </div>
-                <div className="flex items-center mt-0.5 gap-2">
-                  <Rating
-                    defaultValue={3.5}
-                    precision={0.5}
-                    size="small"
-                    readOnly
-                  />
-                  <h3 className="pt-0.5 text-sm">3.5 out of 5</h3>
-                  <h1 className="text-gray-500 text-sm pt-0.5 ">
-                    Reviewed on Nov 15, 2023
-                  </h1>
-                </div>
-                <div className="mt-2">
-                  <h1 className="font-bold">Fresh and tasty</h1>
-                  <h1 className="text-sm">
-                    good as described. doubt the weight as very few organges
-                    arrived fjhjef fekjfk dkjdfshkl dfjnjf kjdfsjkl
-                  </h1>
-                </div>
-              </div>
-              <div className="mt-3">
-                <Pagination count={4} />
-              </div>
-            </div>
+          <div className="w-1/2 font-noto pt-10">
+            <CommentSection />
           </div>
           <div className="w-1/2 font-noto">
             <div className="px-8 py-10 border border-1 border-zinc-300 rounded-2xl">
@@ -314,29 +201,19 @@ function ProductDetailPage() {
                 Flat 503, Sapphire Building, Silicon Oasis, Dubai, United Arab
                 Emirates
               </div>
-              <div className="h-96 mt-3">
-                <MapContainer
-                  style={{ height: '100%', width: '100%' }}
-                  center={[51.505, -0.09]}
-                  zoom={13}
-                  scrollWheelZoom={false}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Marker position={[51.505, -0.09]}>
-                    <Popup>
-                      A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                  </Marker>
-                </MapContainer>
+              <div className="mt-3">
+                <LocationMap />
               </div>
             </div>
           </div>
         </div>
         <div className="mt-20">
-          <ProductSlider />
+          <ProductSlider
+            noOfSlides={6}
+            height={48}
+            heading="Similar Products"
+            editable={false}
+          />
         </div>
       </div>
     </div>

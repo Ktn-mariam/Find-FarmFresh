@@ -1,12 +1,10 @@
 import React from 'react'
-import ProductCard from '../components/ProductCard'
 import ProductSlider from '../components/ProductSlider'
-import Product from '../components/Product'
 
 const StorePage = () => {
   return (
     <div>
-      <div className="bg-gray-100 md:px-36 px-14 py-5 text-xs md:text-sm font-serif">
+      <div className="md:px-36 px-14 py-5 text-xs md:text-sm font-serif">
         <nav>
           <ul className="grid grid-cols-4 md:grid-cols-8 gap-y-5 justify-between items-start font-roboto">
             <li className="flex flex-col items-center">
@@ -77,7 +75,12 @@ const StorePage = () => {
         </nav>
       </div>
       <div className="flex flex-col gap-4 mb-32 md:px-36 px-14">
-        <ProductSlider />
+        <ProductSlider
+          noOfSlides={6}
+          height={48}
+          heading="Recommended for you"
+          editable={false}
+        />
       </div>
       <div className="pt-96"></div>
     </div>

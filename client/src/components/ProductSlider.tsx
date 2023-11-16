@@ -5,6 +5,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   style?: React.CSSProperties
@@ -20,8 +21,8 @@ const PrevArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
         ...style,
         zIndex: 1000,
         position: 'absolute',
-        left: '-30px', // Adjust right positioning
-        top: '45%', // Adjust top positioning
+        left: '-30px',
+        top: '45%',
         transform: 'translateY(-50%)',
       }}
     >
@@ -48,12 +49,24 @@ const NextArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   )
 }
 
-const ProductSlider = () => {
+interface ProductSliderProps {
+  noOfSlides: number
+  height: number
+  heading: string
+  editable: boolean
+}
+
+const ProductSlider: React.FC<ProductSliderProps> = ({
+  noOfSlides,
+  height,
+  heading,
+  editable,
+}) => {
   const settings = {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 6,
+    slidesToShow: noOfSlides,
     slidesToScroll: 3,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
@@ -88,23 +101,21 @@ const ProductSlider = () => {
     ],
   }
   return (
-    <div className="my-5">
-      <h1 className=" font-noto font-bold mb-4 text-lg">
-        Recommended for you...
-      </h1>
+    <div>
+      <h1 className=" font-noto font-bold text-xl">{heading}</h1>
       <div>
         <Slider {...settings}>
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
+          <ProductCard height={height} editable={editable} />
         </Slider>
       </div>
     </div>
