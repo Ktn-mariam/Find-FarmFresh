@@ -12,11 +12,14 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import Rating from '@mui/material/Rating'
+import StorefrontIcon from '@mui/icons-material/Storefront'
+import PhonelinkRingIcon from '@mui/icons-material/PhonelinkRing'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import Pagination from '@mui/material/Pagination'
 import { Progress } from '@material-tailwind/react'
 import ProductSlider from '../components/ProductSlider'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -26,7 +29,7 @@ interface ArrowProps {
 const PrevArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   return (
     <button
-      className="border p-2 rounded-full bg-opacity-70 bg-white hover:shadow-md"
+      className="border p-2 rounded-full bg-opacity-80 bg-gray-300 hover:shadow-md"
       title="left"
       onClick={onClick}
       style={{
@@ -45,7 +48,7 @@ const PrevArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
 const NextArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   return (
     <button
-      className="border bg-white bg-opacity-70 p-2 rounded-full hover:shadow-md"
+      className="border bg-gray-300 bg-opacity-80 p-2 rounded-full hover:shadow-md"
       title="right"
       onClick={onClick}
       style={{
@@ -142,6 +145,10 @@ function ProductDetailPage() {
                 <CachedIcon />
                 Returnable Choice
               </div>
+              <div className="flex flex-col items-center w-14 text-center gap-2">
+                <StorefrontIcon />
+                On-Site Shopping
+              </div>
             </div>
             <div className="mt-6">
               <label htmlFor="quantity">Qty in kg:</label>
@@ -212,9 +219,9 @@ function ProductDetailPage() {
             </div>
           </div>
         </div>
-        <div className="flex gap-16 mt-10">
+        <div className="flex gap-16">
           <div className="w-1/2 font-noto">
-            <h1 className="text-xl font-bold mb-4">Reviews of the Product</h1>
+            <h1 className="text-xl font-bold mb-4  pt-10">Reviews</h1>
             <div className="flex flex-col gap-10">
               <div>
                 <div className="flex items-center gap-1">
@@ -295,7 +302,38 @@ function ProductDetailPage() {
               </div>
             </div>
           </div>
-          <div className="w-1/2">hello</div>
+          <div className="w-1/2 font-noto">
+            <div className="px-8 py-10 border border-1 border-zinc-300 rounded-2xl">
+              <h1 className="text-xl font-bold mb-4">Farmer Details</h1>
+              <div className="flex items-center gap-3">
+                <PhonelinkRingIcon />
+                +971 50 243 0978
+              </div>
+              <div className="flex items-center gap-3 mt-3">
+                <LocationOnIcon />
+                Flat 503, Sapphire Building, Silicon Oasis, Dubai, United Arab
+                Emirates
+              </div>
+              <div className="h-96 mt-3">
+                <MapContainer
+                  style={{ height: '100%', width: '100%' }}
+                  center={[51.505, -0.09]}
+                  zoom={13}
+                  scrollWheelZoom={false}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={[51.505, -0.09]}>
+                    <Popup>
+                      A pretty CSS3 popup. <br /> Easily customizable.
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="mt-20">
           <ProductSlider />
