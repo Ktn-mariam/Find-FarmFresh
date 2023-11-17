@@ -15,17 +15,9 @@ interface ArrowProps {
 const PrevArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   return (
     <button
-      className="border p-2 rounded-full bg-gray-300 border-gray-300 hover:shadow-md"
+      className="border p-2 rounded-full bg-gray-300 border-gray-300 hover:shadow-md absolute -left-8 top-1/2 transform -translate-y-1/2 z-10"
       title="left"
       onClick={onClick}
-      style={{
-        ...style,
-        zIndex: 1000,
-        position: 'absolute',
-        left: '-30px',
-        top: '45%',
-        transform: 'translateY(-50%)',
-      }}
     >
       <KeyboardArrowLeftIcon />
     </button>
@@ -34,16 +26,9 @@ const PrevArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
 const NextArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   return (
     <button
-      className="border bg-gray-300 p-2 rounded-full border-gray-300 hover:shadow-md"
+      className="border bg-gray-300 p-2 rounded-full border-gray-300 hover:shadow-md absolute -right-10 top-1/2 transform -translate-y-1/2"
       title="right"
       onClick={onClick}
-      style={{
-        ...style,
-        position: 'absolute',
-        right: '-34px',
-        top: '45%',
-        transform: 'translateY(-50%)',
-      }}
     >
       <KeyboardArrowRightIcon />
     </button>
