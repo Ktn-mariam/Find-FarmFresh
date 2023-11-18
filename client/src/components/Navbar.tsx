@@ -2,11 +2,10 @@ import React from 'react'
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-// import logo from '../../public/farmfresh-logo-black-without-bg.png'
 
 function Navbar() {
   return (
-    <nav className="flex justify-between items-center px-36 py-3 shadow-sm">
+    <nav className="flex justify-between items-center font-noto px-36 py-3 shadow-sm">
       <div>
         <img
           className="h-12"
