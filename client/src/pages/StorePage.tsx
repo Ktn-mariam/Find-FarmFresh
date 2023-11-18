@@ -74,7 +74,7 @@ const StorePage = () => {
           </ul>
         </nav>
       </div>
-      <div className="flex flex-col gap-4 mb-32 md:px-36 px-14">
+      <div className="flex flex-col gap-4 mb-32 md:px-36 px-14 pt-20">
         <ProductSlider
           noOfSlides={6}
           height={48}
