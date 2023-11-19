@@ -7,9 +7,14 @@ import Rating from '@mui/material/Rating'
 interface ProductCardProps {
   height: number
   editable: boolean
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ height, editable }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  height,
+  editable,
+  setOpenModal,
+}) => {
   return (
     <div className="mx-1">
       <div className="py-5 flex flex-col items-center rounded-md font-noto hover:cursor-pointer">
@@ -43,15 +48,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ height, editable }) => {
             </div>
             {editable && (
               <div className="float-right flex mb-2">
-                <div className="rounded-md py-0.5 px-1 hover:bg-gray-200">
+                <button
+                  title="edit"
+                  className="rounded-md py-0.5 px-1 hover:bg-gray-200"
+                  onClick={() => {
+                    setOpenModal(true)
+                  }}
+                >
                   <EditIcon fontSize="small" />
-                </div>
-                <div className="rounded-md py-0.5 px-1 hover:bg-gray-200">
+                </button>
+                <button
+                  title="delete"
+                  className="rounded-md py-0.5 px-1 hover:bg-gray-200"
+                >
                   <DeleteIcon fontSize="small" />
-                </div>
-                <div className="rounded-md py-0.5 px-1 hover:bg-gray-200">
+                </button>
+                <button
+                  title="display"
+                  className="rounded-md py-0.5 px-1 hover:bg-gray-200"
+                >
                   <VisibilityOffIcon fontSize="small" />
-                </div>
+                </button>
               </div>
             )}
           </div>

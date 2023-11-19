@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ProductCard from './ProductCard'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import AddIcon from '@mui/icons-material/Add'
 import Slider from 'react-slick'
+import Modal from '@mui/material/Modal'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import AddProductModal from './AddProductModal'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -48,6 +50,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   heading,
   editable,
 }) => {
+  const [openModal, setOpenModal] = useState(false)
+
   const settings = {
     dots: false,
     infinite: true,
@@ -88,28 +92,83 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   }
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <h1 className=" font-noto font-bold text-xl">{heading}</h1>
+      <div className="flex items-center justify-between font-noto">
+        <h1 className="font-bold text-xl">{heading}</h1>
         {editable && (
-          <button className="flex items-center gap-1">
-            <AddIcon />
-            <p>Add Product</p>
-          </button>
+          <div>
+            <button
+              onClick={() => {
+                setOpenModal(true)
+              }}
+              className="flex items-center gap-1"
+            >
+              <AddIcon />
+              <p>Add Product</p>
+            </button>
+            <AddProductModal
+              openModal={openModal}
+              setOpenModal={setOpenModal}
+            />
+          </div>
         )}
       </div>
       <div>
         <Slider {...settings}>
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
-          <ProductCard height={height} editable={editable} />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
+          <ProductCard
+            height={height}
+            editable={editable}
+            setOpenModal={setOpenModal}
+          />
         </Slider>
       </div>
     </div>

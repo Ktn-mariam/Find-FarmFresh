@@ -20,6 +20,7 @@ enum Status {
 interface ConsumerProfileProps {
   status: Status
 }
+
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   style?: React.CSSProperties
@@ -119,12 +120,12 @@ const ConsumerProfile: React.FC<ConsumerProfileProps> = ({ status }) => {
                       <div className="py-3 px-5 bg-gray-100 flex gap-5">
                         <div className="w-3/4">
                           <Slider {...settings}>
-                            <ProductCart />
-                            <ProductCart />
-                            <ProductCart />
-                            <ProductCart />
-                            <ProductCart />
-                            <ProductCart />
+                            <ProductCart isShoppingCart={false} />
+                            <ProductCart isShoppingCart={false} />
+                            <ProductCart isShoppingCart={false} />
+                            <ProductCart isShoppingCart={false} />
+                            <ProductCart isShoppingCart={false} />
+                            <ProductCart isShoppingCart={false} />
                           </Slider>
                         </div>
                         <div className="w-1/4 pr-2 pb-3 flex my-3 items-end justify-between flex-col">
