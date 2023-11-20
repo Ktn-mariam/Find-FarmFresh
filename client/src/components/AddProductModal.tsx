@@ -66,10 +66,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       aria-describedby="modal-modal-description"
     >
       <div className="flex items-center mt-24 justify-center">
-        <div className="font-noto p-12 bg-white rounded-md flex flex-col gap-5">
+        <div className="font-noto p-12 w-100 bg-white rounded-md flex flex-col gap-5">
           <div className="font-bold text-xl">Enter Product Details</div>
           <div className="flex gap-10">
-            <div className="w-3/4 flex flex-col">
+            <div className="w-2/3 flex flex-col">
               <label className="font-bold text-md" htmlFor="">
                 Title
               </label>
@@ -89,7 +89,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   <select
                     title="parent-category"
                     name="parent-category"
-                    className="focus:outline-none focus:bg-white focus:border-gray-400 py-2 px-3 bg-gray-200 text-sm  rounded-md w-full mt-2"
+                    className="focus:outline-none focus:bg-white focus:border-gray-400 py-2 px-3 bg-gray-200 text-sm rounded-md w-full mt-2"
                   >
                     <option defaultChecked value="fruits">
                       Select option
@@ -109,7 +109,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   <select
                     title="parent-category"
                     name="parent-category"
-                    className="focus:outline-none focus:bg-white focus:border-gray-400 py-2 px-3 bg-gray-200 text-sm  rounded-md w-full mt-2"
+                    className="focus:outline-none focus:bg-white focus:border-gray-400 py-2 px-3 bg-gray-200 text-sm rounded-md w-full mt-2"
                   >
                     <option defaultChecked value="fruits">
                       Select option
@@ -164,10 +164,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                 </div>
               </div>
             </div>
-            <div className="w-1/4 flex flex-col">
+            <div className="w-1/3 flex flex-col">
               <div>
                 {previewImage ? (
-                  <div className="h-40 mb-3 md:h-64 md:w-52 flex items-center justify-center overflow-hidden">
+                  <div className="h-40 mb-3 md:h-68 md:w-56 flex items-center justify-center overflow-hidden">
                     <img
                       className="object-cover w-full h-full"
                       src={previewImage}

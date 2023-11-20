@@ -9,10 +9,13 @@ module.exports = withMT({
   theme: {
     extend: {
       width: {
+        '56': '234px',
         '88': '340px',
+        '100': '800px',
       },
       height: {
         '30': '120px',
+        '68': '272px',
         '76': '290px',
         '110': '470px',
       },
