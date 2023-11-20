@@ -103,7 +103,9 @@ function ProductDetailPage() {
             <NavLink to="/farmer-profile">
               <div className="flex items-center gap-1">
                 <AccountCircleIcon />
-                <div className="text-lg pt-1">Mariam Khatoon</div>
+                <div className="text-lg pt-1 hover:underline">
+                  Mariam Khatoon
+                </div>
               </div>
             </NavLink>
             <div className="flex items-center mt-3">
