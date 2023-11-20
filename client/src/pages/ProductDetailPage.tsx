@@ -20,6 +20,7 @@ import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import { NavLink } from 'react-router-dom'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -67,9 +68,13 @@ function ProductDetailPage() {
       <StoreNavbar />
       <div className="md:px-36 px-14 pt-10 pb-36">
         <div className="flex text-lg items-center">
-          <h1>Fruits</h1>
+          <NavLink to="/store/fruits">
+            <h1 className="hover:underline">Fruits</h1>
+          </NavLink>
           <KeyboardArrowRightIcon />
-          <h1>Apples</h1>
+          <NavLink to="/store/fruits/apples">
+            <h1 className="hover:underline">Apples</h1>
+          </NavLink>
           <KeyboardArrowRightIcon />
           <h1>Apples, Silicon Oasiskm frkn kjjkey</h1>
         </div>
@@ -95,10 +100,12 @@ function ProductDetailPage() {
             <h1 className="text-3xl font-bold">
               Apples, Silicon Oasiskm frknmn klfkl fkljdfko;
             </h1>
-            <div className="flex items-center gap-1">
-              <AccountCircleIcon />
-              <div className="text-lg pt-1">Mariam Khatoon</div>
-            </div>
+            <NavLink to="/farmer-profile">
+              <div className="flex items-center gap-1">
+                <AccountCircleIcon />
+                <div className="text-lg pt-1">Mariam Khatoon</div>
+              </div>
+            </NavLink>
             <div className="flex items-center mt-3">
               <LocationOnIcon />
               Silicon Oasis, Dubai, United Arab Emirates

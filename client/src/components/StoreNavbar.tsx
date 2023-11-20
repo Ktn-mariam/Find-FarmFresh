@@ -1,18 +1,35 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 function StoreNavbar() {
   return (
     <div className="px-36 py-2 shadow-sm bg-gray-100">
       <nav>
         <ul className="flex justify-between items-center font-workSans">
-          <li>Fruits</li>
-          <li>Vegetables</li>
-          <li>Coffee & Tea</li>
-          <li>Dairy & eggs</li>
-          <li>Meat</li>
-          <li>Honey & Bee Products</li>
-          <li>Flowers</li>
-          <li>Dried Fruits & Nuts</li>
+          <NavLink to="/store/fruits">
+            <li>Fruits</li>
+          </NavLink>
+          <NavLink to="/store/vegetables">
+            <li>Vegetables</li>
+          </NavLink>
+          <NavLink to="/store/coffe-&-tea">
+            <li>Coffee & Tea</li>
+          </NavLink>
+          <NavLink to="/store/diary-&-eggs">
+            <li>Dairy & eggs</li>
+          </NavLink>
+          <NavLink to="/store/meat">
+            <li>Meat</li>
+          </NavLink>
+          <NavLink to="/store/honey-&-bee-products">
+            <li>Honey & Bee Products</li>
+          </NavLink>
+          <NavLink to="/store/flowers">
+            <li>Flowers</li>
+          </NavLink>
+          <NavLink to="/store/dried-fruits-&-nuts">
+            <li>Dried Fruits & Nuts</li>
+          </NavLink>
         </ul>
       </nav>
     </div>

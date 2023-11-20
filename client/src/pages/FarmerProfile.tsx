@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import ProductSlider from '../components/ProductSlider'
 import CommentSection from '../components/CommentSection'
 import LocationMap from '../components/LocationMap'
@@ -7,22 +8,35 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ProfileSideBar from '../components/ProfileSideBar'
 
-const FarmerProfile = () => {
-  const editable = true // true only if farmer is veiwing his own profile
+interface FarmerProfileProps {
+  editable: boolean
+}
+
+const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
+  const navigate = useNavigate()
+  const BackPageExists = window.history.state && window.history.state.idx > 0
+
   return (
     <div>
       {!editable && <StoreNavbar />}
       <div className="md:px-36 px-14 pt-10 mb-32 font-noto">
         <div className="flex items-center justify-between mx-10 mb-5">
-          <div className="flex items-center gap-2 hover:cursor-pointer">
-            <ArrowBackIcon />
-            <h3 className="text-xl">Back</h3>
-          </div>
+          {BackPageExists && !editable && (
+            <button
+              onClick={() => {
+                navigate(-1)
+              }}
+              className="flex items-center gap-2 hover:cursor-pointer"
+            >
+              <ArrowBackIcon />
+              <h3 className="text-xl">Back</h3>
+            </button>
+          )}
           {editable && (
-            <div className="flex items-center gap-2 hover:cursor-pointer">
+            <button className="flex items-center gap-2 hover:cursor-pointer">
               <LogoutIcon />
               <h3 className="text-xl">Logout</h3>
-            </div>
+            </button>
           )}
         </div>
         <div className="flex">
