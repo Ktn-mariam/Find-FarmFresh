@@ -13,6 +13,9 @@ module.exports = withMT({
         '88': '340px',
         '100': '800px',
       },
+      gridTemplateColumns: {
+        '14': 'repeat(14, 1fr)',
+      },
       height: {
         '30': '120px',
         '68': '272px',
