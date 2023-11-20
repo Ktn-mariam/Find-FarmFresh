@@ -9,7 +9,6 @@ import FarmerProfile from './pages/FarmerProfile'
 import ConsumerProfile from './pages/ConsumerProfile'
 import ShoppingCartPage from './pages/ShoppingCartPage'
 import OrdersPage from './pages/OrdersPage'
-import * as ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
 enum Status {
@@ -18,7 +17,7 @@ enum Status {
   Delivered = 'Delivered',
 }
 
-const editable = false
+const editable = true
 
 function App() {
   return (

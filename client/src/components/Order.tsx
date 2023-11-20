@@ -12,7 +12,7 @@ const Order = () => {
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
-        style={{ backgroundColor: '#F8F9FA' }}
+        style={{ backgroundColor: '#F1F3F5' }}
       >
         <div className="grid grid-cols-14">
           <div className="col-span-1">1</div>

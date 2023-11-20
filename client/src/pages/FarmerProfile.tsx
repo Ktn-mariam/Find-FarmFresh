@@ -21,7 +21,7 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
       {!editable && <StoreNavbar />}
       <div className="md:px-36 px-14 pt-10 mb-32 font-noto">
         <div className="flex items-center justify-between mx-10 mb-5">
-          {BackPageExists && !editable && (
+          {BackPageExists && !editable ? (
             <button
               onClick={() => {
                 navigate(-1)
@@ -31,6 +31,8 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
               <ArrowBackIcon />
               <h3 className="text-xl">Back</h3>
             </button>
+          ) : (
+            <div></div>
           )}
           {editable && (
             <button className="flex items-center gap-2 hover:cursor-pointer">

@@ -12,7 +12,7 @@ const OrdersPage = () => {
           <AccordionSummary
             aria-controls="panel1a-content"
             id="panel1a-header"
-            style={{ backgroundColor: '#EFF1F4' }}
+            style={{ backgroundColor: '#b7e4c7' }}
             expandIcon={<div className="px-3" />}
           >
             <div className="grid grid-cols-14 font-semibold">
