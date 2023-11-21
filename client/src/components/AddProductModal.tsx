@@ -11,7 +11,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
   openModal,
   setOpenModal,
 }) => {
-  const [previewImage, setPreviewImage] = useState('/previewImage.png')
+  const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
   const [uploadedImage, setUploadedImage] = useState(null)
   const title = useRef(null)
   const parentCategory = useRef(null)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import RatingStats from './RatingStats'
 import EditIcon from '@mui/icons-material/Edit'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
@@ -6,6 +6,7 @@ import PhonelinkRingIcon from '@mui/icons-material/PhonelinkRing'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 import MyLocationIcon from '@mui/icons-material/MyLocation'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import EditProfileModal from './EditProfileModal'
 
 interface ProductCardProps {
   editable: boolean
@@ -13,6 +14,7 @@ interface ProductCardProps {
 }
 
 const ProfileSideBar: React.FC<ProductCardProps> = ({ editable, isFarmer }) => {
+  const [openModal, setOpenModal] = useState(false)
   return (
     <div>
       <div className="col-span-1 px-10 py-10 border border-1 border-zinc-300 rounded-2xl mb-10">
@@ -26,8 +28,20 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({ editable, isFarmer }) => {
         <div className="flex items-center gap-3 justify-between  pt-3">
           <h1 className="text-2xl font-bold">Mariam Khatoon</h1>
           {editable ? (
-            <div className="rounded-md py-0.5 px-1 hover:bg-gray-200 hover:cursor-pointer">
-              <EditIcon fontSize="small" />
+            <div>
+              <button
+                title="edit"
+                className="rounded-md py-0.5 px-1 hover:bg-gray-200 hover:cursor-pointer"
+                onClick={() => {
+                  setOpenModal(true)
+                }}
+              >
+                <EditIcon fontSize="small" />
+              </button>
+              <EditProfileModal
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+              />
             </div>
           ) : (
             <div className="rounded-md py-0.5 px-1 hover:bg-gray-200 hover:cursor-pointer">

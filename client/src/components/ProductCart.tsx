@@ -11,7 +11,7 @@ const ProductCart: React.FC<ProductCartProps> = ({ isShoppingCart }) => {
   return (
     <div className="mx-1">
       <NavLink to="/store/fruits/apples/1">
-        <div className="py-5 flex flex-col items-center rounded-md font-noto hover:cursor-pointer">
+        <div className="py-5 flex flex-col items-center font-noto hover:cursor-pointer">
           <div className="h-40 mb-3 md:h-40 md:w-32 flex items-center justify-center overflow-hidden">
             <img
               className="object-cover w-full h-full"
