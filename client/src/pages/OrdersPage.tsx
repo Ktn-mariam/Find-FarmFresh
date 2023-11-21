@@ -21,7 +21,7 @@ const OrdersPage = () => {
               <div className="col-span-2">Customer Name</div>
               <div className="col-span-2">Mobile No.</div>
               <div className="col-span-3">Location</div>
-              <div className="col-span-1 flex justify-center">
+              <div className="col-span-1">
                 Total <br /> Items
               </div>
               <div className="col-span-1">
@@ -29,7 +29,7 @@ const OrdersPage = () => {
               </div>
               <div className="col-span-1">Delivery Status</div>
               <div className="col-span-1">Payment Status</div>
-              <div className="col-span-1">Delete</div>
+              <div className="col-span-1 flex justify-center">Delete</div>
             </div>
           </AccordionSummary>
         </Accordion>

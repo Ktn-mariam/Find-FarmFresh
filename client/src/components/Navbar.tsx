@@ -6,7 +6,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 
 function Navbar() {
-  const isFarmer = false
+  const isFarmer = true
   return (
     <nav className="flex justify-between items-center font-noto px-36 py-3 shadow-sm">
       <div>

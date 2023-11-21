@@ -17,16 +17,27 @@ const Order = () => {
         <div className="grid grid-cols-14">
           <div className="col-span-1">1</div>
           <div className="col-span-1">11:23:00 13/11/2023</div>
-          <div className="col-span-2">Zainab Khatoon</div>
+          <div className="col-span-2 pl-2">Zainab Khatoon</div>
           <div className="col-span-2">+971 50 243 0978</div>
           <div className="col-span-3">
             Flat 503, Sapphire Building, Silicon Oasis, Dubai
           </div>
           <div className="col-span-1 text-center">3</div>
           <div className="col-span-1">AED 37.50</div>
-          <div className="col-span-1">Delivered</div>
-          <div className="col-span-1">Paid</div>
-          <div className="col-span-1">
+          <div className="col-span-1 ml-1">
+            <select className="p-1" title="delivery status" name="" id="">
+              <option value="">Waiting</option>
+              <option value="">Transported</option>
+              <option value="">Delivered</option>
+            </select>
+          </div>
+          <div className="ml-2 col-span-1">
+            <select className="p-1" title="payment status" name="" id="">
+              <option value="">UnPaid</option>
+              <option value="">Paid</option>
+            </select>
+          </div>
+          <div className="col-span-1 flex justify-center">
             <DeleteIcon />
           </div>
         </div>
