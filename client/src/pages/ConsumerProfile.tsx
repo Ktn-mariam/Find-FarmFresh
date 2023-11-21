@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import StoreNavbar from '../components/StoreNavbar'
 import ProfileSideBar from '../components/ProfileSideBar'
 import TimelapseIcon from '@mui/icons-material/Timelapse'
@@ -10,6 +10,7 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import ProductCart from '../components/ProductCart'
+import ReviewsModal from '../components/ReviewsModal'
 
 enum Status {
   Waiting = 'Waiting',
@@ -49,6 +50,11 @@ const NextArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   )
 }
 const ConsumerProfile: React.FC<ConsumerProfileProps> = ({ status }) => {
+  const [openReviewModal, setOpenReviewModal] = useState(false)
+
+  useEffect(() => {
+    setOpenReviewModal(true)
+  }, [])
   const settings = {
     dots: false,
     infinite: true,
@@ -92,6 +98,10 @@ const ConsumerProfile: React.FC<ConsumerProfileProps> = ({ status }) => {
   return (
     <div>
       <StoreNavbar />
+      <ReviewsModal
+        openReviewModal={openReviewModal}
+        setOpenReviewModal={setOpenReviewModal}
+      />
       <div className="md:px-36 px-14 pt-10 mb-32 font-noto">
         <div className="flex">
           <div className="grid grid-cols-3 gap-10">

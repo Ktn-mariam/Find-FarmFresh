@@ -10,7 +10,9 @@ module.exports = withMT({
     extend: {
       width: {
         '56': '234px',
+        '68': '272px',
         '88': '340px',
+        '98': '500px',
         '100': '800px',
       },
       gridTemplateColumns: {
