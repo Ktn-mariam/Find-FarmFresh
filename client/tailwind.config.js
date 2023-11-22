@@ -13,6 +13,7 @@ module.exports = withMT({
         '68': '272px',
         '88': '340px',
         '98': '500px',
+        '110': '740px',
         '100': '800px',
       },
       gridTemplateColumns: {
@@ -32,7 +33,9 @@ module.exports = withMT({
         'light-green': '#9CC5A1',
         grey: '#DCE1DE',
         ashGrey: '#E7EBE9',
-        lightGreen: '2b9348',
+        lightGreen: '#2b9348',
+        mintCream: '#E1F5E7',
+        celadon: '#B7E4C7',
       },
       fontFamily: {
         workSans: ['Work Sans', 'sans-serif'],
