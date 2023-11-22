@@ -11,6 +11,9 @@ import ShoppingCartPage from './pages/ShoppingCartPage'
 import OrdersPage from './pages/OrdersPage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
+import SignInPage from './pages/SignInPage'
+import SignUpPage from './pages/SignUpPage'
+
 enum Status {
   Waiting = 'Waiting',
   Transported = 'Transported',
@@ -46,6 +49,8 @@ function App() {
         {!editable && (
           <Route path="/shopping-cart" element={<ShoppingCartPage />} />
         )}
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/sign-up" element={<SignUpPage />} />
         {editable && <Route path="/orders" element={<OrdersPage />} />}
         <Route
           path="/farmer-profile"
