@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import ProductSlider from '../components/ProductSlider'
 import StoreNavbar from '../components/StoreNavbar'
 import CommentSection from '../components/CommentSection'
@@ -20,7 +21,6 @@ import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { NavLink } from 'react-router-dom'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>

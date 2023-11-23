@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import ReviewProduct from './ReviewProduct'
+import GratitudeModal from './GratitudeModal'
 import Modal from '@mui/material/Modal'
 import CelebrationIcon from '@mui/icons-material/Celebration'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
@@ -6,8 +8,6 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import ReviewProduct from './ReviewProduct'
-import GratitudeModal from './GratitudeModal'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import StoreNavbar from '../components/StoreNavbar'
 import ProfileSideBar from '../components/ProfileSideBar'
+import ProductCart from '../components/ProductCart'
+import ReviewsModal from '../components/ReviewsModal'
 import TimelapseIcon from '@mui/icons-material/Timelapse'
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
@@ -9,8 +11,6 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import ProductCart from '../components/ProductCart'
-import ReviewsModal from '../components/ReviewsModal'
 
 enum Status {
   Waiting = 'Waiting',

@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import RatingStats from './RatingStats'
+import EditProfileModal from './EditProfileModal'
 import EditIcon from '@mui/icons-material/Edit'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PhonelinkRingIcon from '@mui/icons-material/PhonelinkRing'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 import MyLocationIcon from '@mui/icons-material/MyLocation'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import EditProfileModal from './EditProfileModal'
 
 interface ProductCardProps {
   editable: boolean

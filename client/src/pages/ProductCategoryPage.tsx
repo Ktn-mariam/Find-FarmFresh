@@ -1,8 +1,8 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import Product from '../components/Product'
 import StoreNavbar from '../components/StoreNavbar'
 import Rating from '@mui/material/Rating'
-import { useParams } from 'react-router-dom'
 
 const ProductCategoryPage = () => {
   const { category } = useParams()

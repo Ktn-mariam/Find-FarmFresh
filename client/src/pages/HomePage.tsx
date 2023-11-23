@@ -1,6 +1,5 @@
 import React from 'react'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import StoreNavbar from '../components/StoreNavbar'
 import CategoryNavbar from '../components/CategoryNavbar'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
 import Accordion from '@mui/material/Accordion'
@@ -8,7 +7,7 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AddIcon from '@mui/icons-material/Add'
 import { NavLink } from 'react-router-dom'
-// Design Inspiration: https://www.behance.net/gallery/173817441/Agriculture-Eco-farm-Solutions-Website-Homepage?tracking_source=search_projects&l=16
+
 const HomePage = () => {
   return (
     <div className="md:px-36 px-14 pt-10 mb-32 font-noto">

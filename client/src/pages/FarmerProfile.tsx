@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import ProductSlider from '../components/ProductSlider'
 import CommentSection from '../components/CommentSection'
 import LocationMap from '../components/LocationMap'
+import ProfileSideBar from '../components/ProfileSideBar'
 import StoreNavbar from '../components/StoreNavbar'
 import LogoutIcon from '@mui/icons-material/Logout'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import ProfileSideBar from '../components/ProfileSideBar'
 
 interface FarmerProfileProps {
   editable: boolean

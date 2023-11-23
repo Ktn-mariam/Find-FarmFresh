@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import ProductCard from './ProductCard'
+import AddProductModal from './AddProductModal'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import AddIcon from '@mui/icons-material/Add'
 import Slider from 'react-slick'
-import Modal from '@mui/material/Modal'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import AddProductModal from './AddProductModal'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>

@@ -1,6 +1,6 @@
 import React from 'react'
-import RemoveIcon from '@mui/icons-material/Remove'
 import { NavLink } from 'react-router-dom'
+import RemoveIcon from '@mui/icons-material/Remove'
 
 interface ProductCartProps {
   isShoppingCart: boolean

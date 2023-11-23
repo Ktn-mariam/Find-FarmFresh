@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
-import Modal from '@mui/material/Modal'
 import AddProfileInformation from './AddProfileInformation'
+import Modal from '@mui/material/Modal'
 
 interface EditProfileModalProps {
   openModal: boolean
