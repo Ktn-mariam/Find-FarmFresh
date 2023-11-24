@@ -31,7 +31,7 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({ editable, isFarmer }) => {
             <div>
               <button
                 title="edit"
-                className="rounded-md py-0.5 px-1 hover:bg-gray-200 hover:cursor-pointer"
+                className="rounded-md py-0.5 px-1 hover:bg-gray-300 hover:cursor-pointer"
                 onClick={() => {
                   setOpenModal(true)
                 }}
@@ -44,7 +44,7 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({ editable, isFarmer }) => {
               />
             </div>
           ) : (
-            <div className="rounded-md py-0.5 px-1 hover:bg-gray-200 hover:cursor-pointer">
+            <div className="rounded-md py-0.5 px-1 hover:bg-gray-300 hover:cursor-pointer">
               <PersonAddAlt1Icon />
             </div>
           )}

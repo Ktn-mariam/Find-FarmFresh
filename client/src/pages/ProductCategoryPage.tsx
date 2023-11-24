@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import Product from '../components/Product'
 import StoreNavbar from '../components/StoreNavbar'
 import Rating from '@mui/material/Rating'
+import SearchIcon from '@mui/icons-material/Search'
 
 const ProductCategoryPage = () => {
   const { category } = useParams()
@@ -30,17 +31,17 @@ const ProductCategoryPage = () => {
             Category
           </h3>
           <div className="py-2">
-            {categories.map((category) => {
+            {categories.map((childCategory) => {
               return (
                 <div className="flex pb-2 text-sm items-center">
                   <input
-                    title={category}
+                    title={childCategory}
                     type="radio"
-                    name={category}
-                    id={category}
+                    name="childCategory"
+                    id={childCategory}
                   />
-                  <label className="pl-1" htmlFor={category}>
-                    {category}
+                  <label className="pl-1" htmlFor={childCategory}>
+                    {childCategory}
                   </label>
                 </div>
               )
@@ -75,8 +76,21 @@ const ProductCategoryPage = () => {
           </div>
         </div>
         <div className="py-6">
-          <div className="pl-14 font-workSans">
-            <h1 className="text-xl font-bold">Results</h1>
+          <div className="flex justify-between pl-14 font-workSans">
+            <div>
+              <h1 className="text-xl font-bold">Results</h1>
+            </div>
+            <select
+              className="px-2 py-1 border border-gray-200"
+              title="location=filter"
+              name="location-filter"
+              id="filter"
+            >
+              <option value="">Within 20 Miles</option>
+              <option value="">Within 15 Miles</option>
+              <option value="">Within 10 Miles</option>
+              <option value="">Within 5 Miles</option>
+            </select>
           </div>
           <div className="grid grid-cols-1 justify-center sm:grid-cols-2 md:grid-cols-3 pl-10 gap-x-4 gap-y-1">
             <Product />

@@ -5,7 +5,7 @@ import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled'
 
 function Footer() {
   return (
-    <div className="bg-black p-24 justify-center items-center text-white text-sm grid gap-20 grid-cols-1 md:grid-cols-4">
+    <div className="bg-night p-24 justify-center items-center text-white text-sm grid gap-20 grid-cols-1 md:grid-cols-4">
       <div className="col-span-2">
         <img className="h-16" src="/farmfresh-logo-without-bg.png" alt="" />
         <p className="pt-4">

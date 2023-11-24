@@ -99,7 +99,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
               onClick={() => {
                 setOpenModal(true)
               }}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 px-3 py-2 rounded-md hover:bg-gray-100"
             >
               <AddIcon />
               <p>Add Product</p>

@@ -20,7 +20,7 @@ enum Status {
   Delivered = 'Delivered',
 }
 
-const editable = true
+const editable = false
 
 function App() {
   return (
