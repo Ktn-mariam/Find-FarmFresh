@@ -157,10 +157,10 @@ function ProductDetailPage() {
                 })}
               </select>
             </div>
-            <div className="mt-5">
-              <button className="flex items-center gap-2 py-2 px-10 rounded-2xl bg-yellow-600 hover:shadow-md">
+            <div className="mt-7">
+              <button className="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-pistachio3 bg-pistachio2">
                 <AddShoppingCartIcon />
-                <h1 className="text-sm">Add to cart</h1>
+                <h1 className="text-lg">Add to cart</h1>
               </button>
             </div>
           </div>

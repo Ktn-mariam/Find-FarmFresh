@@ -46,7 +46,7 @@ const SignUpPage = () => {
                   setIsConsumerChecked(false)
                 }}
                 className={`flex rounded-l-lg justify-center gap-3 w-full py-3 transition duration-500 ease-in-out ${
-                  isFarmerChecked ? 'bg-celadon' : 'bg-mintCream'
+                  isFarmerChecked ? 'bg-teaGreen1' : 'bg-magnolia'
                 }`}
               >
                 <AgricultureIcon />
@@ -58,7 +58,7 @@ const SignUpPage = () => {
                   setIsFarmerChecked(false)
                 }}
                 className={`flex justify-center rounded-r-lg gap-3 w-full py-3 transition duration-500 ease-in-out ${
-                  isConsumerChecked ? 'bg-celadon' : 'bg-mintCream'
+                  isConsumerChecked ? 'bg-teaGreen1' : 'bg-magnolia'
                 }`}
               >
                 <ShoppingBasketIcon />

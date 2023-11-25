@@ -26,13 +26,13 @@ const HomePage = () => {
             </div>
             <div className="mt-10 flex gap-5">
               <NavLink to="/sign-up">
-                <button className="text-lg px-4 py-3 bg-green flex items-center rounded-md">
+                <button className="text-lg px-4 py-3 bg-appleGreen flex items-center rounded-md hover:bg-asparagus">
                   Create Account
                   <KeyboardArrowRightIcon />
                 </button>
               </NavLink>
               <NavLink to="/store">
-                <button className="text-lg px-4 py-3 bg-mintCream items-center rounded-md">
+                <button className="text-lg px-4 py-3 bg-teaGreen1 hover:bg-teaGreen2 items-center rounded-md hover:shadow-sm">
                   View Products
                   <KeyboardArrowRightIcon />
                 </button>
@@ -68,7 +68,7 @@ const HomePage = () => {
         <div className="my-20 flex flex-col gap-10">
           <h1 className="text-3xl text-center font-bold">Features</h1>
           <div className="flex gap-10">
-            <div className="p-10 flex flex-col items-center bg-mintCream">
+            <div className="p-10 flex flex-col items-center bg-beige">
               <div className="w-64 h-64">
                 <img
                   className="object-cover w-full h-full rounded-lg"
@@ -85,7 +85,7 @@ const HomePage = () => {
                 connection between you and the food you eat.
               </div>
             </div>
-            <div className="p-10 flex flex-col items-center bg-mintCream">
+            <div className="p-10 flex flex-col items-center bg-beige">
               <div className="w-64 h-64">
                 <img
                   className="object-cover w-full h-full rounded-lg"
@@ -103,7 +103,7 @@ const HomePage = () => {
                 experience.
               </div>
             </div>
-            <div className="p-10 flex flex-col items-center bg-mintCream">
+            <div className="p-10 flex flex-col items-center bg-beige">
               <div className="w-64 h-64">
                 <img
                   className="object-cover w-full h-full rounded-lg"
@@ -134,7 +134,7 @@ const HomePage = () => {
                 </h5>
                 <p>Create your account and fill the required information</p>
               </div>
-              <div className="col-span-1 px-5 py-4 rounded-md bg-green m-2 text-white text-2xl font-bold mr-20">
+              <div className="col-span-1 px-5 py-4 rounded-md bg-appleGreen m-2 text-white text-2xl font-bold mr-20">
                 01
               </div>
               <div className="col-span-3">
@@ -151,7 +151,7 @@ const HomePage = () => {
                 </h5>
                 <p>Create your account and fill the required information</p>
               </div>
-              <div className="col-span-1 px-5 py-4 rounded-md bg-green m-2 text-white text-2xl font-bold mr-20">
+              <div className="col-span-1 px-5 py-4 rounded-md bg-appleGreen m-2 text-white text-2xl font-bold mr-20">
                 02
               </div>
               <div className="col-span-3">
@@ -168,7 +168,7 @@ const HomePage = () => {
                 </h5>
                 <p>Create your account and fill the required information</p>
               </div>
-              <div className="col-span-1 px-5 py-4 rounded-md bg-green m-2 text-white text-2xl font-bold mr-20">
+              <div className="col-span-1 px-5 py-4 rounded-md bg-appleGreen m-2 text-white text-2xl font-bold mr-20">
                 03
               </div>
               <div className="col-span-3">
@@ -196,7 +196,7 @@ const HomePage = () => {
             </h5>
           </div>
           <div className="grid grid-cols-3 gap-10">
-            <div className="col-span-1 rounded-md bg-mintCream  px-6 py-8">
+            <div className="col-span-1 rounded-md bg-beige  px-6 py-8">
               <div className="flex justify-center">
                 <FormatQuoteIcon fontSize="large" />
               </div>
@@ -216,7 +216,7 @@ const HomePage = () => {
                 November 15, 2023
               </div>
             </div>
-            <div className="col-span-1 rounded-md bg-mintCream  px-6 py-8">
+            <div className="col-span-1 rounded-md bg-beige  px-6 py-8">
               <div className="flex justify-center">
                 <FormatQuoteIcon fontSize="large" />
               </div>
@@ -236,7 +236,7 @@ const HomePage = () => {
                 November 15, 2023
               </div>
             </div>
-            <div className="col-span-1 rounded-md bg-mintCream px-6 py-8">
+            <div className="col-span-1 rounded-md bg-beige px-6 py-8">
               <div className="flex justify-center">
                 <FormatQuoteIcon fontSize="large" />
               </div>
@@ -267,7 +267,7 @@ const HomePage = () => {
                   expandIcon={<AddIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  style={{ backgroundColor: '#E1F5E7' }}
+                  style={{ backgroundColor: '#F3EFF5' }}
                 >
                   How can I trust the quality of the produce when ordering from
                   different farmers?
@@ -284,7 +284,7 @@ const HomePage = () => {
                   expandIcon={<AddIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  style={{ backgroundColor: '#E1F5E7' }}
+                  style={{ backgroundColor: '#F3EFF5' }}
                 >
                   Is customization available for orders, or are they pre-set
                   packages?
@@ -300,7 +300,7 @@ const HomePage = () => {
                   expandIcon={<AddIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  style={{ backgroundColor: '#E1F5E7' }}
+                  style={{ backgroundColor: '#F3EFF5' }}
                 >
                   What if I, as a farmer, cannot provide delivery services?
                 </AccordionSummary>
@@ -317,7 +317,7 @@ const HomePage = () => {
                   expandIcon={<AddIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  style={{ backgroundColor: '#E1F5E7' }}
+                  style={{ backgroundColor: '#F3EFF5' }}
                 >
                   How can I stay updated on a specific farmer's offerings and
                   updates? Can I follow them on the platform?
@@ -335,7 +335,7 @@ const HomePage = () => {
                   expandIcon={<AddIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  style={{ backgroundColor: '#E1F5E7' }}
+                  style={{ backgroundColor: '#F3EFF5' }}
                 >
                   Are there any membership or subscription fees for using the
                   platform?
