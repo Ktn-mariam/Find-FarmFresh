@@ -1,5 +1,5 @@
 import React from 'react'
-import Order from '../components/Order'
+import Order from './Order'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 

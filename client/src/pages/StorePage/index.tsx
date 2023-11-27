@@ -1,6 +1,6 @@
 import React from 'react'
-import ProductSlider from '../components/ProductSlider'
-import CategoryNavbar from '../components/CategoryNavbar'
+import ProductSlider from '../../components/ProductSlider'
+import CategoryNavbar from '../../components/CategoryNavbar'
 
 const StorePage = () => {
   return (

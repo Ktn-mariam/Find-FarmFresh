@@ -1,9 +1,9 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import Product from '../components/Product'
-import StoreNavbar from '../components/StoreNavbar'
+import Product from './Product'
+import StoreNavbar from '../../components/StoreNavbar'
 import Rating from '@mui/material/Rating'
-import SearchIcon from '@mui/icons-material/Search'
+import Pagination from '@mui/material/Pagination'
 
 const ProductCategoryPage = () => {
   const { category } = useParams()
@@ -76,21 +76,34 @@ const ProductCategoryPage = () => {
           </div>
         </div>
         <div className="py-6">
-          <div className="flex justify-between pl-14 font-workSans">
+          <div className="flex items-center justify-between pl-14 font-workSans">
             <div>
               <h1 className="text-xl font-bold">Results</h1>
             </div>
-            <select
-              className="px-2 py-1 border border-gray-200"
-              title="location=filter"
-              name="location-filter"
-              id="filter"
-            >
-              <option value="">Within 20 Miles</option>
-              <option value="">Within 15 Miles</option>
-              <option value="">Within 10 Miles</option>
-              <option value="">Within 5 Miles</option>
-            </select>
+            <div className="flex gap-3">
+              <select
+                className="px-2 py-1 border border-gray-200"
+                title="location=filter"
+                name="location-filter"
+                id="filter"
+              >
+                <option value="">Distance Filter</option>
+                <option value="">Within 20 Miles</option>
+                <option value="">Within 15 Miles</option>
+                <option value="">Within 10 Miles</option>
+                <option value="">Within 5 Miles</option>
+              </select>
+              <select
+                className="px-2 py-1 border border-gray-200"
+                title="sort"
+                name="sort"
+                id="filter"
+              >
+                <option value="">Sort By</option>
+                <option value="">Price low to high</option>
+                <option value="">Price high to low</option>
+              </select>
+            </div>
           </div>
           <div className="grid grid-cols-1 justify-center sm:grid-cols-2 md:grid-cols-3 pl-10 gap-x-4 gap-y-1">
             <Product />
@@ -101,6 +114,9 @@ const ProductCategoryPage = () => {
             <Product />
             <Product />
             <Product />
+          </div>
+          <div className="mt-3 flex justify-center">
+            <Pagination count={4} />
           </div>
         </div>
       </div>

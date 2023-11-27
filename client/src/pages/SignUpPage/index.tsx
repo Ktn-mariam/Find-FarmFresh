@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import AddProfileInformation from '../components/AddProfileInformation'
+import AddProfileInformation from '../../components/AddProfileInformation'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
-import AuthForm from '../components/AuthForm'
+import AuthForm from '../../components/AuthForm'
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
 import AgricultureIcon from '@mui/icons-material/Agriculture'
 

@@ -5,7 +5,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-const port = 6000
-app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`)
+const PORT = 6000
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`)
 })
