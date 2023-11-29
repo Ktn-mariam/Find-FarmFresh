@@ -6,7 +6,8 @@
 
 ![image](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/7c2ff919-aeae-421d-b300-0f32aa1de144)
 
-****!!! Note: This is a Demo Project !!!***
+***!!! Note: This is a Demo Project !!!*** 
+<br>
 This project is for demonstration purposes only. The data included is generated or curated for display and illustrative purposes. It does not represent real-world information and should not be used for any practical application.
 
 <h2>Introduction</h2>
