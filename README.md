@@ -1,4 +1,6 @@
-<h1 style="text-align: center;">FarmFresh-Finder 🧑‍🌾</h1>
+<div style="text-align: center;">
+    <h1>FarmFresh-Finder 🧑‍🌾</h1>
+</div>
 
 FarmFresh Finder, a platform designed to seamlessly connect farmers with consumers, fostering a direct and transparent exchange of fresh, locally sourced produce. Our application is dedicated to empowering farmers by providing them with a digital space to showcase their yields, while offering consumers a convenient way to discover and purchase high-quality, sustainably grown products.
 
