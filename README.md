@@ -12,7 +12,7 @@ FarmFresh Finder, a platform designed to seamlessly connect farmers with consume
 # Backend
 
 <img src="https://github.com/devicons/devicon/blob/master/icons/mongodb/mongodb-original-wordmark.svg" title="MongoDB" alt="MongoDB" width="40" height="40"/>&nbsp;
-<img src="https://github.com/devicons/devicon/blob/master/icons/nodejs/nodejs-original.svg" title="Node.js"  alt="Node.js" width="40" height="40"/>&nbsp;
+<img src="https://github.com/devicons/devicon/blob/master/icons/nodejs/nodejs-original-wordmark.svg" title="Node.js"  alt="Node.js" width="40" height="40"/>&nbsp;
 <img src="https://github.com/devicons/devicon/blob/master/icons/typescript/typescript-original.svg" title="TypeScript"  alt="TypeScript" width="40" height="40"/>&nbsp;
 
 ## Key Features
@@ -22,8 +22,6 @@ FarmFresh Finder, a platform designed to seamlessly connect farmers with consume
 - **Direct Communication:** Engage directly with farmers, ask questions, and build a connection before making a purchase.
 
 - **Transparency and Trust:** Read and leave reviews, promoting transparency and building a trustworthy community of farmers and consumers.
-
-- **Flexible Delivery Options:** Choose from various delivery options based on your location and preferences.
 
 - **Online Visibility for Farmers:** Farmers have the option to display their products for online visibility, even if they cannot provide delivery services.
 
