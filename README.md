@@ -1,6 +1,6 @@
 <p display="flex" align="center" justify="center">
     <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/148e7c5a-ad43-480c-bb06-725f77eae9df" alt="farmfresh-logo" />
-    <h1>FarmFresh-Finder</h1>
+    <h1  align="center">FarmFresh-Finder</h1>
 </p>
 
 FarmFresh Finder is a platform designed to seamlessly connect farmers with consumers, fostering a direct and transparent exchange of fresh, locally sourced produce. Our application is dedicated to empowering farmers by providing them with a digital space to showcase their yields while offering consumers a convenient way to discover and purchase high-quality, sustainably grown products.
