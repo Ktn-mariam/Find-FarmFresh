@@ -1,7 +1,8 @@
 <p display="flex" align="center" justify="center">
     <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/148e7c5a-ad43-480c-bb06-725f77eae9df" alt="farmfresh-logo" />
 </p>
-<br/>
+<p align="center"><em>Connecting consumers with local farmers for a direct and fresh produce experience</em></p>
+<br>
 
 ![image](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/7c2ff919-aeae-421d-b300-0f32aa1de144)
 
