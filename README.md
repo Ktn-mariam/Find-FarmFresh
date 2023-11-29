@@ -1,7 +1,8 @@
+<div style="text-align: center;">
+    <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/blob/main/assets/113761859/148e7c5a-ad43-480c-bb06-725f77eae9df" alt="farmfresh-logo" />
+</div>
 
-![farmfresh-logo-without-bg](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/ace38141-4af3-47cd-b0f1-922e332ac81a)
-<h1>FarmFresh-Finder 🧑‍🌾</h1>
-
+# FarmFresh-Finder
 FarmFresh Finder is a platform designed to seamlessly connect farmers with consumers, fostering a direct and transparent exchange of fresh, locally sourced produce. Our application is dedicated to empowering farmers by providing them with a digital space to showcase their yields while offering consumers a convenient way to discover and purchase high-quality, sustainably grown products.
 
 <div>
