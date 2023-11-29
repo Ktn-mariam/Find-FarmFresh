@@ -16,8 +16,7 @@ FarmFresh Finder is a platform designed to seamlessly connect farmers with consu
 <br>
 &nbsp;
 <div>
-    <h2 align="center">Tech Stack:</h2>
-    <div align="center">
+    <h2>Tech Stack:</h2>
     <img src="https://github.com/devicons/devicon/blob/master/icons/react/react-original-wordmark.svg" title="React" alt="React" width="40" height="40"/>&nbsp;
     <img src="https://github.com/devicons/devicon/blob/master/icons/typescript/typescript-original.svg" title="TypeScript"  alt="TypeScript" width="40" height="40"/>&nbsp;
     <img src="https://github.com/devicons/devicon/blob/master/icons/tailwindcss/tailwindcss-plain.svg" title="Tailwind CSS" alt="Tailwind CSS" width="40" height="40"/>&nbsp;
