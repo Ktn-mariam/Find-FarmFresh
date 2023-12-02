@@ -7,6 +7,7 @@ import ProfileSideBar from '../../components/ProfileSideBar'
 import StoreNavbar from '../../components/StoreNavbar'
 import LogoutIcon from '@mui/icons-material/Logout'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import LineChart from './LineChart'
 
 interface FarmerProfileProps {
   editable: boolean
@@ -52,6 +53,12 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
                   heading={'Products sold by Mariam'}
                   editable={editable}
                 />
+              </div>
+              <div className="mt-5">
+                <h1 className="font-noto font-bold text-xl mb-5">
+                  Your Sales this Month
+                </h1>
+                <LineChart />
               </div>
               <div className="mt-5">
                 <h1 className="font-noto font-bold text-xl mb-5">
