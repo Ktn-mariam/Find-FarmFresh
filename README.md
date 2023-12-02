@@ -21,7 +21,7 @@
 
 ***!!! Note: This is a Demo Project !!!*** 
 <br>
-This project is for demonstration purposes only. The data included is generated or curated for display and illustrative purposes. It does not represent real-world information and should not be used for any practical application.
+This project is for demonstration purposes only. The data displayed or curated is for illustrative purposes only, and does not represent real-world information.
 
 <h2>Introduction:</h2>
 FarmFresh Finder is a platform designed to seamlessly connect farmers with consumers, fostering a direct and transparent exchange of fresh, locally sourced produce. Our application empowers farmers by providing them with a digital space to showcase their yields while offering consumers a convenient way to discover and purchase high-quality, sustainably grown products.
