@@ -14,9 +14,6 @@
     <a href="https://github.com/Ktn-mariam/FarmFresh-Finder/issues">Request Feature</a>
   </p>
 
-<h3 align="center" >**!! Note: This is a Demo Project !!**</h3>
-<p align="center">This project is for demonstration purposes only. The data displayed or curated is for illustrative purposes only and does not represent real-world information.</p>
-
 <details>
   <summary>Table of Contents</summary>
   <ol>
@@ -48,6 +45,8 @@
 
 ![image](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/7c2ff919-aeae-421d-b300-0f32aa1de144)
 
+<h3 align="center" >**!! Note: This is a Demo Project !!**</h3>
+<p align="center">This project is for demonstration purposes only. The data displayed or curated is for illustrative purposes only and does not represent real-world information.</p>
 
 FarmFresh Finder is a platform designed to seamlessly connect farmers with consumers, fostering a direct and transparent exchange of fresh, locally sourced produce. Our application empowers farmers by providing a digital space to showcase their yields while offering consumers a convenient way to discover and purchase high-quality, sustainably grown products.
 
