@@ -17,7 +17,6 @@
     ·
     <a href="https://github.com/Ktn-mariam/FarmFresh-Finder/issues">Request Feature</a>
   </p>
-&nbsp;
 
 <h3 align="center" >**!! Note: This is a Demo Project !!**</h3>
 <p align="center">This project is for demonstration purposes only. The data displayed or curated is for illustrative purposes only and does not represent real-world information.</p>
