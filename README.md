@@ -1,9 +1,5 @@
 &nbsp;
-<div align="center">
-    <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
-</div>
-&nbsp;
-        
+       
 <p display="flex" align="center" justify="center">
     <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/148e7c5a-ad43-480c-bb06-725f77eae9df" alt="farmfresh-logo" />
     <h3 align="center">Farm Fresh Finder</h3>
