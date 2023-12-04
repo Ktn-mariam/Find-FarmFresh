@@ -7,6 +7,10 @@
 <p align="center">
     <em>Connecting consumers with local farmers for a direct and fresh produce experience</em> 🧑‍🌾
     <br />
+    <br/>
+    <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
+    <br/>
+    <br/>
     <a href="">View Demo</a>
     ·
     <a href="https://github.com/Ktn-mariam/FarmFresh-Finder/issues">Report Bug</a>
