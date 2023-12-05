@@ -1,4 +1,10 @@
 const productSchema = new mongoose.Schema({
+  images: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   title: {
     type: String,
     required: true,
@@ -27,7 +33,7 @@ const productSchema = new mongoose.Schema({
       message: '{VALUE} is not supported',
     },
   },
-  childCategory: {
+  category: {
     type: String,
     enum: {
       values: [
@@ -46,6 +52,10 @@ const productSchema = new mongoose.Schema({
       ],
       message: '{VALUE} is not supported',
     },
+  },
+  isVisible: {
+    type: Boolean,
+    default: true,
   },
   delivery: {
     type: Boolean,

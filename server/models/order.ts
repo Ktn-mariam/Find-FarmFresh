@@ -1,25 +1,21 @@
 const orderSchema = new mongoose.Schema({
-  orderID: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
-  FarmerID: {
+  farmer_ID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Farmer',
     required: true,
   },
-  FarmerName: {
+  farmerName: {
     type: String,
     required: true,
   },
-  Customer_ID: {
+  consumer_ID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Consumer',
     required: true,
   },
-  OrderDate: {
+  orderDate: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
   totalPrice: {
     type: Number,

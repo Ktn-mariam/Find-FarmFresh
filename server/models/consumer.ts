@@ -1,4 +1,8 @@
 const consumerSchema = new mongoose.Schema({
+  image: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
