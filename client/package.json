@@ -17,6 +17,7 @@
     "@types/react-chartjs-2": "^2.5.7",
     "@types/react-dom": "^18.2.15",
     "chart.js": "^4.4.0",
+    "formik": "^2.4.5",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
