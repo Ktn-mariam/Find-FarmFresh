@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useFormik, FormikValues } from 'formik'
+import { useFormik } from 'formik'
 import Modal from '@mui/material/Modal'
 import { FormControlLabel, FormGroup, Switch } from '@mui/material'
 // https://stackoverflow.com/questions/74536534/react-js-how-to-upload-image-with-preview-and-display-the-processe-image
@@ -62,11 +62,15 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
 
     if (!values.price) {
       errors.price = 'Required field'
+    } else if (isNaN(values.price)) {
+      errors.price = 'Please enter a numeric value'
     }
 
     if (discountAvailable && !values.discountPercentage) {
       errors.discountPercentage =
         'Please add a % value if you wish to add discount'
+    } else if (values.discountPercentage && isNaN(values.discountPercentage)) {
+      errors.discountPercentage = 'Please enter a numeric value'
     }
 
     return errors
@@ -175,7 +179,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             <div className="font-bold text-xl">Enter Product Details</div>
             <div className="flex gap-10">
               <div className="w-2/3 flex flex-col">
-                <label className="font-bold text-md mt-5" htmlFor="title">
+                <label className="text-md mt-5" htmlFor="title">
                   Title
                 </label>
                 <input
@@ -194,10 +198,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                 ) : null}
                 <div className="flex mt-5 gap-5">
                   <div className="flex flex-col w-1/2">
-                    <label
-                      className="font-bold text-md"
-                      htmlFor="parent-category"
-                    >
+                    <label className="text-md" htmlFor="parent-category">
                       Parent Category:
                     </label>
                     <select
@@ -227,7 +228,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                     ) : null}
                   </div>
                   <div className="flex flex-col w-1/2">
-                    <label className="font-bold text-md" htmlFor="category">
+                    <label className="text-md" htmlFor="category">
                       Child Category:
                     </label>
                     <select
@@ -258,7 +259,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   </div>
                 </div>
                 <div className="mt-5 flex flex-col gap-5">
-                  <label htmlFor="" className="font-bold text-md">
+                  <label htmlFor="" className="text-md">
                     Select options that apply:
                   </label>
                   <div className="text-sm grid grid-cols-2 gap-1 -mt-3">
@@ -336,14 +337,13 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   </div>
                 </div>
                 <div className="mt-5">
-                  <label htmlFor="" className="font-bold text-md">
+                  <label htmlFor="" className="text-md">
                     Price per kg
                   </label>
                   <input
                     title="price"
                     name="price"
                     className="bg-gray-200 text-sm border-2 border-gray-200 rounded-md ml-3 py-1 px-3 focus:outline-none focus:bg-white focus:border-gray-400 mt-1 w-24"
-                    type="number"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.price}
@@ -369,7 +369,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                         label={
                           <label
                             htmlFor=""
-                            className="font-semibold text-md whitespace-nowrap -ml-4"
+                            className="text-md whitespace-nowrap -ml-4"
                           >
                             Add Discount
                           </label>
@@ -379,29 +379,26 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                     </FormGroup>
                     {discountAvailable && (
                       <div className="flex gap-3 items-center">
-                        <label
-                          htmlFor=""
-                          className="font-bold text-md whitespace-nowrap"
-                        >
+                        <label htmlFor="" className="text-md whitespace-nowrap">
                           Discount in %
                         </label>
                         <input
                           title="discountPercentage"
                           name="discountPercentage"
                           className="bg-gray-200 text-sm border-2 border-gray-200 rounded-md py-1 px-3 focus:outline-none focus:bg-white focus:border-gray-400 w-24"
-                          type="number"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.discountPercentage}
                         />
-                        {formik.touched.discountPercentage &&
-                        formik.errors.discountPercentage ? (
-                          <div className="text-sm text-red-900">
-                            {formik.errors.discountPercentage}
-                          </div>
-                        ) : null}
                       </div>
                     )}
+                    {discountAvailable &&
+                    formik.touched.discountPercentage &&
+                    formik.errors.discountPercentage ? (
+                      <div className="text-sm text-red-900">
+                        {formik.errors.discountPercentage}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>
