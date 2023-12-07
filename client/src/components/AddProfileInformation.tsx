@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import FormikContext from '../context/formik-context'
 
 interface AddProfileInformationProps {
   edit: boolean
@@ -9,7 +10,10 @@ const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
 }) => {
   const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
   const [uploadedImage, setUploadedImage] = useState(null)
-  const isFarmer = true
+  const { handleBlur, handleChange, values, errors, touched } = useContext(
+    FormikContext,
+  )
+  const isFarmer = false
 
   const handleUploadImage = () => {
     const data = new FormData()
@@ -52,72 +56,126 @@ const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
             Your Name/Farm Name:
           </label>
           <input
-            title="title"
-            className="mt-2 bg-gray-200 border-2 border-gray-200 rounded-md w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+            title="name"
+            name="name"
+            className="mt-2 bg-gray-200 border-2 border-gray-200 rounded-md w-full text-sm py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
             type="text"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.name}
           />
+          {touched?.name && errors?.name ? (
+            <div className="text-sm text-red-900">{errors?.name}</div>
+          ) : null}
           {isFarmer && (
             <div className="mt-5">
               <label htmlFor="">Short About/ Description</label>
               <textarea
-                title="title"
-                className="mt-2 bg-gray-200 border-2 border-gray-200 rounded-md w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+                title="description"
+                name="description"
+                className="mt-2 bg-gray-200 border-2 border-gray-200 rounded-md w-full text-sm py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.description}
               />
+              {touched?.description && errors?.description ? (
+                <div className="text-sm text-red-900">
+                  {errors?.description}
+                </div>
+              ) : null}
             </div>
           )}
           <label className="whitespace-nowrap text-md mt-5" htmlFor="">
             Mobile No:
           </label>
           <input
-            title="title"
-            className="mt-2 bg-gray-200 border-2 border-gray-200 rounded-md w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+            title="mobileNo"
+            name="mobileNo"
+            className="mt-2 bg-gray-200 border-2 border-gray-200 rounded-md  text-sm w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.mobileNo}
           />
+          {touched?.mobileNo && errors?.mobileNo ? (
+            <div className="text-sm text-red-900">{errors?.mobileNo}</div>
+          ) : null}
           <label className="text-md mt-5" htmlFor="">
             Location
           </label>
           <input
-            title="title"
-            className="mt-2 bg-gray-200 border-2 border-gray-200 rounded-md w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+            title="location"
+            name="location"
+            className="mt-2 bg-gray-200 border-2 border-gray-200 rounded-md text-sm w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
             type="text"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.location}
           />
-          <div className="flex items-center gap-5 mt-5">
-            <div className="flex items-center gap-2">
+          {touched?.location && errors?.location ? (
+            <div className="text-sm text-red-900">{errors?.location}</div>
+          ) : null}
+          <div className="flex items-center gap-1 mt-5">
+            <div className="flex items-center gap-1">
               <label className="text-md" htmlFor="">
-                Latitude:
+                Latitude
               </label>
               <input
-                title="title"
-                className="bg-gray-200 border-2 border-gray-200 rounded-md w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
-                type="decimal"
+                title="latitudeCoordinate"
+                name="latitudeCoordinate"
+                className="bg-gray-200 border-2 border-gray-200 rounded-md text-sm w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.latitudeCoordinate}
               />
               <select
-                title="lat"
-                name="lat"
-                className="bg-gray-200 border-2 border-gray-200 rounded-md w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+                title="latitudeDirection"
+                name="latitudeDirection"
+                className="bg-gray-200 border-2 border-gray-200 rounded-md  text-sm w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.latitudeDirection}
               >
-                <option value="">N</option>
-                <option value="">S</option>
+                <option defaultChecked value="N">
+                  N
+                </option>
+                <option value="S">S</option>
               </select>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <label className="text-md" htmlFor="">
-                Longitude:
+                Longitude
               </label>
               <input
-                title="title"
-                className="bg-gray-200 border-2 border-gray-200 rounded-md w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
-                type="decimal"
+                title="longitudeCoordinate"
+                name="longitudeCoordinate"
+                className="bg-gray-200 border-2 border-gray-200 rounded-md text-sm w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.longitudeCoordinate}
               />
               <select
-                title="lat"
-                name="lat"
-                className="bg-gray-200 border-2 border-gray-200 rounded-md w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+                title="longitudeDirection"
+                name="longitudeDirection"
+                className="bg-gray-200 border-2 border-gray-200 rounded-md text-sm w-full py-1 px-2 focus:outline-none focus:bg-white focus:border-gray-400"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.longitudeDirection}
               >
-                <option value="">E</option>
-                <option value="">W</option>
+                <option value="E">E</option>
+                <option value="W">W</option>
               </select>
             </div>
           </div>
+          {touched?.latitudeCoordinate && errors?.latitudeCoordinate ? (
+            <div className="text-sm text-red-900">
+              {errors?.latitudeCoordinate}
+            </div>
+          ) : null}
+          {touched?.longitudeCoordinate && errors?.longitudeCoordinate ? (
+            <div className="text-sm text-red-900">
+              {errors?.longitudeCoordinate}
+            </div>
+          ) : null}
         </div>
         <div className="w-2/5 flex flex-col">
           <div>

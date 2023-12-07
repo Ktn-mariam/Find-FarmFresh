@@ -33,7 +33,7 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
               <h3 className="text-xl">Back</h3>
             </button>
           ) : (
-            <div></div>
+            <div className="text-2xl font-bold">My Profile</div>
           )}
           {editable && (
             <button className="flex items-center gap-2 hover:cursor-pointer">
@@ -56,7 +56,7 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
               </div>
               <div className="mt-5">
                 <h1 className="font-noto font-bold text-xl mb-5">
-                  Your Sales this Month
+                  Your Sales Last 30 Days
                 </h1>
                 <LineChart />
               </div>

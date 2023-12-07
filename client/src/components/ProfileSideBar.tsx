@@ -7,6 +7,7 @@ import PhonelinkRingIcon from '@mui/icons-material/PhonelinkRing'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 import MyLocationIcon from '@mui/icons-material/MyLocation'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { FormikContextProvider } from '../context/formik-context'
 
 interface ProductCardProps {
   editable: boolean
@@ -38,10 +39,12 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({ editable, isFarmer }) => {
               >
                 <EditIcon fontSize="small" />
               </button>
-              <EditProfileModal
-                openModal={openModal}
-                setOpenModal={setOpenModal}
-              />
+              <FormikContextProvider setOpenModal={setOpenModal}>
+                <EditProfileModal
+                  openModal={openModal}
+                  setOpenModal={setOpenModal}
+                />
+              </FormikContextProvider>
             </div>
           ) : (
             <div className="rounded-md py-0.5 px-1 hover:bg-gray-300 hover:cursor-pointer">
