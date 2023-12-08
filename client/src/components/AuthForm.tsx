@@ -1,69 +1,167 @@
 import React from 'react'
+import { FormikTouched, FormikErrors } from 'formik'
 
 interface AuthFormProps {
-  handleNext?: () => void
-  isSignIn: boolean
+  isLogIn: boolean
+  signUpFormik: SignUpFormikType | null
+  logInFormik: LogInFormikType | null
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ handleNext, isSignIn }) => {
-  const SignUpHandler = (event: React.SyntheticEvent) => {
-    event.preventDefault()
-    if (handleNext) handleNext()
+interface SignUpInformation {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  retypedPassword: string
+}
+
+interface LogInInformation {
+  email: string
+  password: string
+}
+
+interface SignUpFormikType {
+  handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
+  handleBlur: {
+    (e: React.FocusEvent<any, Element>): void
+    <T = any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
   }
+  handleChange: {
+    (e: React.ChangeEvent<any>): void
+    <T_1 = string | React.ChangeEvent<any>>(
+      field: T_1,
+    ): T_1 extends React.ChangeEvent<any>
+      ? void
+      : (e: string | React.ChangeEvent<any>) => void
+  }
+  touched: FormikTouched<SignUpInformation>
+  values: SignUpInformation
+  errors: FormikErrors<SignUpInformation>
+}
+
+interface LogInFormikType {
+  handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
+  handleBlur: {
+    (e: React.FocusEvent<any, Element>): void
+    <T = any>(fieldOrEvent: T): T extends string ? (e: any) => void : void
+  }
+  handleChange: {
+    (e: React.ChangeEvent<any>): void
+    <T_1 = string | React.ChangeEvent<any>>(
+      field: T_1,
+    ): T_1 extends React.ChangeEvent<any>
+      ? void
+      : (e: string | React.ChangeEvent<any>) => void
+  }
+  touched: FormikTouched<LogInInformation>
+  values: LogInInformation
+  errors: FormikErrors<LogInInformation>
+}
+
+const AuthForm: React.FC<AuthFormProps> = ({
+  isLogIn,
+  signUpFormik,
+  logInFormik,
+}) => {
+  const formik = signUpFormik! ?? logInFormik!
   return (
     <div className="px-10 py-7 border border-gray-300 rounded-2xl mb-10 w-98">
       <h1 className="text-lg font-bold text-center">
-        Sign {isSignIn ? 'In' : 'Up'}
+        {isLogIn ? 'Log In' : 'Sign Up'}
       </h1>
-      <form className="mt-3" action="" onSubmit={SignUpHandler}>
-        {!isSignIn && (
+      <form className="mt-3" onSubmit={formik.handleSubmit}>
+        {!isLogIn && (
           <div className="mt-4 flex gap-4">
             <div className="">
               <label htmlFor="">First Name</label>
               <input
-                title="title"
+                title="firstName"
+                name="firstName"
                 className="mt-1 bg-gray-200 text-sm border-2 border-gray-200 rounded-md w-full py-2 px-3 focus:outline-none focus:bg-white focus:border-gray-400"
                 type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.firstName}
               />
+              {formik.touched.firstName && formik.errors.firstName ? (
+                <div className="text-sm text-red-900">
+                  {formik.errors.firstName}
+                </div>
+              ) : null}
             </div>
             <div className="">
               <label htmlFor="">Last Name</label>
               <input
-                title="title"
+                title="lastName"
+                name="lastName"
                 className="mt-1 bg-gray-200 text-sm border-2 border-gray-200 rounded-md w-full py-2 px-3 focus:outline-none focus:bg-white focus:border-gray-400"
                 type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.lastName}
               />
+              {formik.touched.lastName && formik.errors.lastName ? (
+                <div className="text-sm text-red-900">
+                  {formik.errors.lastName}
+                </div>
+              ) : null}
             </div>
           </div>
         )}
         <div className="mt-4">
           <label htmlFor="">Email</label>
           <input
-            title="title"
+            title="email"
+            name="email"
             className="mt-1 bg-gray-200 text-sm border-2 border-gray-200 rounded-md w-full py-2 px-3 focus:outline-none focus:bg-white focus:border-gray-400"
             type="text"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
           />
+          {formik.touched.email && formik.errors.email ? (
+            <div className="text-sm text-red-900">{formik.errors.email}</div>
+          ) : null}
         </div>
         <div className="mt-4">
           <label htmlFor="">Password</label>
           <input
-            title="title"
+            title="password"
+            name="password"
             className="mt-1 bg-gray-200 text-sm border-2 border-gray-200 rounded-md w-full py-2 px-3 focus:outline-none focus:bg-white focus:border-gray-400"
             type="password"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
           />
+          {formik.touched.password && formik.errors.password ? (
+            <div className="text-sm text-red-900">{formik.errors.password}</div>
+          ) : null}
         </div>
-        {!isSignIn && (
+        {!isLogIn && (
           <div className="mt-4">
             <label htmlFor="">Retype Password</label>
             <input
-              title="title"
+              title="retypedPassword"
+              name="retypedPassword"
               className="mt-1 bg-gray-200 text-sm border-2 border-gray-200 rounded-md w-full py-2 px-3 focus:outline-none focus:bg-white focus:border-gray-400"
               type="password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.retypedPassword}
             />
+            {formik.touched.retypedPassword && formik.errors.retypedPassword ? (
+              <div className="text-sm text-red-900">
+                {formik.errors.retypedPassword}
+              </div>
+            ) : null}
           </div>
         )}
-        <button className="bg-black mt-6 text-white w-full rounded-md px-3 py-2">
-          {isSignIn ? 'Sign up' : 'Create Account'}
+        <button
+          type="submit"
+          className="bg-black mt-6 text-white w-full rounded-md px-3 py-2"
+        >
+          {isLogIn ? 'Sign up' : 'Create Account'}
         </button>
       </form>
       <div className="text-center">OR</div>

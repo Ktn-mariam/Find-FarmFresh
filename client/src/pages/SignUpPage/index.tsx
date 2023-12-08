@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useFormik } from 'formik'
 import AddProfileInformation from '../../components/AddProfileInformation'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
@@ -9,12 +10,93 @@ import AgricultureIcon from '@mui/icons-material/Agriculture'
 
 const steps = ['Create your account', 'Add required Information']
 
+interface SignUpInformation {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  retypedPassword: string
+}
+
+interface FormErrorType {
+  firstName?: string
+  lastName?: string
+  email?: string
+  password?: string
+  retypedPassword?: string
+}
+
 const SignUpPage = () => {
   const [activeStep, setActiveStep] = useState(0)
   const [isFarmerChecked, setIsFarmerChecked] = useState(true)
   const [isConsumerChecked, setIsConsumerChecked] = useState(false)
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
+  }
+
+  const validate = (values: SignUpInformation) => {
+    const errors: FormErrorType = {}
+    if (!values.firstName) {
+      errors.firstName = 'Required field'
+    }
+
+    if (!values.lastName) {
+      errors.lastName = 'Required field'
+    }
+
+    if (!values.email) {
+      errors.email = 'Required field'
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+    ) {
+      errors.email = 'Invalid Email Address'
+    }
+
+    if (!values.password) {
+      errors.password = 'Required field'
+    }
+
+    if (!values.retypedPassword) {
+      errors.retypedPassword = 'Required field'
+    } else if (values.password.localeCompare(values.retypedPassword) !== 0) {
+      errors.retypedPassword =
+        'Retyped password does not match the above password'
+    }
+
+    return errors
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      retypedPassword: '',
+    },
+    validate,
+    onSubmit: async (values, { setValues, setErrors, setTouched }) => {
+      await alert(JSON.stringify(values, null, 2))
+      setValues({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        retypedPassword: '',
+      } as SignUpInformation)
+      setTouched({})
+      setErrors({})
+      handleNext()
+    },
+  })
+
+  const formikProps = {
+    handleSubmit: formik.handleSubmit,
+    handleBlur: formik.handleBlur,
+    handleChange: formik.handleChange,
+    touched: formik.touched,
+    values: formik.values,
+    errors: formik.errors,
   }
 
   const handleReset = () => {
@@ -65,7 +147,11 @@ const SignUpPage = () => {
                 <label htmlFor="">I am a Constomer</label>
               </button>
             </div>
-            <AuthForm handleNext={handleNext} isSignIn={false} />
+            <AuthForm
+              logInFormik={null}
+              signUpFormik={formikProps}
+              isLogIn={false}
+            />
           </div>
         )}
         {activeStep === 1 && (
