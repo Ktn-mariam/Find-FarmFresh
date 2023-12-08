@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ReviewProduct from '../../components/ReviewProduct'
+import ReviewProduct from './ReviewProduct'
 import GratitudeModal from '../../components/GratitudeModal'
 import Modal from '@mui/material/Modal'
 import CelebrationIcon from '@mui/icons-material/Celebration'
