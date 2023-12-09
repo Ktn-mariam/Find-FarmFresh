@@ -1,5 +1,6 @@
 import React from 'react'
 import { FormikTouched, FormikErrors } from 'formik'
+import { NavLink } from 'react-router-dom'
 
 interface AuthFormProps {
   isLogIn: boolean
@@ -164,8 +165,21 @@ const AuthForm: React.FC<AuthFormProps> = ({
           {isLogIn ? 'Sign up' : 'Create Account'}
         </button>
       </form>
-      <div className="text-center">OR</div>
-      <div className="text-center">Sign up using Google</div>
+      {isLogIn ? (
+        <div className="text-center mt-5">
+          Dont have an account?{' '}
+          <span className="underline">
+            <NavLink to="/sign-in">Register Now</NavLink>
+          </span>
+        </div>
+      ) : (
+        <div className="text-center mt-5">
+          Already a member?{' '}
+          <span className="underline">
+            <NavLink to="/sign-in">Log In</NavLink>
+          </span>
+        </div>
+      )}
     </div>
   )
 }

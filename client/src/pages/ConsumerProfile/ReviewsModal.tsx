@@ -99,7 +99,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                 Next Time, Sorry!
               </button>
               <button
-                className="bg-black text-white rounded-md px-3 text-sm py-2"
+                className="bg-night text-white rounded-md px-3 text-sm py-2"
                 onClick={() => {
                   setOpenReviewModal(false)
                   setOpenGratitudeModal(true)

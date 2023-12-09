@@ -154,7 +154,7 @@ const ConsumerProfile: React.FC<ConsumerProfileProps> = ({ status }) => {
                           </div>
                           <button
                             disabled
-                            className="px-3 py-1 bg-yellow-400 rounded-lg"
+                            className="px-3 py-1 bg-yellow-300 rounded-lg"
                           >
                             Cancel Order
                           </button>

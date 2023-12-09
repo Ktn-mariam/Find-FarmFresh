@@ -19,7 +19,7 @@ const GratitudeModal: React.FC<GratitudeModalProps> = ({
       aria-describedby="modal-modal-description"
     >
       <div className="flex items-center mt-40 justify-center">
-        <div className="font-noto p-12 w-96 bg-gray-100 rounded-md flex flex-col items-center gap-2">
+        <div className="font-noto p-12 w-96 bg-white rounded-md flex flex-col items-center gap-2">
           <TaskAltIcon fontSize="large" />
           <h1 className="font-bold text-center">
             Thank you for your feedback! Your insights are invaluable in making
