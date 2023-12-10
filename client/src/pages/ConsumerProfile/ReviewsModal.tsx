@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ReviewProduct from './ReviewProduct'
-import GratitudeModal from '../../components/GratitudeModal'
+import GratitudeModal from './GratitudeModal'
 import Modal from '@mui/material/Modal'
 import CelebrationIcon from '@mui/icons-material/Celebration'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
