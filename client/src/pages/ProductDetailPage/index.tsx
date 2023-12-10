@@ -158,9 +158,9 @@ function ProductDetailPage() {
               </select>
             </div>
             <div className="mt-7">
-              <button className="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-pistachio3 bg-pistachio2">
-                <AddShoppingCartIcon />
-                <h1 className="text-lg">Add to cart</h1>
+              <button className="flex items-center gap-2 py-2 px-3 rounded-lg bg-night text-white">
+                <AddShoppingCartIcon style={{ color: '#fff' }} />
+                <h1 className="text-md">Add to cart</h1>
               </button>
             </div>
           </div>
