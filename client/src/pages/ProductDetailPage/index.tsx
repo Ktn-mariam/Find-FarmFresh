@@ -30,7 +30,7 @@ interface ArrowProps {
 const PrevArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   return (
     <button
-      className="border p-2 rounded-full bg-opacity-80 bg-gray-300 hover:shadow-md absolute left-5 top-1/2 transform -translate-y-1/2 z-10"
+      className="p-2 rounded-full bg-opacity-70 bg-gray-100 hover:shadow-md absolute left-3 top-1/2 transform -translate-y-1/2 z-10"
       title="left"
       onClick={onClick}
     >
@@ -41,7 +41,7 @@ const PrevArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
 const NextArrow: React.FC<ArrowProps> = ({ onClick, style }) => {
   return (
     <button
-      className="border bg-gray-300 bg-opacity-80 p-2 rounded-full hover:shadow-md absolute left-80 top-1/2 transform -translate-y-1/2"
+      className="bg-gray-100 bg-opacity-70 p-2 rounded-full hover:shadow-md absolute right-3 top-1/2 transform -translate-y-1/2"
       title="right"
       onClick={onClick}
     >
