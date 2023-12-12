@@ -78,7 +78,7 @@ function ProductDetailPage() {
           <KeyboardArrowRightIcon />
           <h1>Apples, Silicon Oasiskm frkn kjjkey</h1>
         </div>
-        <div className="py-6 flex gap-x-7">
+        <div className="py-6 w-full flex gap-x-7">
           <div className="w-40 md:w-96">
             <Slider {...settings}>
               {imageLocation.map((location) => {
@@ -96,77 +96,78 @@ function ProductDetailPage() {
               })}
             </Slider>
           </div>
-          <div className="font-noto">
+          <div className="flex-grow">
             <h1 className="text-3xl font-bold">
               Apples, Silicon Oasiskm frknmn klfkl fkljdfko;
             </h1>
-            <NavLink to="/farmer-profile">
-              <div className="flex items-center gap-1">
-                <AccountCircleIcon />
-                <div className="text-lg pt-1 hover:underline">
-                  Mariam Khatoon
+            <div className="flex w-full justify-between mt-4">
+              <div className="font-noto">
+                <NavLink to="/farmer-profile">
+                  <div className="flex items-center gap-1">
+                    <AccountCircleIcon />
+                    <div className="text-lg pt-1 hover:underline">
+                      Mariam Khatoon
+                    </div>
+                  </div>
+                </NavLink>
+                <div className="flex items-center mt-3">
+                  <LocationOnIcon />
+                  Silicon Oasis, Dubai, United Arab Emirates
+                </div>
+                <div className="flex mt-6">
+                  <p className="text-sm md:text-base py-0.5 pr-1">AED</p>
+                  <p className="text-red-600">
+                    <span className="font-bold text-xl md:text-4xl">35.50</span>
+                    /kg
+                  </p>
+                </div>
+                <div className="flex text-xs gap-x-5 my-10">
+                  <div className="flex flex-col items-center w-14 text-center gap-2">
+                    <LocalShippingIcon />
+                    Free Delivery
+                  </div>
+                  <div className="flex flex-col items-center w-14 text-center gap-2">
+                    <SpaIcon />
+                    Organically Produced
+                  </div>
+                  <div className="flex flex-col items-center w-14 text-center gap-2">
+                    <SecurityIcon />
+                    Secure Transaction
+                  </div>
+                  <div className="flex flex-col items-center w-14 text-center gap-2">
+                    <PaymentsOutlinedIcon />
+                    Cash On Delivery
+                  </div>
+                  <div className="flex flex-col items-center w-14 text-center gap-2">
+                    <CachedIcon />
+                    Returnable Choice
+                  </div>
+                  <div className="flex flex-col items-center w-14 text-center gap-2">
+                    <StorefrontIcon />
+                    On-Site Shopping
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <label htmlFor="quantity">Qty in kg:</label>
+                  <select
+                    className="px-3 ml-3 py-1 border border-1 border-gray-500 rounded-md"
+                    title="quantity"
+                    name="quantity"
+                    id=""
+                  >
+                    {quantityOptions.map((option) => {
+                      return <option value={option}>{option}</option>
+                    })}
+                  </select>
+                </div>
+                <div className="mt-7">
+                  <button className="flex items-center gap-2 py-2 px-3 rounded-lg bg-night text-white">
+                    <AddShoppingCartIcon style={{ color: '#fff' }} />
+                    <h1 className="text-md">Add to cart</h1>
+                  </button>
                 </div>
               </div>
-            </NavLink>
-            <div className="flex items-center mt-3">
-              <LocationOnIcon />
-              Silicon Oasis, Dubai, United Arab Emirates
-            </div>
-            <div className="flex mt-6">
-              <p className="text-sm md:text-base py-0.5 pr-1">AED</p>
-              <p className="text-red-600">
-                <span className="font-bold text-xl md:text-4xl">35.50</span>/kg
-              </p>
-            </div>
-            <div className="flex text-xs gap-x-5 my-10">
-              <div className="flex flex-col items-center w-14 text-center gap-2">
-                <LocalShippingIcon />
-                Free Delivery
-              </div>
-              <div className="flex flex-col items-center w-14 text-center gap-2">
-                <SpaIcon />
-                Organically Produced
-              </div>
-              <div className="flex flex-col items-center w-14 text-center gap-2">
-                <SecurityIcon />
-                Secure Transaction
-              </div>
-              <div className="flex flex-col items-center w-14 text-center gap-2">
-                <PaymentsOutlinedIcon />
-                Cash On Delivery
-              </div>
-              <div className="flex flex-col items-center w-14 text-center gap-2">
-                <CachedIcon />
-                Returnable Choice
-              </div>
-              <div className="flex flex-col items-center w-14 text-center gap-2">
-                <StorefrontIcon />
-                On-Site Shopping
-              </div>
-            </div>
-            <div className="mt-6">
-              <label htmlFor="quantity">Qty in kg:</label>
-              <select
-                className="px-3 ml-3 py-1 border border-1 border-gray-500 rounded-md"
-                title="quantity"
-                name="quantity"
-                id=""
-              >
-                {quantityOptions.map((option) => {
-                  return <option value={option}>{option}</option>
-                })}
-              </select>
-            </div>
-            <div className="mt-7">
-              <button className="flex items-center gap-2 py-2 px-3 rounded-lg bg-night text-white">
-                <AddShoppingCartIcon style={{ color: '#fff' }} />
-                <h1 className="text-md">Add to cart</h1>
-              </button>
-            </div>
-          </div>
-          <div className="right-36">
-            <div className="font-noto w-88">
-              <div className="px-5 py-8 border border-1 border-zinc-300 rounded-2xl">
+              <div className="font-noto w-88 px-5 py-8 border border-1 border-zinc-300 rounded-2xl">
                 <RatingStats />
                 <div className="mt-6 border-t-1 border-gray-200">
                   <h1 className="text-lg font-bold">Farmer's Rating</h1>
