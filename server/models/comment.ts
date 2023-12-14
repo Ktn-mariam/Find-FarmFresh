@@ -1,3 +1,6 @@
+export {}
+const mongoose = require('mongoose')
+
 const commentSchema = new mongoose.Schema({
   consumer_ID: {
     type: mongoose.Schema.Types.ObjectId,
