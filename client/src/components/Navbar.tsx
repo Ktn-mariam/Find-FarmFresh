@@ -20,10 +20,9 @@ function Navbar() {
       </div>
       <div className="flex gap-9 items-center">
         <ul className="flex gap-4">
-          <li>About</li>
-          <li>Contact</li>
-          <li>FAQ</li>
-          <li>Blogs</li>
+          <li>APIs</li>
+          <li>GitHub</li>
+          <li>LinkedIn</li>
         </ul>
         <ul className="flex gap-4 items-center">
           <li>
