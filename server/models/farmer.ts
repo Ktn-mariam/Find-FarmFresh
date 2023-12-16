@@ -1,4 +1,66 @@
-const farmerSchema = new mongoose.Schema({
+import bcrypt from 'bcryptjs'
+import { Document, Schema, Types, model } from 'mongoose'
+import jwt from 'jsonwebtoken'
+
+interface ILocationCoordinates {
+  latitude: {
+    coordinate: number
+    direction: 'N' | 'S'
+  }
+  longitude: {
+    coordinate: number
+    direction: 'E' | 'W'
+  }
+}
+
+interface IFarmerRating {
+  rating: number
+  voteCount: {
+    five: number
+    four: number
+    three: number
+    two: number
+    one: number
+  }
+}
+
+interface IComment {
+  commentID: Types.ObjectId
+  UserID: Types.ObjectId
+  UserName: string
+  Rating: number
+  title: string
+  description: string
+  date: Date
+}
+
+export interface IFarmer extends Document {
+  image: string
+  name: string
+  email: string
+  password: string
+  description: string
+  mobileNo: string
+  location: string
+  locationCoordinates: ILocationCoordinates
+  farmerRating: IFarmerRating
+  comments: IComment[]
+
+  getFarmerDetails(): {
+    name: string
+    image: string
+    description: string
+    mobileNo: string
+    location: string
+    locationCoordinates: ILocationCoordinates
+  }
+
+  createJWT(): string
+
+  comparePasswords(candidatePassword: string): boolean
+}
+
+const FarmerSchema = new Schema({
   image: {
     type: String,
     required: true,
@@ -7,8 +69,23 @@ const farmerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    required: [true, 'Please provide email'],
+    match: [
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Please provide valid email',
+    ],
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, 'Please provide password'],
+    minlength: 6,
+  },
   description: {
     type: String,
+    required: true,
   },
   mobileNo: {
     type: String,
@@ -16,48 +93,47 @@ const farmerSchema = new mongoose.Schema({
   },
   location: {
     type: String,
+    required: true,
   },
   locationCoordinates: {
     latitude: {
       coordinate: {
         type: Number,
+        required: true,
       },
       direction: {
         type: String,
         enum: ['N', 'S'],
+        required: true,
       },
     },
     longitude: {
       coordinate: {
         type: Number,
+        required: true,
       },
       direction: {
         type: String,
         enum: ['E', 'W'],
+        required: true,
       },
     },
   },
-  products: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product', // Replace 'Product' with the actual model name for products
-    },
-  ],
   farmerRating: {
-    Rating: {
+    rating: {
       type: Number,
-      required: true,
+      default: 4.5,
       min: 0.0,
       max: 5.0,
     },
-    VoteCount: {
+    voteCount: {
       five: {
         type: Number,
         default: 0,
       },
       four: {
         type: Number,
-        default: 0,
+        default: 1,
       },
       three: {
         type: Number,
@@ -76,11 +152,11 @@ const farmerSchema = new mongoose.Schema({
   comments: [
     {
       commentID: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Comment',
       },
       UserID: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Consumer',
       },
       UserName: {
@@ -103,4 +179,45 @@ const farmerSchema = new mongoose.Schema({
   ],
 })
 
-module.exports = mongoose.model('Farmer', farmerSchema)
+FarmerSchema.pre('save', async function (this: IFarmer, next) {
+  const salt = await bcrypt.genSalt(10)
+  this.password = await bcrypt.hash(this.password, salt)
+})
+
+FarmerSchema.methods.getFarmerDetails = function () {
+  return {
+    name: this.name,
+    image: this.image,
+    description: this.description,
+    mobileNo: this.mobileNo,
+    location: this.location,
+    locationCoordinates: this.locationCoordinates,
+  }
+}
+
+FarmerSchema.methods.createJWT = function () {
+  return jwt.sign(
+    {
+      farmerID: this._id,
+      image: this.image,
+      name: this.name,
+      description: this.description,
+      mobileNo: this.mobileNo,
+      location: this.location,
+      locationCoordinates: this.locationCoordinates,
+    },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: process.env.JWT_LIFETIME,
+    },
+  )
+}
+
+FarmerSchema.methods.comparePasswords = async function (
+  candidatePassword: string,
+) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password)
+  return isMatch
+}
+
+export default model('Farmer', FarmerSchema)
