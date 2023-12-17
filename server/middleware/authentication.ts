@@ -1,5 +1,3 @@
-import Farmer from '../models/farmer'
-import Consumer from '../models/consumer'
 import jwt from 'jsonwebtoken'
 import { UnauthenticatedError } from '../errors'
 import { Request, Response, NextFunction } from 'express'
@@ -32,10 +30,7 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET as string)
-    console.log(payload)
     if (typeof payload === 'object') {
-      console.log(payload)
-
       const userID =
         payload.farmerID !== undefined ? payload.farmerID : payload.consumerID
       const role = payload.farmerID !== undefined ? Role.Farmer : Role.Consumer
