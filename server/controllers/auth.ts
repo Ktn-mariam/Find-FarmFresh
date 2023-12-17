@@ -5,7 +5,6 @@ import { StatusCodes } from 'http-status-codes'
 import { IFarmer } from '../models/farmer'
 import { IConsumer } from '../models/consumer'
 import { BadRequestError, UnauthenticatedError } from '../errors'
-import jwt from 'jsonwebtoken'
 
 const registerFarmer = async (req: Request, res: Response) => {
   const farmer = (await Farmer.create({ ...req.body })) as IFarmer
