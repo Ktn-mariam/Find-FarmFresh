@@ -25,13 +25,12 @@ interface IFarmerRating {
 }
 
 interface IComment {
-  commentID: Types.ObjectId
-  UserID: Types.ObjectId
-  UserName: string
-  Rating: number
+  userID: Types.ObjectId
+  username: string
+  rating: number
   title: string
   description: string
-  date: Date
+  createdAt: Date
 }
 
 export interface IFarmer extends Document {
@@ -151,27 +150,27 @@ const FarmerSchema = new Schema({
   },
   comments: [
     {
-      commentID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Comment',
-      },
-      UserID: {
+      userID: {
         type: Schema.Types.ObjectId,
         ref: 'Consumer',
       },
-      UserName: {
+      username: {
         type: String,
+        required: true,
       },
-      Rating: {
+      rating: {
         type: Number,
+        required: true,
       },
       title: {
         type: String,
+        required: true,
       },
       description: {
         type: String,
+        required: true,
       },
-      date: {
+      createdAt: {
         type: Date,
         default: Date.now(),
       },
