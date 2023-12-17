@@ -1,148 +1,163 @@
-const productSchema = new mongoose.Schema({
-  images: [
-    {
+import mongoose from 'mongoose'
+
+const ProductSchema = new mongoose.Schema(
+  {
+    images: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    title: {
       type: String,
       required: true,
     },
-  ],
-  title: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-  parentCategory: {
-    type: String,
-    enum: {
-      values: [
-        'Fruits',
-        'Vegetables',
-        'Coffee & Tea',
-        'Dairy & eggs',
-        'Meat',
-        'Honey & Bee Products',
-        'Flowers',
-        'Dried Fruits & Nuts',
-      ],
-      message: '{VALUE} is not supported',
-    },
-  },
-  category: {
-    type: String,
-    enum: {
-      values: [
-        'Apples',
-        'Bananas',
-        'Carrots',
-        'Brinjals',
-        'Coffee',
-        'Tea',
-        'Milk',
-        'Chicken',
-        'Mutton',
-        'Honey',
-        'Roses',
-        'Almonds',
-      ],
-      message: '{VALUE} is not supported',
-    },
-  },
-  isVisible: {
-    type: Boolean,
-    default: true,
-  },
-  delivery: {
-    type: Boolean,
-    default: false,
-  },
-  organic: {
-    type: Boolean,
-    default: false,
-  },
-  transaction: {
-    type: Boolean,
-    default: false,
-  },
-  cashOnDelivery: {
-    type: Boolean,
-    default: false,
-  },
-  returnableChoice: {
-    type: Boolean,
-    default: false,
-  },
-  onSiteShopping: {
-    type: Boolean,
-    default: false,
-  },
-  farmerID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Farmer',
-  },
-  productRating: {
-    rating: {
+    price: {
       type: Number,
-      default: 0,
-      min: 0.0,
-      max: 5.0,
+      required: true,
     },
-    voteCount: {
-      five: {
-        type: Number,
-        default: 0,
-      },
-      four: {
-        type: Number,
-        default: 0,
-      },
-      three: {
-        type: Number,
-        default: 0,
-      },
-      two: {
-        type: Number,
-        default: 0,
-      },
-      one: {
-        type: Number,
-        default: 0,
+    parentCategory: {
+      type: String,
+      enum: {
+        values: [
+          'Fruits',
+          'Vegetables',
+          'Coffee & Tea',
+          'Dairy & eggs',
+          'Meat',
+          'Honey & Bee Products',
+          'Flowers',
+          'Dried Fruits & Nuts',
+        ],
+        message: '{VALUE} is not supported',
       },
     },
-  },
-  comments: [
-    {
-      commentID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment',
+    category: {
+      type: String,
+      enum: {
+        values: [
+          'Apples',
+          'Bananas',
+          'Carrots',
+          'Brinjals',
+          'Coffee',
+          'Tea',
+          'Milk',
+          'Chicken',
+          'Mutton',
+          'Honey',
+          'Roses',
+          'Almonds',
+        ],
+        message: '{VALUE} is not supported',
       },
-      userID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Consumer',
-      },
-      userName: {
-        type: String,
-      },
+    },
+    isVisible: {
+      type: Boolean,
+      default: true,
+    },
+    delivery: {
+      type: Boolean,
+      required: true,
+    },
+    organic: {
+      type: Boolean,
+      required: true,
+    },
+    transaction: {
+      type: Boolean,
+      required: true,
+    },
+    cashOnDelivery: {
+      type: Boolean,
+      required: true,
+    },
+    returnableChoice: {
+      type: Boolean,
+      required: true,
+    },
+    onSiteShopping: {
+      type: Boolean,
+      required: true,
+    },
+    // farmer: {
+    //   farmerID: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Farmer',
+    //     required: true,
+    //   },
+    //   name: {
+    //     type: String,
+    //     required: true,
+    //   },
+    // },
+    farmerID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Farmer',
+      required: true,
+    },
+    productRating: {
       rating: {
         type: Number,
+        default: 5,
+        min: 0.0,
+        max: 5.0,
       },
-      title: {
-        type: String,
-      },
-      description: {
-        type: String,
-      },
-      date: {
-        type: Date,
-        default: Date.now,
+      voteCount: {
+        five: {
+          type: Number,
+          default: 1,
+        },
+        four: {
+          type: Number,
+          default: 0,
+        },
+        three: {
+          type: Number,
+          default: 0,
+        },
+        two: {
+          type: Number,
+          default: 0,
+        },
+        one: {
+          type: Number,
+          default: 0,
+        },
       },
     },
-  ],
-})
+    comments: [
+      {
+        userID: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Consumer',
+        },
+        username: {
+          type: String,
+          required: true,
+        },
+        rating: {
+          type: Number,
+          required: true,
+          min: 0.0,
+          max: 5.0,
+        },
+        title: {
+          type: String,
+          required: true,
+        },
+        description: {
+          type: String,
+          required: true,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now(),
+        },
+      },
+    ],
+  },
+  { timestamps: true },
+)
 
-module.exports = mongoose.model('Product', productSchema)
+export default mongoose.model('Product', ProductSchema)

@@ -1,8 +1,25 @@
-const express = require('express')
-const router = express.Router()
+import { Router } from 'express'
+const router = Router()
 
-const { getAllProducts } = require('../controllers/products')
+import {
+  createProduct,
+  getAllProducts,
+  getProductsOfCategory,
+  getProductDetail,
+  deleteProduct,
+  updateProduct,
+} from '../controllers/products'
+import authenticationMiddleware from '../middleware/authentication'
 
-router.route('/').get(getAllProducts)
+router
+  .route('/')
+  .get(getAllProducts)
+  .post(authenticationMiddleware, createProduct)
+router
+  .route('/:productID')
+  .get(getProductDetail)
+  .delete(authenticationMiddleware, deleteProduct)
+  .patch(authenticationMiddleware, updateProduct)
+router.route('/category/:parentCategory').get(getProductsOfCategory)
 
-module.exports = router
+export default router
