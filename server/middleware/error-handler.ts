@@ -1,13 +1,17 @@
 import { Request, Response, NextFunction } from 'express'
+import { CustomAPIError } from '../errors'
+import { StatusCodes } from 'http-status-codes'
 
-const errorHandlerMiddleware = async (
-  err: Error,
+const errorHandlerMiddleware = (
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(err)
-  return res.status(500).json({ msg: 'Something went wrong, please try again' })
+  if (err instanceof CustomAPIError) {
+    return res.status(err.statusCode).json({ msg: err.message })
+  }
+  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ err })
 }
 
-module.exports = errorHandlerMiddleware
+export default errorHandlerMiddleware
