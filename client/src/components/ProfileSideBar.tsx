@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PhonelinkRingIcon from '@mui/icons-material/PhonelinkRing'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
+import PersonAddDisabledIcon from '@mui/icons-material/PersonAddDisabled'
 import MyLocationIcon from '@mui/icons-material/MyLocation'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { FormikContextProvider } from '../context/formik-context'
@@ -16,6 +17,7 @@ interface ProductCardProps {
 
 const ProfileSideBar: React.FC<ProductCardProps> = ({ editable, isFarmer }) => {
   const [openModal, setOpenModal] = useState(false)
+  const isFollowing = false
   return (
     <div>
       <div className="col-span-1 px-10 py-10 border border-1 border-zinc-300 rounded-2xl mb-10">
@@ -48,7 +50,7 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({ editable, isFarmer }) => {
             </div>
           ) : (
             <div className="rounded-md py-0.5 px-1 hover:bg-gray-300 hover:cursor-pointer">
-              <PersonAddAlt1Icon />
+              {isFollowing ? <PersonAddAlt1Icon /> : <PersonAddDisabledIcon />}
             </div>
           )}
         </div>
@@ -87,8 +89,10 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({ editable, isFarmer }) => {
               <h1 className="text-lg font-bold">My following</h1>
               <div className="mt-3">
                 <div className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 rounded-md hover:cursor-pointer">
-                  <AccountCircleIcon />
-                  Mariam Khatoon
+                  <div>
+                    <AccountCircleIcon />
+                    Mariam Khatoon
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 rounded-md hover:cursor-pointer">
                   <AccountCircleIcon />
