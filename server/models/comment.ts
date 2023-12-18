@@ -1,17 +1,20 @@
-export {}
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const commentSchema = new mongoose.Schema({
-  consumer_ID: {
+const CommentSchema = new mongoose.Schema({
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+  userID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Consumer',
     required: true,
   },
-  Username: {
+  username: {
     type: String,
     required: true,
   },
-  Rating: {
+  rating: {
     type: Number,
     required: true,
     min: 0.0,
@@ -25,20 +28,20 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  date: {
+  createdAt: {
     type: Date,
-    default: Date.now(),
+    required: true,
   },
-  product_ID: {
+  productID: {
     // It can be null
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
   },
-  farmer_ID: {
+  farmerID: {
     // It can be null
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Farmer',
   },
 })
 
-module.exports = mongoose.model('Comment', commentSchema)
+export default mongoose.model('Comment', CommentSchema)
