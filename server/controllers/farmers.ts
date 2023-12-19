@@ -10,7 +10,9 @@ import UnAuthorizedError from '../errors/unauthorized'
 
 const getFarmer = async (req: Request, res: Response) => {
   const { farmerID } = req.params
-  const farmer = await Farmer.find({ _id: farmerID })
+  const farmer = await Farmer.find({ _id: farmerID }).select(
+    'locationCoordinates farmerRating _id image name description mobileNo location comments',
+  )
   res.status(StatusCodes.OK).json({ farmer })
 }
 
