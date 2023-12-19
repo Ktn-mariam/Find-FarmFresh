@@ -3,13 +3,7 @@ import Order from '../models/order'
 import { StatusCodes } from 'http-status-codes'
 import { Role } from '../middleware/authentication'
 import UnAuthorizedError from '../errors/unauthorized'
-
-enum deliveryStatus {
-  'Waiting',
-  'Transported',
-  'Cancelled',
-  'Delivered',
-}
+import NotFoundError from '../errors/not-found'
 
 const getOrders = async (req: Request, res: Response) => {
   const { userID, role } = req.user
@@ -23,7 +17,11 @@ const getOrders = async (req: Request, res: Response) => {
 }
 
 const addOrder = async (req: Request, res: Response) => {
-  const { userID } = req.user
+  const { userID, role } = req.user
+
+  if (role === Role.Farmer) {
+    throw new UnAuthorizedError('You cannot add Orders as a farmer')
+  }
 
   const order = await Order.create({ ...req.body, consumerID: userID })
   res.status(StatusCodes.CREATED).json({ order })
@@ -34,14 +32,7 @@ const updateOrder = async (req: Request, res: Response) => {
   const { orderID } = req.params
 
   let updateFields: any = {}
-  if (
-    (role === Role.Farmer &&
-      req.body.deliveryStatus &&
-      req.body.deliveryStatus !== deliveryStatus.Cancelled) ||
-    (req.body.deliveryStatus === deliveryStatus.Cancelled &&
-      role === Role.Consumer &&
-      req.body.deliveryStatus)
-  ) {
+  if (req.body.deliveryStatus) {
     updateFields.deliveryStatus = req.body.deliveryStatus
   }
 
@@ -63,8 +54,6 @@ const updateOrder = async (req: Request, res: Response) => {
       { new: true, runValidators: true },
     )
   }
-
-  console.log(updateFields)
 
   if (role === Role.Consumer && updateFields !== null) {
     updatedOrder = await Order.findOneAndUpdate(
@@ -89,7 +78,10 @@ const deleteOrder = async (req: Request, res: Response) => {
     _id: orderID,
     farmerID: req.user.userID,
   })
-  res.status(200).json({ order })
+  if (!order) {
+    throw new NotFoundError('Order not found')
+  }
+  res.status(StatusCodes.OK).json({ order })
 }
 
 export { getOrders, addOrder, updateOrder, deleteOrder }
