@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import Farmer from '../models/farmer'
 import Product from '../models/product'
-import Order from '../models/order'
 import NotFoundError from '../errors/not-found'
 import { RemovedCommentType } from './products'
 import Comment from '../models/comment'
@@ -12,21 +11,13 @@ import UnAuthorizedError from '../errors/unauthorized'
 const getFarmer = async (req: Request, res: Response) => {
   const { farmerID } = req.params
   const farmer = await Farmer.find({ _id: farmerID })
-  res.status(200).json({ farmer })
+  res.status(StatusCodes.OK).json({ farmer })
 }
 
 const getProductsOfFarmer = async (req: Request, res: Response) => {
   const { farmerID } = req.params
-
   const products = await Product.find({ farmerID })
-  res.status(200).json({ products, nbHits: products.length })
-}
-
-const getOrdersOfFarmer = async (req: Request, res: Response) => {
-  const { userID } = req.user
-  const orders = await Order.find({ farmerID: userID })
-
-  res.status(200).json({ orders })
+  res.status(StatusCodes.OK).json({ products, nbHits: products.length })
 }
 
 const updateFarmer = async (req: Request, res: Response) => {
@@ -116,7 +107,9 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
     console.log(updatedFarmer)
 
     if (!updatedFarmer)
-      return res.status(404).json({ error: 'Farmer not found' })
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Farmer not found' })
 
     if (updatedFarmer.comments.length > 6) {
       const leastRecentComment: RemovedCommentType = updatedFarmer
@@ -138,7 +131,6 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
         title: leastRecentComment?.title,
         createdAt: leastRecentComment?.createdAt,
         username: leastRecentComment?.username,
-        _id: leastRecentComment?._id,
         farmerID,
       })
 
@@ -149,16 +141,10 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
   }
 
   if (!updateFarmer) {
-    return res.status(404).json({ error: 'Farmer not found' })
+    return res.status(StatusCodes.NOT_FOUND).json({ error: 'Farmer not found' })
   }
 
   res.json({ farmer: updatedFarmer })
 }
 
-export {
-  getFarmer,
-  getProductsOfFarmer,
-  getOrdersOfFarmer,
-  updateFarmer,
-  addCommentsToFarmer,
-}
+export { getFarmer, getProductsOfFarmer, updateFarmer, addCommentsToFarmer }
