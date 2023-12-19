@@ -1,6 +1,8 @@
 import express from 'express'
 const router = express.Router()
-import authenticationMiddleware from '../middleware/authentication'
+import authenticateMiddleware from '../middleware/authentication'
+import authorizeConsumer from '../middleware/authorizationConsumer'
+import authorizeFarmer from '../middleware/authorizationFarmer'
 import {
   getFarmer,
   getProductsOfFarmer,
@@ -11,8 +13,8 @@ import {
 router.route('/:farmerID/products').get(getProductsOfFarmer)
 router
   .route('/:farmerID/comments')
-  .patch(authenticationMiddleware, addCommentsToFarmer)
+  .patch(authenticateMiddleware, authorizeConsumer, addCommentsToFarmer)
 router.route('/:farmerID').get(getFarmer)
-router.route('/').patch(authenticationMiddleware, updateFarmer)
+router.route('/').patch(authenticateMiddleware, authorizeFarmer, updateFarmer)
 
 export default router

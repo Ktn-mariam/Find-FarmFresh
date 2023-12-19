@@ -29,11 +29,8 @@ export type RemovedCommentType =
   | undefined
 
 const createProduct = async (req: Request, res: Response) => {
-  const { userID, role, name } = req.user
+  const { userID, name } = req.user
 
-  if (role !== Role.Farmer) {
-    throw new UnAuthorizedError('You cannot create products as a consumer')
-  }
   const product = await Product.create({
     ...req.body,
     farmerID: userID,

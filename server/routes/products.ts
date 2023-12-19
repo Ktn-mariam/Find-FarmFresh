@@ -8,22 +8,19 @@ import {
   getProductDetail,
   deleteProduct,
   updateProduct,
-  // getFollowedFarmerProducts,
 } from '../controllers/products'
-import authenticationMiddleware from '../middleware/authentication'
+import authenticateMiddleware from '../middleware/authentication'
+import authorizeFarmer from '../middleware/authorizationFarmer'
 
 router
   .route('/')
   .get(getAllProducts)
-  .post(authenticationMiddleware, createProduct)
+  .post(authenticateMiddleware, authorizeFarmer, createProduct)
 router
   .route('/:productID')
   .get(getProductDetail)
-  .delete(authenticationMiddleware, deleteProduct)
-  .patch(authenticationMiddleware, updateProduct)
+  .delete(authenticateMiddleware, authorizeFarmer, deleteProduct)
+  .patch(authenticateMiddleware, updateProduct)
 router.route('/category/:parentCategory').get(getProductsOfCategory)
-// router
-//   .route('/followingProducts')
-//   .get(authenticationMiddleware, getFollowedFarmerProducts)
 
 export default router

@@ -4,9 +4,7 @@ import Product from '../models/product'
 import NotFoundError from '../errors/not-found'
 import { RemovedCommentType } from './products'
 import Comment from '../models/comment'
-import { Role } from '../middleware/authentication'
 import { StatusCodes } from 'http-status-codes'
-import UnAuthorizedError from '../errors/unauthorized'
 
 const getFarmer = async (req: Request, res: Response) => {
   const { farmerID } = req.params
@@ -93,19 +91,17 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
       }
     : undefined
 
-  console.log(newComment)
-
   let updatedFarmer
-  if (newComment && role === Role.Consumer) {
+  if (newComment) {
     updatedFarmer = await Farmer.findOneAndUpdate(
       { _id: farmerID },
       {
         $push: { comments: newComment },
       },
       { new: true, runValidators: true },
+    ).select(
+      '_id locationCoordinates name location farmerRating image email comments mobileNo ',
     )
-
-    console.log(updatedFarmer)
 
     if (!updatedFarmer)
       return res
@@ -123,6 +119,8 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
           },
         },
         { new: true, runValidators: true },
+      ).select(
+        '_id locationCoordinates name location farmerRating image email comments mobileNo ',
       )
 
       const comment = await Comment.create({
@@ -137,8 +135,6 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
 
       return res.status(StatusCodes.CREATED).json({ comment })
     }
-  } else if (newComment && role !== Role.Consumer) {
-    throw new UnAuthorizedError('You cannot add comments as a Farmer')
   }
 
   if (!updateFarmer) {

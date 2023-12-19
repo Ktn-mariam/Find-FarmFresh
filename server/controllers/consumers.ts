@@ -1,19 +1,18 @@
 import { Request, Response } from 'express'
 import Consumer from '../models/consumer'
-import Order from '../models/order'
 import { StatusCodes } from 'http-status-codes'
 import NotFoundError from '../errors/not-found'
-import { Role } from '../middleware/authentication'
-import UnAuthorizedError from '../errors/unauthorized'
+
+const getMyDetails = async (req: Request, res: Response) => {
+  const { userID } = req.user
+  const consumer = await Consumer.find({ _id: userID }).select(
+    'locationCoordinates name mobileNo location image following cart',
+  )
+  res.status(StatusCodes.OK).json({ consumer })
+}
 
 const getConsumer = async (req: Request, res: Response) => {
   const { consumerID } = req.params
-  const { role } = req.user
-  if (role === Role.Consumer) {
-    throw new UnAuthorizedError(
-      'You cannot access information of other consumers',
-    )
-  }
 
   const consumer = await Consumer.find({ _id: consumerID }).select(
     'locationCoordinates name mobileNo location',
@@ -58,7 +57,7 @@ const followFarmer = async (req: Request, res: Response) => {
     { _id: userID },
     { $addToSet: { following: farmer } },
     { new: true, runValidators: true },
-  )
+  ).select('locationCoordinates name mobileNo location following cart')
 
   if (!updateConsumer) {
     throw new NotFoundError('Consumer not found')
@@ -74,7 +73,7 @@ const unFollowFarmer = async (req: Request, res: Response) => {
     { _id: userID },
     { $pull: { following: req.body.farmer } },
     { new: true, runValidators: true },
-  )
+  ).select('locationCoordinates name mobileNo location following cart')
 
   if (!updateConsumer) {
     throw new NotFoundError('Consumer not found')
@@ -83,4 +82,10 @@ const unFollowFarmer = async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ consumer: updatedConsumer })
 }
 
-export { getConsumer, updateConsumer, followFarmer, unFollowFarmer }
+export {
+  getMyDetails,
+  getConsumer,
+  updateConsumer,
+  followFarmer,
+  unFollowFarmer,
+}

@@ -17,11 +17,7 @@ const getOrders = async (req: Request, res: Response) => {
 }
 
 const addOrder = async (req: Request, res: Response) => {
-  const { userID, role } = req.user
-
-  if (role === Role.Farmer) {
-    throw new UnAuthorizedError('You cannot add Orders as a farmer')
-  }
+  const { userID } = req.user
 
   const order = await Order.create({ ...req.body, consumerID: userID })
   res.status(StatusCodes.CREATED).json({ order })

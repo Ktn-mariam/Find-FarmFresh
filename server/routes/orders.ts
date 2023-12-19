@@ -7,15 +7,17 @@ import {
   updateOrder,
   deleteOrder,
 } from '../controllers/orders'
-import authenticationMiddleware from '../middleware/authentication'
+import authenticateMiddleware from '../middleware/authentication'
+import authorizeConsumer from '../middleware/authorizationConsumer'
+import authorizeFarmer from '../middleware/authorizationFarmer'
 
 router
   .route('/')
-  .get(authenticationMiddleware, getOrders)
-  .post(authenticationMiddleware, addOrder)
+  .get(authenticateMiddleware, getOrders)
+  .post(authenticateMiddleware, authorizeConsumer, addOrder)
 router
   .route('/:orderID')
-  .patch(authenticationMiddleware, updateOrder)
-  .delete(authenticationMiddleware, deleteOrder)
+  .patch(authenticateMiddleware, updateOrder)
+  .delete(authenticateMiddleware, authorizeFarmer, deleteOrder)
 
 export default router
