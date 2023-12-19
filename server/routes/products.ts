@@ -8,6 +8,7 @@ import {
   getProductDetail,
   deleteProduct,
   updateProduct,
+  // getFollowedFarmerProducts,
 } from '../controllers/products'
 import authenticationMiddleware from '../middleware/authentication'
 
@@ -21,5 +22,8 @@ router
   .delete(authenticationMiddleware, deleteProduct)
   .patch(authenticationMiddleware, updateProduct)
 router.route('/category/:parentCategory').get(getProductsOfCategory)
+// router
+//   .route('/followingProducts')
+//   .get(authenticationMiddleware, getFollowedFarmerProducts)
 
 export default router

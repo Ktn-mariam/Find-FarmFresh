@@ -80,20 +80,13 @@ const ProductSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
-    // farmer: {
-    //   farmerID: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Farmer',
-    //     required: true,
-    //   },
-    //   name: {
-    //     type: String,
-    //     required: true,
-    //   },
-    // },
     farmerID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Farmer',
+      required: true,
+    },
+    farmerName: {
+      type: String,
       required: true,
     },
     productRating: {

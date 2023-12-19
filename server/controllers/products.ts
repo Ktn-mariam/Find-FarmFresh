@@ -29,12 +29,16 @@ export type RemovedCommentType =
   | undefined
 
 const createProduct = async (req: Request, res: Response) => {
-  if (req.user.role !== Role.Farmer) {
-    throw new UnAuthorizedError('You are not authorized to create products')
-  }
+  const { userID, role, name } = req.user
 
-  const { userID } = req.user
-  const product = await Product.create({ ...req.body, farmerID: userID })
+  if (role !== Role.Farmer) {
+    throw new UnAuthorizedError('You cannot create products as a consumer')
+  }
+  const product = await Product.create({
+    ...req.body,
+    farmerID: userID,
+    farmerName: name,
+  })
   res.status(StatusCodes.CREATED).json({ product })
 }
 
@@ -65,10 +69,8 @@ const getProductsOfCategory = async (req: Request, res: Response) => {
     queryObject['productRating.rating'] = { $gte: parseFloat(rating as string) }
   }
 
-  console.log(queryObject)
-
   let result = Product.find(queryObject).select(
-    '_id title price farmerID images parentCategory category productRating',
+    '_id title price farmerID farmerName images parentCategory category productRating',
   )
 
   if (sort) {
@@ -186,7 +188,6 @@ const updateProduct = async (req: Request, res: Response) => {
         title: leastRecentComment?.title,
         createdAt: leastRecentComment?.createdAt,
         username: leastRecentComment?.username,
-        _id: leastRecentComment?._id,
         productID,
       })
 
