@@ -56,6 +56,7 @@ const ConsumerSchema = new Schema({
   name: {
     type: String,
     required: true,
+    immutable: true,
   },
   email: {
     type: String,
@@ -65,6 +66,7 @@ const ConsumerSchema = new Schema({
       'Please provide valid email',
     ],
     unique: true,
+    immutable: true,
   },
   password: {
     type: String,
@@ -106,15 +108,20 @@ const ConsumerSchema = new Schema({
   },
   following: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'Farmer',
+      farmerID: { type: Schema.Types.ObjectId, ref: 'Farmer' },
+      name: { type: String },
     },
   ],
   cart: [
     {
-      farmerID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Farmer',
+      farmer: {
+        farmerID: {
+          type: Schema.Types.ObjectId,
+          ref: 'Farmer',
+        },
+        name: {
+          type: String,
+        },
       },
       totalPrice: {
         type: Number,

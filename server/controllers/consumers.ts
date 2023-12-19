@@ -1,37 +1,86 @@
 import { Request, Response } from 'express'
-const Consumer = require('../models/consumer')
-const Order = require('../models/order')
-
-const addConsumer = async (req: Request, res: Response) => {
-  const consumer = await Consumer.create(req.body)
-  res.status(201).json({ consumer })
-}
+import Consumer from '../models/consumer'
+import Order from '../models/order'
+import { StatusCodes } from 'http-status-codes'
+import NotFoundError from '../errors/not-found'
+import { Role } from '../middleware/authentication'
+import UnAuthorizedError from '../errors/unauthorized'
 
 const getConsumer = async (req: Request, res: Response) => {
-  const { consumer_ID } = req.params
-  const consumer = await Consumer.find({ _id: consumer_ID })
-  res.status(200).json({ consumer })
+  const { consumerID } = req.params
+  const { role } = req.user
+  if (role === Role.Consumer) {
+    throw new UnAuthorizedError(
+      'You cannot access information of other consumers',
+    )
+  }
+
+  const consumer = await Consumer.find({ _id: consumerID }).select(
+    'locationCoordinates name mobileNo location',
+  )
+  res.status(StatusCodes.OK).json({ consumer })
 }
 
 const updateConsumer = async (req: Request, res: Response) => {
-  const { consumer_ID } = req.params
-  const task = await Consumer.findOneAndUpdate({ _id: consumer_ID }, req.body, {
+  const { userID } = req.user
+
+  let updateFields: any = {}
+
+  if (req.body.image) updateFields.image = req.body.image
+  if (req.body.location) updateFields.location = req.body.location
+  if (req.body.mobileNo) updateFields.mobileNo = req.body.mobileNo
+  if (req.body.locationCoordinates) {
+    updateFields.locationCoordinates = {
+      latitude: {
+        coordinate: req.body.locationCoordinates.latitude.coordinate,
+        direction: req.body.locationCoordinates.latitude.direction,
+      },
+      longitude: {
+        coordinate: req.body.locationCoordinates.longitude.coordinate,
+        direction: req.body.locationCoordinates.longitude.direction,
+      },
+    }
+  }
+  const consumer = await Consumer.findOneAndUpdate({ _id: userID }, req.body, {
     new: true,
     runValidators: true,
-  })
-  res.status(200).json({ task })
+  }).select(
+    'name image location mobileNo locationCoordinates following cart _id',
+  )
+  res.status(StatusCodes.OK).json({ consumer })
 }
 
-const getOrdersOfConsumer = async (req: Request, res: Response) => {
-  const { consumerID } = req.params
-  const orders = await Order.find({ consumer_ID: consumerID })
+const followFarmer = async (req: Request, res: Response) => {
+  const { userID } = req.user
+  const { farmer } = req.body
 
-  res.status(200).json({ orders })
+  const updatedConsumer = await Consumer.findByIdAndUpdate(
+    { _id: userID },
+    { $addToSet: { following: farmer } },
+    { new: true, runValidators: true },
+  )
+
+  if (!updateConsumer) {
+    throw new NotFoundError('Consumer not found')
+  }
+
+  res.status(StatusCodes.OK).json({ consumer: updatedConsumer })
 }
 
-module.exports = {
-  addConsumer,
-  getConsumer,
-  updateConsumer,
-  getOrdersOfConsumer,
+const unFollowFarmer = async (req: Request, res: Response) => {
+  const { userID } = req.user
+
+  const updatedConsumer = await Consumer.findByIdAndUpdate(
+    { _id: userID },
+    { $pull: { following: req.body.farmer } },
+    { new: true, runValidators: true },
+  )
+
+  if (!updateConsumer) {
+    throw new NotFoundError('Consumer not found')
+  }
+
+  res.status(StatusCodes.OK).json({ consumer: updatedConsumer })
 }
+
+export { getConsumer, updateConsumer, followFarmer, unFollowFarmer }
