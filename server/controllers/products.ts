@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { UnauthenticatedError } from '../errors'
 import Product from '../models/product'
 import Comment from '../models/comment'
 import { Role } from '../middleware/authentication'
@@ -163,7 +162,9 @@ const updateProduct = async (req: Request, res: Response) => {
     )
 
     if (!updatedProduct)
-      return res.status(404).json({ error: 'Product not found' })
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Product not found' })
 
     if (updatedProduct.comments.length > 6) {
       const leastRecentComment: RemovedCommentType = updatedProduct
@@ -195,7 +196,9 @@ const updateProduct = async (req: Request, res: Response) => {
   }
 
   if (!updatedProduct) {
-    return res.status(404).json({ error: 'Product not found' })
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ error: 'Product not found' })
   }
 
   res.json({ product: updatedProduct })

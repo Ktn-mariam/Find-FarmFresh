@@ -52,7 +52,7 @@ const login = async (req: Request, res: Response) => {
     ? farmer.getFarmerDetails()
     : consumer?.getConsumerDetails()
 
-  return res.status(StatusCodes.CREATED).json({
+  return res.status(StatusCodes.OK).json({
     UserDetail: details,
     token,
     role: farmer ? 'Farmer' : 'Consumer',

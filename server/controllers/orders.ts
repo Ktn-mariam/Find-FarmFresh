@@ -77,7 +77,7 @@ const deleteOrder = async (req: Request, res: Response) => {
   if (!order) {
     throw new NotFoundError('Order not found')
   }
-  res.status(StatusCodes.OK).json({ order })
+  res.status(StatusCodes.GONE).json({ order })
 }
 
 export { getOrders, addOrder, updateOrder, deleteOrder }

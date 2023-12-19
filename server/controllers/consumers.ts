@@ -79,7 +79,7 @@ const unFollowFarmer = async (req: Request, res: Response) => {
     throw new NotFoundError('Consumer not found')
   }
 
-  res.status(StatusCodes.OK).json({ consumer: updatedConsumer })
+  res.status(StatusCodes.GONE).json({ consumer: updatedConsumer })
 }
 
 export {
