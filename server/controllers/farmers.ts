@@ -24,7 +24,6 @@ const updateFarmer = async (req: Request, res: Response) => {
   const { userID } = req.user
 
   const updateFields = {
-    ...(req.body.name && { name: req.body.name }),
     ...(req.body.mobileNo && { mobileNo: req.body.mobileNo }),
     ...(req.body.image && { image: req.body.image }),
     ...(req.body.description && { description: req.body.description }),

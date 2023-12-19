@@ -67,6 +67,7 @@ const FarmerSchema = new Schema({
   name: {
     type: String,
     required: true,
+    immutable: true,
   },
   email: {
     type: String,
@@ -76,6 +77,7 @@ const FarmerSchema = new Schema({
       'Please provide valid email',
     ],
     unique: true,
+    immutable: true,
   },
   password: {
     type: String,
