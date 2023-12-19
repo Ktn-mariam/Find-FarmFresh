@@ -1,5 +1,7 @@
-const orderSchema = new mongoose.Schema({
-  farmer_ID: {
+import mongoose from 'mongoose'
+
+const OrderSchema = new mongoose.Schema({
+  farmerID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Farmer',
     required: true,
@@ -8,7 +10,7 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  consumer_ID: {
+  consumerID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Consumer',
     required: true,
@@ -23,6 +25,10 @@ const orderSchema = new mongoose.Schema({
   },
   products: [
     {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+      },
       productID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
@@ -37,13 +43,17 @@ const orderSchema = new mongoose.Schema({
   deliveryStatus: {
     type: String,
     enum: ['Waiting', 'Transported', 'Cancelled', 'Delivered'],
-    required: true,
+    default: 'Waiting',
   },
   paymentStatus: {
     type: String,
     enum: ['Paid', 'UnPaid'],
-    required: true,
+    default: 'UnPaid',
+  },
+  notifyConsumer: {
+    type: Boolean,
+    default: false,
   },
 })
 
-module.exports = mongoose.model('Order', orderSchema)
+export default mongoose.model('Order', OrderSchema)
