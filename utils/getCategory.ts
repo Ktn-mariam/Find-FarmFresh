@@ -7,7 +7,7 @@ const getCategory = (parentCategory: string) => {
     case 'vegetables':
       result = 'Vegetables'
       break
-    case 'coffe&tea':
+    case 'coffee&tea':
       result = 'Coffee & Tea'
       break
     case 'diary&eggs':
@@ -22,7 +22,7 @@ const getCategory = (parentCategory: string) => {
     case 'flowers':
       result = 'Flowers'
       break
-    case 'driedfruits':
+    case 'driedFruits':
       result = 'Dried Fruits & Nuts'
       break
     default:
