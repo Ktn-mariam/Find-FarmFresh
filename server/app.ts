@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import 'express-async-errors'
 import express from 'express'
+import cors from 'cors'
 
 import connectDB from './db/connect'
 
@@ -17,6 +18,7 @@ import notFoundMiddleware from './middleware/not-found'
 const app = express()
 
 // middleware
+app.use(cors())
 app.use(express.json())
 
 // routes
