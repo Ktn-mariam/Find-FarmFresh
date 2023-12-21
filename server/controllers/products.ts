@@ -5,7 +5,7 @@ import { Role } from '../middleware/authentication'
 import UnAuthorizedError from '../errors/unauthorized'
 import { StatusCodes } from 'http-status-codes'
 import NotFoundError from '../errors/not-found'
-import getCategory from '../utils/getCategory'
+import getCategory from '../../utils/getCategory'
 import { Types } from 'mongoose'
 
 interface QueryObjectType {
@@ -41,6 +41,13 @@ const createProduct = async (req: Request, res: Response) => {
 const getAllProducts = async (req: Request, res: Response) => {
   const products = await Product.find({})
   res.status(StatusCodes.OK).json({ products, nbHits: products.length })
+}
+
+const getTopRatedProducts = async (req: Request, res: Response) => {
+  const queryObject = { 'productRating.rating': { $gte: 4.5 } }
+  const topRatedProducts = await Product.find(queryObject)
+
+  res.status(StatusCodes.OK).json({ products: topRatedProducts })
 }
 
 const getProductsOfCategory = async (req: Request, res: Response) => {
@@ -225,6 +232,7 @@ export {
   createProduct,
   getAllProducts,
   getProductsOfCategory,
+  getTopRatedProducts,
   getProductDetail,
   deleteProduct,
   updateProduct,
