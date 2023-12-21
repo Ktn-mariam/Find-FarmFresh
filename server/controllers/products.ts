@@ -5,7 +5,7 @@ import { Role } from '../middleware/authentication'
 import UnAuthorizedError from '../errors/unauthorized'
 import { StatusCodes } from 'http-status-codes'
 import NotFoundError from '../errors/not-found'
-import getCategory from '../../utils/getCategory'
+import getCategory from '../utils/getCategory'
 import { Types } from 'mongoose'
 
 interface QueryObjectType {

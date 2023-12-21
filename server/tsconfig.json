@@ -11,6 +11,6 @@
     "forceConsistentCasingInFileNames": true
   },
   "lib": ["es2015"],
-  "include": ["**/*.ts", "../utils/getCategory.ts"],
+  "include": ["**/*.ts", "utils/getCategory.ts"],
   "exclude": ["node_modules"]
 }
