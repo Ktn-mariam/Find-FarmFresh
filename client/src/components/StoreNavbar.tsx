@@ -23,7 +23,7 @@ function StoreNavbar() {
             <li>Vegetables</li>
           </NavLink>
           <NavLink
-            to="/store/coffe-&-tea"
+            to="/store/coffee&tea"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -31,7 +31,7 @@ function StoreNavbar() {
             <li>Coffee & Tea</li>
           </NavLink>
           <NavLink
-            to="/store/diary-&-eggs"
+            to="/store/diary&eggs"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -47,7 +47,7 @@ function StoreNavbar() {
             <li>Meat</li>
           </NavLink>
           <NavLink
-            to="/store/honey-&-bee-products"
+            to="/store/honey"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -63,7 +63,7 @@ function StoreNavbar() {
             <li>Flowers</li>
           </NavLink>
           <NavLink
-            to="/store/dried-fruits-&-nuts"
+            to="/store/driedFruits"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }

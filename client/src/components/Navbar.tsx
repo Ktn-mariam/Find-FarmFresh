@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import ListAltIcon from '@mui/icons-material/ListAlt'
+import AuthenticationContext from '../context/authentication'
+import { Role } from '../types/Auth'
 
 function Navbar() {
-  const isFarmer = false
+  const { role } = useContext(AuthenticationContext)
   return (
     <nav className="flex justify-between items-center font-noto px-36 py-3 shadow-sm">
       <div>
@@ -20,9 +22,27 @@ function Navbar() {
       </div>
       <div className="flex gap-9 items-center">
         <ul className="flex gap-4">
-          <li>APIs</li>
-          <li>GitHub</li>
-          <li>LinkedIn</li>
+          <li>
+            <a href="/">APIs</a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/Ktn-mariam/FarmFresh-Finder"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.linkedin.com/in/mariamkhatoon/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn
+            </a>
+          </li>
         </ul>
         <ul className="flex gap-4 items-center">
           <li>
@@ -30,14 +50,14 @@ function Navbar() {
               <ShoppingBagIcon />
             </NavLink>
           </li>
-          {!isFarmer && (
+          {role === Role.Consumer && (
             <li className="pr-2">
               <NavLink to="/shopping-cart">
                 <ShoppingCartIcon />
               </NavLink>
             </li>
           )}
-          {isFarmer && (
+          {role === Role.Farmer && (
             <li className="pr-2">
               <NavLink to="/orders">
                 <ListAltIcon />
