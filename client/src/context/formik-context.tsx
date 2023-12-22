@@ -1,5 +1,26 @@
-import { createContext } from 'react'
+import { createContext, useState } from 'react'
 import { useFormik, FormikTouched, FormikErrors } from 'formik'
+import { Role } from '../types/Auth'
+
+interface SignUpDetailsType {
+  name: string
+  image: string
+  email: string
+  password: string
+  description?: string
+  mobileNo: string
+  location: string
+  locationCoordinates: {
+    latitude: {
+      coordinate: number
+      direction: 'N' | 'S'
+    }
+    longitude: {
+      coordinate: number
+      direction: 'E' | 'W'
+    }
+  }
+}
 
 export interface FormikContextType {
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
@@ -18,11 +39,13 @@ export interface FormikContextType {
   values: ProfileInformationType
   touched: FormikTouched<ProfileInformationType> | null
   errors: FormikErrors<ProfileInformationType> | null
+  submitted: boolean
+  setSignUpInfo: React.Dispatch<React.SetStateAction<SignUpInformation | null>>
 }
 
 interface Props {
   children: string | JSX.Element | JSX.Element[]
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+  setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface ProfileInformationType {
@@ -52,6 +75,8 @@ const FormikContext = createContext<FormikContextType>({
   },
   touched: null,
   errors: null,
+  submitted: false,
+  setSignUpInfo: () => {},
 })
 
 interface FormikErrorType {
@@ -63,17 +88,26 @@ interface FormikErrorType {
   longitudeCoordinate?: string
 }
 
+interface SignUpInformation {
+  email: string
+  password: string
+  role: 'Farmer' | 'Consumer'
+}
+
 export const FormikContextProvider = ({ children, setOpenModal }: Props) => {
   const isFarmer = false
+  const [submitted, setSubmitted] = useState(false)
+  const [isFarmerChecked, setIsFarmerChecked] = useState(true)
+  const [isConsumerChecked, setIsConsumerChecked] = useState(false)
+  const [signUpInfo, setSignUpInfo] = useState<SignUpInformation | null>(null)
+
   const validate = (values: ProfileInformationType) => {
     const errors: FormikErrorType = {}
-
-    console.log(values)
 
     if (!values.name) {
       errors.name = 'Required field'
     }
-    if (isFarmer && !values.description) {
+    if (signUpInfo?.role === Role.Farmer && !values.description) {
       errors.description = 'Required field'
     } else if (
       isFarmer &&
@@ -130,6 +164,32 @@ export const FormikContextProvider = ({ children, setOpenModal }: Props) => {
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
       await alert(JSON.stringify(values, null, 2))
+      const signUpDetails: SignUpDetailsType = {
+        email: signUpInfo?.email || 'random email',
+        password: signUpInfo?.password || 'random password',
+        image: 'image.png',
+        name: values.name,
+        mobileNo: values.mobileNo,
+        location: values.location,
+        locationCoordinates: {
+          latitude: {
+            coordinate: values.latitudeCoordinate || 0,
+            direction: values.latitudeDirection,
+          },
+          longitude: {
+            coordinate: values.longitudeCoordinate || 0,
+            direction: values.longitudeDirection,
+          },
+        },
+      }
+
+      if (signUpInfo?.role === Role.Farmer) {
+        signUpDetails.description = values.description
+      }
+
+      if (!setOpenModal) {
+        signUpUser(signUpDetails)
+      }
       setValues({
         image: '',
         name: '',
@@ -143,10 +203,45 @@ export const FormikContextProvider = ({ children, setOpenModal }: Props) => {
       } as ProfileInformationType)
 
       setTouched({})
+      console.log('IN ON SUBMIT')
+      setSubmitted(true)
       setErrors({})
-      setOpenModal(false)
+      if (setOpenModal) setOpenModal(false)
     },
   })
+
+  const signUpUser = async (
+    signUpDetails: SignUpDetailsType,
+  ): Promise<void> => {
+    let url
+    if (signUpInfo?.role === Role.Farmer) {
+      url = 'http://localhost:5000/api/v1/auth/register/farmer'
+    } else {
+      url = 'http://localhost:5000/api/v1/auth/register/consumer'
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any additional headers if needed
+        },
+        body: JSON.stringify(signUpDetails),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      localStorage.setItem('token', JSON.stringify(result.token))
+    } catch (error) {
+      console.error('Error during sign-up:', error)
+      // Handle the error appropriately, such as displaying a user-friendly message
+      throw error
+    }
+  }
 
   const contextValue = {
     handleSubmit: formik.handleSubmit,
@@ -155,6 +250,8 @@ export const FormikContextProvider = ({ children, setOpenModal }: Props) => {
     touched: formik.touched,
     values: formik.values,
     errors: formik.errors,
+    submitted,
+    setSignUpInfo,
   }
 
   return (

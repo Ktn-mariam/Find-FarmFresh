@@ -1,19 +1,21 @@
 import React, { useState, useContext } from 'react'
 import FormikContext from '../context/formik-context'
+import { Role } from '../types/Auth'
 
 interface AddProfileInformationProps {
   edit: boolean
+  role: 'Farmer' | 'Consumer'
 }
 
 const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
   edit,
+  role,
 }) => {
   const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
   const [uploadedImage, setUploadedImage] = useState(null)
   const { handleBlur, handleChange, values, errors, touched } = useContext(
     FormikContext,
   )
-  const isFarmer = false
 
   const handleUploadImage = () => {
     const data = new FormData()
@@ -67,7 +69,7 @@ const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
           {touched?.name && errors?.name ? (
             <div className="text-sm text-red-900">{errors?.name}</div>
           ) : null}
-          {isFarmer && (
+          {role === Role.Farmer && (
             <div className="mt-5">
               <label htmlFor="">Short About/ Description</label>
               <textarea

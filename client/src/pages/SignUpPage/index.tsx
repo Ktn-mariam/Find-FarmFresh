@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { useFormik } from 'formik'
 import AddProfileInformation from '../../components/AddProfileInformation'
 import Stepper from '@mui/material/Stepper'
@@ -7,20 +7,18 @@ import StepLabel from '@mui/material/StepLabel'
 import AuthForm from '../../components/AuthForm'
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
 import AgricultureIcon from '@mui/icons-material/Agriculture'
+import FormikContext from '../../context/formik-context'
+import { useNavigate } from 'react-router-dom'
 
 const steps = ['Create your account', 'Add required Information']
 
 interface SignUpInformation {
-  firstName: string
-  lastName: string
   email: string
   password: string
   retypedPassword: string
 }
 
 interface FormErrorType {
-  firstName?: string
-  lastName?: string
   email?: string
   password?: string
   retypedPassword?: string
@@ -30,19 +28,32 @@ const SignUpPage = () => {
   const [activeStep, setActiveStep] = useState(0)
   const [isFarmerChecked, setIsFarmerChecked] = useState(true)
   const [isConsumerChecked, setIsConsumerChecked] = useState(false)
+  const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
+  const [uploadedImage, setUploadedImage] = useState(null)
+  const navigate = useNavigate()
+  const { submitted, setSignUpInfo, handleSubmit } = useContext(FormikContext)
+  console.log(`submitted: ${submitted}`)
+
+  useEffect(() => {
+    if (submitted) {
+      navigate('/my-profile')
+    }
+  }, [submitted, navigate])
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
   }
 
+  const handleAddProfileSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault()
+    handleUploadImage()
+    handleSubmit()
+  }
+
   const validate = (values: SignUpInformation) => {
     const errors: FormErrorType = {}
-    if (!values.firstName) {
-      errors.firstName = 'Required field'
-    }
-
-    if (!values.lastName) {
-      errors.lastName = 'Required field'
-    }
 
     if (!values.email) {
       errors.email = 'Required field'
@@ -54,6 +65,10 @@ const SignUpPage = () => {
 
     if (!values.password) {
       errors.password = 'Required field'
+    } else if (values.password.length < 6) {
+      errors.password = 'Password length should be atleast 6 characters'
+    } else if (values.password.length > 12) {
+      errors.password = 'Password length should not be more than 12 characters'
     }
 
     if (!values.retypedPassword) {
@@ -68,8 +83,6 @@ const SignUpPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
       email: '',
       password: '',
       retypedPassword: '',
@@ -77,9 +90,14 @@ const SignUpPage = () => {
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
       await alert(JSON.stringify(values, null, 2))
+      console.log(values)
+
+      setSignUpInfo({
+        email: values.email,
+        password: values.password,
+        role: isFarmerChecked ? 'Farmer' : 'Consumer',
+      })
       setValues({
-        firstName: '',
-        lastName: '',
         email: '',
         password: '',
         retypedPassword: '',
@@ -101,6 +119,18 @@ const SignUpPage = () => {
 
   const handleReset = () => {
     setActiveStep(0)
+  }
+
+  const handleUploadImage = () => {
+    const data = new FormData()
+    data.append('file', previewImage)
+
+    // fetch(__filename, { method: 'POST', body: data })
+    //   .then(async (response) => {
+    //     const imageResponse = await response.json()
+    //     setUploadedImage(imageResponse)
+    //   })
+    //   .catch((err) => {})
   }
   return (
     <div className="md:px-36 px-14 pt-5 pb-8 font-noto flex justify-center flex-col gap-5">
@@ -157,12 +187,20 @@ const SignUpPage = () => {
         {activeStep === 1 && (
           <div className="p-10 border border-1 border-zinc-300 rounded-2xl mb-10">
             <div className="font-noto w-110 bg-white rounded-md">
-              <AddProfileInformation edit={false} />
-              <div className="mt-5 flex justify-end mr-6">
-                <button className="bg-black w-68 text-white rounded-md px-3 py-2 hover:shadow-lg">
-                  Complete Profile
-                </button>
-              </div>
+              <form onSubmit={handleAddProfileSubmit}>
+                <AddProfileInformation
+                  role={isFarmerChecked ? 'Farmer' : 'Consumer'}
+                  edit={false}
+                />
+                <div className="mt-5 flex justify-end mr-6">
+                  <button
+                    type="submit"
+                    className="bg-black w-68 text-white rounded-md px-3 py-2 hover:shadow-lg"
+                  >
+                    Complete Profile
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}

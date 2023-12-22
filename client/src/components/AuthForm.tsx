@@ -9,8 +9,6 @@ interface AuthFormProps {
 }
 
 interface SignUpInformation {
-  firstName: string
-  lastName: string
   email: string
   password: string
   retypedPassword: string
@@ -71,44 +69,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
         {isLogIn ? 'Log In' : 'Sign Up'}
       </h1>
       <form className="mt-3" onSubmit={formik.handleSubmit}>
-        {!isLogIn && (
-          <div className="mt-4 flex gap-4">
-            <div className="">
-              <label htmlFor="">First Name</label>
-              <input
-                title="firstName"
-                name="firstName"
-                className="mt-1 bg-gray-200 text-sm border-2 border-gray-200 rounded-md w-full py-2 px-3 focus:outline-none focus:bg-white focus:border-gray-400"
-                type="text"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.firstName}
-              />
-              {formik.touched.firstName && formik.errors.firstName ? (
-                <div className="text-sm text-red-900">
-                  {formik.errors.firstName}
-                </div>
-              ) : null}
-            </div>
-            <div className="">
-              <label htmlFor="">Last Name</label>
-              <input
-                title="lastName"
-                name="lastName"
-                className="mt-1 bg-gray-200 text-sm border-2 border-gray-200 rounded-md w-full py-2 px-3 focus:outline-none focus:bg-white focus:border-gray-400"
-                type="text"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.lastName}
-              />
-              {formik.touched.lastName && formik.errors.lastName ? (
-                <div className="text-sm text-red-900">
-                  {formik.errors.lastName}
-                </div>
-              ) : null}
-            </div>
-          </div>
-        )}
         <div className="mt-4">
           <label htmlFor="">Email</label>
           <input
