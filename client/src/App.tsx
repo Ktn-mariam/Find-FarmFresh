@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Navbar from './components/Navbar'
 import HomePage from './pages/HomePage'
 import Footer from './components/Footer'
@@ -13,6 +13,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
 import SignInPage from './pages/SignInPage'
 import SignUpPage from './pages/SignUpPage'
+import AuthenticationContext from './context/authentication'
+import { FormikContextProvider } from './context/formik-context'
+import { Role } from './types/Auth'
 
 enum Status {
   Waiting = 'Waiting',
@@ -20,45 +23,54 @@ enum Status {
   Delivered = 'Delivered',
 }
 
-const editable = false
-
 function App() {
+  const { role } = useContext(AuthenticationContext)
   return (
-    <Router>
-      <Navbar />
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/store" element={<StorePage />} />
-        <Route path="/store/:category" element={<ProductCategoryPage />} />
-        <Route
-          path="/my-profile"
-          element={
-            editable ? (
-              <FarmerProfile editable={true} />
-            ) : (
-              <ConsumerProfile status={Status.Delivered} />
-            )
-          }
-        />
-        <Route
-          path="/farmer-profile"
-          element={<FarmerProfile editable={false} />}
-        />
-        <Route path="/store/fruits/apples/1" element={<ProductDetailPage />} />
-        {!editable && (
-          <Route path="/shopping-cart" element={<ShoppingCartPage />} />
-        )}
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/sign-up" element={<SignUpPage />} />
-        {editable && <Route path="/orders" element={<OrdersPage />} />}
-        <Route
-          path="/farmer-profile"
-          element={<FarmerProfile editable={false} />}
-        />
-      </Routes>
-      <Footer />
-    </Router>
+    <FormikContextProvider>
+      <Router>
+        <Navbar />
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/store" element={<StorePage />} />
+          <Route
+            path="/store/:parentCategory/:category"
+            element={<ProductCategoryPage />}
+          />
+          <Route
+            path="/store/:parentCategory"
+            element={<ProductCategoryPage />}
+          />
+          <Route
+            path="/my-profile"
+            element={
+              role === Role.Farmer ? (
+                <FarmerProfile editable={true} />
+              ) : (
+                <ConsumerProfile status={Status.Delivered} />
+              )
+            }
+          />
+          <Route
+            path="/farmer-profile/:farmerID"
+            element={<FarmerProfile editable={false} />}
+          />
+          <Route
+            path="/store/:parentCategory/:category/:productID"
+            element={<ProductDetailPage />}
+          />
+          {role === Role.Consumer && (
+            <Route path="/shopping-cart" element={<ShoppingCartPage />} />
+          )}
+          <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/sign-up" element={<SignUpPage />} />
+          {role === Role.Farmer && (
+            <Route path="/orders" element={<OrdersPage />} />
+          )}
+        </Routes>
+        <Footer />
+      </Router>
+    </FormikContextProvider>
   )
 }
 
