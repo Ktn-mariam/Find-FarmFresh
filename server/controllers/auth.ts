@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes'
 import { IFarmer } from '../models/farmer'
 import { IConsumer } from '../models/consumer'
 import { BadRequestError, UnauthenticatedError } from '../errors'
+import { Role } from '../middleware/authentication'
 
 const registerFarmer = async (req: Request, res: Response) => {
   const farmer = (await Farmer.create({ ...req.body })) as IFarmer
@@ -59,4 +60,26 @@ const login = async (req: Request, res: Response) => {
   })
 }
 
-export { registerFarmer, registerConsumer, login }
+const getUserProfileInformation = async (req: Request, res: Response) => {
+  const { userID, role, name } = req.user
+  let userDetail
+  if (role === Role.Farmer) {
+    userDetail = await Farmer.find({ _id: userID }).select(
+      'locationCoordinates farmerRating _id image name description mobileNo location comments',
+    )
+  } else {
+    userDetail = await Consumer.find({ _id: userID }).select(
+      'locationCoordinates name mobileNo location image following cart',
+    )
+  }
+
+  const user = {
+    userDetail,
+    userID,
+    role,
+  }
+
+  res.status(StatusCodes.OK).json({ user })
+}
+
+export { registerFarmer, registerConsumer, login, getUserProfileInformation }

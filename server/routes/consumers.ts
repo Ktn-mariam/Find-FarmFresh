@@ -4,7 +4,6 @@ import authMiddleware from '../middleware/authentication'
 import authorizeConsumer from '../middleware/authorizationConsumer'
 import authorizeFarmer from '../middleware/authorizationFarmer'
 import {
-  getMyDetails,
   getConsumer,
   updateConsumer,
   followFarmer,
@@ -12,10 +11,7 @@ import {
 } from '../controllers/consumers'
 
 router.route('/:consumerID').get(authMiddleware, authorizeFarmer, getConsumer)
-router
-  .route('/')
-  .patch(authMiddleware, authorizeConsumer, updateConsumer)
-  .get(authMiddleware, authorizeConsumer, getMyDetails)
+router.route('/').patch(authMiddleware, authorizeConsumer, updateConsumer)
 router
   .route('/followFarmer')
   .patch(authMiddleware, authorizeConsumer, followFarmer)

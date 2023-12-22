@@ -3,8 +3,8 @@ import { UnauthenticatedError } from '../errors'
 import { Request, Response, NextFunction } from 'express'
 
 export enum Role {
-  Farmer,
-  Consumer,
+  Farmer = 'Farmer',
+  Consumer = 'Consumer',
 }
 
 // Extend the Request interface to include a user property

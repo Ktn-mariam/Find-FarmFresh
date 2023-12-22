@@ -3,14 +3,6 @@ import Consumer from '../models/consumer'
 import { StatusCodes } from 'http-status-codes'
 import NotFoundError from '../errors/not-found'
 
-const getMyDetails = async (req: Request, res: Response) => {
-  const { userID } = req.user
-  const consumer = await Consumer.find({ _id: userID }).select(
-    'locationCoordinates name mobileNo location image following cart',
-  )
-  res.status(StatusCodes.OK).json({ consumer })
-}
-
 const getConsumer = async (req: Request, res: Response) => {
   const { consumerID } = req.params
 
@@ -82,10 +74,4 @@ const unFollowFarmer = async (req: Request, res: Response) => {
   res.status(StatusCodes.GONE).json({ consumer: updatedConsumer })
 }
 
-export {
-  getMyDetails,
-  getConsumer,
-  updateConsumer,
-  followFarmer,
-  unFollowFarmer,
-}
+export { getConsumer, updateConsumer, followFarmer, unFollowFarmer }
