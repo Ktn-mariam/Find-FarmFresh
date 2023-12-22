@@ -1,10 +1,19 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import Rating from '@mui/material/Rating'
+import { ProductType } from '../../types/Product'
+import getParentCategoryRoute from '../../utils/getParentCategoryRoute'
 
-function Product() {
+interface ProductPropType {
+  product: ProductType
+}
+
+const Product: React.FC<ProductPropType> = ({ product }) => {
+  const parentCategoryRoute = getParentCategoryRoute(product.parentCategory)
   return (
-    <NavLink to="/store/fruits/apples/1">
+    <NavLink
+      to={`/store/${parentCategoryRoute}/${product.category}/${product._id}`}
+    >
       <div className="w-48 md:w-72">
         <div className="px-2 py-4 flex flex-col items-center rounded-md font-workSans hover:cursor-pointer">
           {/* 4:5 ratio */}
@@ -17,25 +26,28 @@ function Product() {
           </div>
           <div>
             <h4 className="truncate w-40 md:w-64 text-md md:text-lg">
-              Apples, Silicon Oasiskm frkn kjjkey
+              {product.title}
             </h4>
-            <NavLink to="/farmer-profile">
+            <NavLink to={`/farmer-profile/${product.farmerID}`}>
               <h6 className="text-sm hover:underline">Mariam Khatoon</h6>
             </NavLink>
             <div className="flex">
               <p className="text-xs md:text-sm py-0.5 pr-1">AED</p>
               <p className="text-red-600">
-                <span className="font-bold text-md md:text-xl">35.50</span>/kg
+                <span className="font-bold text-md md:text-xl">
+                  {product.price}
+                </span>
+                /kg
               </p>
             </div>
             <div className="flex items-center">
               <Rating
-                defaultValue={3.5}
-                precision={0.5}
+                defaultValue={product.productRating.rating}
+                precision={0.1}
                 size="small"
                 readOnly
               />
-              <p className="text-sm pl-1">5</p>
+              <p className="text-sm pl-1">{product.productRating.rating}</p>
             </div>
           </div>
         </div>

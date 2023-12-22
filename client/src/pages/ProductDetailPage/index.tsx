@@ -310,9 +310,14 @@ function ProductDetailPage() {
                   <LocationOnIcon />
                   {farmer?.location}
                 </div>
-                <div className="mt-3">
-                  <LocationMap />
-                </div>
+                {farmer && (
+                  <div className="mt-3">
+                    <LocationMap
+                      locationCoordinates={farmer.locationCoordinates}
+                      location={farmer.location}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
