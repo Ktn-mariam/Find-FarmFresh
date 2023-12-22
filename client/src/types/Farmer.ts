@@ -27,5 +27,5 @@ export interface FarmerType {
   description: string
   mobileNo: string
   location: string
-  comments: Comment[]
+  comments: Comment[] | []
 }
