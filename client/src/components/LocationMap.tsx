@@ -1,12 +1,32 @@
 import React from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
-const LocationMap = () => {
+interface LocationCoordinatesType {
+  latitude: {
+    coordinate: number
+    direction: 'N' | 'S'
+  }
+  longitude: {
+    coordinate: number
+    direction: 'E' | 'W'
+  }
+}
+
+interface LocationMapPropsType {
+  locationCoordinates: LocationCoordinatesType
+  location: string
+}
+
+const LocationMap: React.FC<LocationMapPropsType> = ({
+  locationCoordinates,
+  location,
+}) => {
+  const { latitude, longitude } = locationCoordinates
   return (
     <div className="h-80">
       <MapContainer
         style={{ height: '100%', width: '100%' }}
-        center={[25.261, 55.315]}
+        center={[latitude.coordinate, longitude.coordinate]}
         zoom={13}
         scrollWheelZoom={false}
       >
@@ -14,10 +34,8 @@ const LocationMap = () => {
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
         />
-        <Marker position={[25.261, 55.315]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
+        <Marker position={[latitude.coordinate, longitude.coordinate]}>
+          <Popup>{location}</Popup>
         </Marker>
       </MapContainer>
     </div>
