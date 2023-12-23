@@ -1,15 +1,17 @@
 import React, { useState, useContext } from 'react'
 import FormikContext from '../context/formik-context'
-import { Role } from '../types/Auth'
+import { Role, ProfileSidebarInformationType } from '../types/Auth'
 
 interface AddProfileInformationProps {
   edit: boolean
   role: 'Farmer' | 'Consumer'
+  profileInformation: ProfileSidebarInformationType
 }
 
 const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
   edit,
   role,
+  profileInformation,
 }) => {
   const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
   const [uploadedImage, setUploadedImage] = useState(null)
@@ -54,9 +56,16 @@ const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
       </div>
       <div className="flex gap-10 items-center">
         <div className="w-3/5 flex flex-col">
-          <label className="text-md" htmlFor="">
-            Your Name/Farm Name:
-          </label>
+          <div className="flex justify-between items-center">
+            <label className="text-md" htmlFor="">
+              Your Name/Farm Name:
+            </label>
+            {edit ? (
+              <div className="text-xs text-red-900">UnChangeable</div>
+            ) : (
+              <div></div>
+            )}
+          </div>
           <input
             title="name"
             name="name"
@@ -65,6 +74,7 @@ const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
             onChange={handleChange}
             onBlur={handleBlur}
             value={values.name}
+            readOnly={edit ? true : false}
           />
           {touched?.name && errors?.name ? (
             <div className="text-sm text-red-900">{errors?.name}</div>

@@ -1,6 +1,7 @@
-import { createContext, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { useFormik, FormikTouched, FormikErrors } from 'formik'
-import { Role } from '../types/Auth'
+import { ProfileSidebarInformationType, Role } from '../types/Auth'
+import AuthenticationContext from './authentication'
 
 interface SignUpDetailsType {
   name: string
@@ -46,6 +47,7 @@ export interface FormikContextType {
 interface Props {
   children: string | JSX.Element | JSX.Element[]
   setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>
+  profileInformation?: ProfileSidebarInformationType
 }
 
 export interface ProfileInformationType {
@@ -94,12 +96,17 @@ interface SignUpInformation {
   role: 'Farmer' | 'Consumer'
 }
 
-export const FormikContextProvider = ({ children, setOpenModal }: Props) => {
+export const FormikContextProvider = ({
+  children,
+  setOpenModal,
+  profileInformation,
+}: Props) => {
   const isFarmer = false
   const [submitted, setSubmitted] = useState(false)
   const [isFarmerChecked, setIsFarmerChecked] = useState(true)
   const [isConsumerChecked, setIsConsumerChecked] = useState(false)
   const [signUpInfo, setSignUpInfo] = useState<SignUpInformation | null>(null)
+  const { logInData, setLogInData } = useContext(AuthenticationContext)
 
   const validate = (values: ProfileInformationType) => {
     const errors: FormikErrorType = {}
@@ -150,8 +157,24 @@ export const FormikContextProvider = ({ children, setOpenModal }: Props) => {
     return errors
   }
 
-  const formik = useFormik({
-    initialValues: {
+  let intialValues: ProfileInformationType
+  if (profileInformation) {
+    intialValues = {
+      name: profileInformation?.name,
+      description: profileInformation?.description,
+      mobileNo: profileInformation?.mobileNo,
+      location: profileInformation?.location,
+      latitudeCoordinate:
+        profileInformation?.locationCoordinates.latitude.coordinate,
+      latitudeDirection:
+        profileInformation?.locationCoordinates.latitude.direction,
+      longitudeCoordinate:
+        profileInformation?.locationCoordinates.longitude.coordinate,
+      longitudeDirection:
+        profileInformation?.locationCoordinates.longitude.direction,
+    }
+  } else {
+    intialValues = {
       name: '',
       description: '',
       mobileNo: '',
@@ -160,47 +183,74 @@ export const FormikContextProvider = ({ children, setOpenModal }: Props) => {
       latitudeDirection: 'N',
       longitudeCoordinate: undefined,
       longitudeDirection: 'E',
-    },
+    }
+  }
+
+  const formik = useFormik({
+    initialValues: intialValues,
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
-      await alert(JSON.stringify(values, null, 2))
-      const signUpDetails: SignUpDetailsType = {
-        email: signUpInfo?.email || 'random email',
-        password: signUpInfo?.password || 'random password',
-        image: 'image.png',
-        name: values.name,
-        mobileNo: values.mobileNo,
-        location: values.location,
-        locationCoordinates: {
-          latitude: {
-            coordinate: values.latitudeCoordinate || 0,
-            direction: values.latitudeDirection,
-          },
-          longitude: {
-            coordinate: values.longitudeCoordinate || 0,
-            direction: values.longitudeDirection,
-          },
-        },
-      }
+      // await alert(JSON.stringify(values, null, 2))
 
-      if (signUpInfo?.role === Role.Farmer) {
-        signUpDetails.description = values.description
-      }
+      if (!profileInformation) {
+        const signUpDetails: SignUpDetailsType = {
+          email: signUpInfo?.email || 'random email',
+          password: signUpInfo?.password || 'random password',
+          image: 'image.png',
+          name: values.name,
+          mobileNo: values.mobileNo,
+          location: values.location,
+          locationCoordinates: {
+            latitude: {
+              coordinate: values.latitudeCoordinate || 0,
+              direction: values.latitudeDirection,
+            },
+            longitude: {
+              coordinate: values.longitudeCoordinate || 0,
+              direction: values.longitudeDirection,
+            },
+          },
+        }
 
-      if (!setOpenModal) {
+        if (signUpInfo?.role === Role.Farmer) {
+          signUpDetails.description = values.description
+        }
         signUpUser(signUpDetails)
+        console.log('I AM CALLING SIGN UP TOO')
+        setValues({
+          image: '',
+          name: '',
+          description: '',
+          mobileNo: '',
+          location: '',
+          latitudeCoordinate: undefined,
+          latitudeDirection: 'N',
+          longitudeCoordinate: undefined,
+          longitudeDirection: 'E',
+        } as ProfileInformationType)
+      } else {
+        const updateUserDetails: ProfileSidebarInformationType = {
+          name: values.name,
+          image: 'image2.png',
+          mobileNo: values.mobileNo,
+          location: values.location,
+          locationCoordinates: {
+            latitude: {
+              coordinate: values.latitudeCoordinate!,
+              direction: values.latitudeDirection,
+            },
+            longitude: {
+              coordinate: values.longitudeCoordinate!,
+              direction: values.longitudeDirection,
+            },
+          },
+        }
+
+        if (logInData.role === Role.Farmer) {
+          updateUserDetails.description = values.description
+        }
+        updateUser(updateUserDetails)
       }
-      setValues({
-        image: '',
-        name: '',
-        description: '',
-        mobileNo: '',
-        location: '',
-        latitudeCoordinate: undefined,
-        latitudeDirection: 'N',
-        longitudeCoordinate: undefined,
-        longitudeDirection: 'E',
-      } as ProfileInformationType)
 
       setTouched({})
       console.log('IN ON SUBMIT')
@@ -225,7 +275,6 @@ export const FormikContextProvider = ({ children, setOpenModal }: Props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Add any additional headers if needed
         },
         body: JSON.stringify(signUpDetails),
       })
@@ -238,7 +287,68 @@ export const FormikContextProvider = ({ children, setOpenModal }: Props) => {
       localStorage.setItem('token', JSON.stringify(result.token))
     } catch (error) {
       console.error('Error during sign-up:', error)
-      // Handle the error appropriately, such as displaying a user-friendly message
+      throw error
+    }
+  }
+
+  const updateUser = async (
+    updateUserDetails: ProfileSidebarInformationType,
+  ): Promise<void> => {
+    let url
+    if (logInData?.role === Role.Farmer) {
+      url = 'http://localhost:5000/api/v1/farmers'
+    } else {
+      url = 'http://localhost:5000/api/v1/consumers'
+    }
+    console.log(updateUserDetails)
+
+    const token = localStorage.getItem('token')
+    const parsedToken = JSON.parse(token!)
+
+    try {
+      const response = await fetch(url, {
+        method: 'PATCH',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${parsedToken}`,
+        },
+        body: JSON.stringify(updateUserDetails),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log(result)
+
+      if (logInData.role === Role.Farmer) {
+        setLogInData((logInData) => {
+          return {
+            ...logInData,
+            name: result.farmer.name,
+            description: result.farmer.description,
+            location: result.farmer.location,
+            mobileNo: result.farmer.mobileNo,
+            locationCoordinates: result.farmer.locationCoordinates,
+            image: result.farmer.image,
+          }
+        })
+      } else {
+        setLogInData((logInData) => {
+          return {
+            ...logInData,
+            name: result.consumer.name,
+            location: result.consumer.location,
+            mobileNo: result.consumer.mobileNo,
+            locationCoordinates: result.consumer.locationCoordinates,
+            image: result.consumer.image,
+          }
+        })
+      }
+    } catch (error) {
+      console.error('Error during sign-up:', error)
       throw error
     }
   }

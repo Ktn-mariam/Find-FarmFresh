@@ -2,19 +2,24 @@ import React, { useState, useContext } from 'react'
 import FormikContext from '../context/formik-context'
 import AddProfileInformation from './AddProfileInformation'
 import Modal from '@mui/material/Modal'
+import AuthenticationContext from '../context/authentication'
+import { ProfileSidebarInformationType } from '../types/Auth'
 
 interface EditProfileModalProps {
   openModal: boolean
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+  profileInformation: ProfileSidebarInformationType
 }
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({
   openModal,
   setOpenModal,
+  profileInformation,
 }) => {
   const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
   const [uploadedImage, setUploadedImage] = useState(null)
   const { handleSubmit } = useContext(FormikContext)
+  const { logInData, loadingLogInData } = useContext(AuthenticationContext)
 
   const handleEditProfileSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -52,6 +57,19 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
     }
   }
 
+  if (loadingLogInData) {
+    return (
+      <Modal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div>Loading</div>
+      </Modal>
+    )
+  }
+
   return (
     <Modal
       open={openModal}
@@ -62,7 +80,11 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       <div className="flex items-center mt-10 justify-center">
         <div className="font-noto p-12 w-100 bg-white rounded-md flex flex-col gap-5">
           <form onSubmit={handleEditProfileSubmit}>
-            <AddProfileInformation edit={true} />
+            <AddProfileInformation
+              role={logInData.role!}
+              edit={true}
+              profileInformation={profileInformation}
+            />
             <div className="flex gap-3 justify-end font-bold mt-5">
               <button
                 className="bg-gray-300 rounded-md px-3 py-2"

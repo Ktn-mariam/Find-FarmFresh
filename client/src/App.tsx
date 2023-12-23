@@ -24,7 +24,7 @@ enum Status {
 }
 
 function App() {
-  const { role } = useContext(AuthenticationContext)
+  const { logInData } = useContext(AuthenticationContext)
   return (
     <FormikContextProvider>
       <Router>
@@ -44,7 +44,7 @@ function App() {
           <Route
             path="/my-profile"
             element={
-              role === Role.Farmer ? (
+              logInData.role === Role.Farmer ? (
                 <FarmerProfile editable={true} />
               ) : (
                 <ConsumerProfile status={Status.Delivered} />
@@ -59,12 +59,12 @@ function App() {
             path="/store/:parentCategory/:category/:productID"
             element={<ProductDetailPage />}
           />
-          {role === Role.Consumer && (
+          {logInData.role === Role.Consumer && (
             <Route path="/shopping-cart" element={<ShoppingCartPage />} />
           )}
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/sign-up" element={<SignUpPage />} />
-          {role === Role.Farmer && (
+          {logInData.role === Role.Farmer && (
             <Route path="/orders" element={<OrdersPage />} />
           )}
         </Routes>
