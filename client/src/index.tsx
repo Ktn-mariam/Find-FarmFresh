@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-tailwind/react'
 import { AuthenticationContextProvider } from './context/authentication'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+
 root.render(
   <React.StrictMode>
     <ThemeProvider>
