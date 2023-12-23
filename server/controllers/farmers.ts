@@ -17,6 +17,8 @@ const getFarmer = async (req: Request, res: Response) => {
 const getProductsOfFarmer = async (req: Request, res: Response) => {
   const { farmerID } = req.params
   const products = await Product.find({ farmerID })
+    .sort({ createdAt: -1 })
+    .exec()
   res.status(StatusCodes.OK).json({ products, nbHits: products.length })
 }
 
@@ -67,7 +69,7 @@ const updateFarmer = async (req: Request, res: Response) => {
       runValidators: true,
     },
   ).select(
-    '_id locationCoordinates name location farmerRating image email comments mobileNo ',
+    '_id locationCoordinates name location farmerRating image email comments mobileNo description',
   )
 
   if (!updatedFarmer) {
@@ -100,7 +102,7 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
       },
       { new: true, runValidators: true },
     ).select(
-      '_id locationCoordinates name location farmerRating image email comments mobileNo ',
+      '_id locationCoordinates name location farmerRating image email comments mobileNo description',
     )
 
     if (!updatedFarmer)
@@ -120,7 +122,7 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
         },
         { new: true, runValidators: true },
       ).select(
-        '_id locationCoordinates name location farmerRating image email comments mobileNo ',
+        '_id locationCoordinates name location farmerRating image email comments mobileNo description',
       )
 
       const comment = await Comment.create({
