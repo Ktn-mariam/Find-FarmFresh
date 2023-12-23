@@ -2,6 +2,7 @@ const getChildCategories = (category: string) => {
   let childCategories
   switch (category) {
     case 'fruits':
+    case 'Fruits':
       childCategories = [
         'Bananas',
         'Oranges',
@@ -12,6 +13,7 @@ const getChildCategories = (category: string) => {
       ]
       break
     case 'vegetables':
+    case 'Vegetables':
       childCategories = [
         'Potatoes',
         'Onions',
@@ -23,18 +25,23 @@ const getChildCategories = (category: string) => {
       ]
       break
     case 'coffee&tea':
+    case 'Coffee & Tea':
       childCategories = ['Tea', 'Coffee']
       break
     case 'diary&eggs':
+    case 'Dairy & eggs':
       childCategories = ['Milk', 'Butter', 'Cheese', 'Eggs']
       break
     case 'meat':
+    case 'Meat':
       childCategories = ['Goat', 'Sheep', 'Chicken']
       break
     case 'honey':
+    case 'Honey & Bee Products':
       childCategories = ['Honey', 'Beewax', 'Pollen']
       break
     case 'flowers':
+    case 'Flowers':
       childCategories = [
         'Rose',
         'Orchids',
@@ -45,6 +52,7 @@ const getChildCategories = (category: string) => {
       ]
       break
     case 'driedFruits':
+    case 'Dried Fruits & Nuts':
       childCategories = ['Pistachios', 'Apricot', 'Dates', 'Cashew', 'Almonds']
       break
     default:
