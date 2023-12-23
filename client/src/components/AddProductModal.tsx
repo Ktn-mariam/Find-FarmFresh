@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useFormik } from 'formik'
 import Modal from '@mui/material/Modal'
 import { FormControlLabel, FormGroup, Switch } from '@mui/material'
+import getChildCategories from '../utils/getChildCategories'
+
 // https://stackoverflow.com/questions/74536534/react-js-how-to-upload-image-with-preview-and-display-the-processe-image
 
 interface AddProductFormValues {
@@ -33,15 +35,25 @@ interface ErrorType {
 interface AddProductModalProps {
   openModal: boolean
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+  setRefetchProducts: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AddProductModal: React.FC<AddProductModalProps> = ({
   openModal,
   setOpenModal,
+  setRefetchProducts,
 }) => {
   const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
   const [uploadedImage, setUploadedImage] = useState(null)
   const [discountAvailable, setDiscountAvailable] = useState(false)
+  const [childCategories, setChildCategories] = useState<string[]>([
+    'Bananas',
+    'Oranges',
+    'Apples',
+    'Mangoes',
+    'Pinapples',
+    'Strawberries',
+  ])
 
   const validate = (values: AddProductFormValues) => {
     const errors: ErrorType = {}
@@ -102,8 +114,32 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
         returnableChoice: values.returnableChoice === 'on',
         onSiteShopping: values.onSiteShopping === 'on',
         hasDiscount: discountAvailable,
+        images: ['image.png', 'images2.png'],
       }
+      console.log(result)
+
       await alert(JSON.stringify(result, null, 2))
+      const token = localStorage.getItem('token')
+      const parsedToken = JSON.parse(token!)
+
+      const productsResponse = await fetch(
+        `http://localhost:5000/api/v1/products`,
+        {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${parsedToken}`,
+          },
+          body: JSON.stringify(result),
+        },
+      )
+
+      const productData = await productsResponse.json()
+      console.log(productData)
+
+      setRefetchProducts(true)
+
       setValues({
         images: [],
         title: '',
@@ -118,7 +154,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
         returnableChoice: false,
         onSiteShopping: false,
       } as AddProductFormValues)
-      console.log('After reset:', values)
+
       setOpenModal(false)
       setDiscountAvailable(false)
       setTouched({})
@@ -207,7 +243,17 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       className="focus:outline-none focus:bg-white focus:border-gray-400 py-1 px-3 bg-gray-200 text-sm rounded-md w-full mt-1"
                       value={formik.values.parentCategory}
                       onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}
+                      onChange={(e) => {
+                        formik.handleChange(e)
+                        console.log(e.target.value)
+
+                        const childCategories = getChildCategories(
+                          e.target.value,
+                        )
+                        console.log(childCategories)
+
+                        setChildCategories(childCategories)
+                      }}
                     >
                       <option disabled value="">
                         Select option
@@ -243,7 +289,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       <option disabled value="">
                         Select option
                       </option>
-                      {parentCategories.map((category) => {
+                      {childCategories.map((category) => {
                         return (
                           <option key={category} value={category}>
                             {category}

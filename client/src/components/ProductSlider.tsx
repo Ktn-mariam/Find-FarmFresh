@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import { ProductDetailType, ProductType } from '../types/Product'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -41,6 +42,8 @@ interface ProductSliderProps {
   height: number
   heading: string
   editable: boolean
+  products: ProductDetailType[]
+  setRefetchProducts: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ProductSlider: React.FC<ProductSliderProps> = ({
@@ -48,6 +51,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   height,
   heading,
   editable,
+  products,
+  setRefetchProducts,
 }) => {
   const [openModal, setOpenModal] = useState(false)
 
@@ -107,68 +112,39 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
             <AddProductModal
               openModal={openModal}
               setOpenModal={setOpenModal}
+              setRefetchProducts={setRefetchProducts}
             />
           </div>
         )}
       </div>
       <div>
-        <Slider {...settings}>
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-          <ProductCard
-            height={height}
-            editable={editable}
-            setOpenModal={setOpenModal}
-          />
-        </Slider>
+        {products.length > noOfSlides ? (
+          <Slider {...settings}>
+            {products.map((product) => (
+              <ProductCard
+                key={product._id}
+                height={height}
+                editable={editable}
+                setOpenModal={setOpenModal}
+                product={product}
+                setRefetchProducts={setRefetchProducts}
+              />
+            ))}
+          </Slider>
+        ) : (
+          <div className="flex gap-10">
+            {products.map((product) => (
+              <ProductCard
+                key={product._id}
+                height={height}
+                editable={editable}
+                setOpenModal={setOpenModal}
+                product={product}
+                setRefetchProducts={setRefetchProducts}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
