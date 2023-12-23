@@ -8,7 +8,7 @@ const CategoryNavbar = () => {
         <NavLink to="/store/fruits">
           <li className="flex flex-col items-center">
             <img
-              className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
+              className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
               src="/store-navbar/fruit.jpg"
               alt="fruit"
             />
@@ -18,27 +18,27 @@ const CategoryNavbar = () => {
         <NavLink to="/store/vegetables">
           <li className="flex flex-col items-center">
             <img
-              className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
+              className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
               src="/store-navbar/vegetable.jpg"
               alt="fruit"
             />
             <p>Vegetables</p>
           </li>
         </NavLink>
-        <NavLink to="/store/coffee-&-tea">
+        <NavLink to="/store/coffee&tea">
           <li className="flex flex-col items-center">
             <img
-              className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
+              className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
               src="/store-navbar/coffee.png"
               alt="fruit"
             />
             <p>Coffee & Tea</p>
           </li>
         </NavLink>
-        <NavLink to="/store/diary-&-eggs">
+        <NavLink to="/store/diary&eggs">
           <li className="flex flex-col items-center">
             <img
-              className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
+              className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
               src="/store-navbar/milk.png"
               alt="fruit"
             />
@@ -48,17 +48,17 @@ const CategoryNavbar = () => {
         <NavLink to="/store/meat">
           <li className="flex flex-col items-center">
             <img
-              className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
+              className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
               src="/store-navbar/meat.png"
               alt="fruit"
             />
             <p>Meat</p>
           </li>
         </NavLink>
-        <NavLink to="/store/honey-&-bee-products">
+        <NavLink to="/store/honey">
           <li className="flex flex-col items-center">
             <img
-              className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
+              className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
               src="/store-navbar/honey.png"
               alt="fruit"
             />
@@ -68,17 +68,17 @@ const CategoryNavbar = () => {
         <NavLink to="/store/flowers">
           <li className="flex flex-col items-center">
             <img
-              className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
+              className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
               src="/store-navbar/flower.png"
               alt="fruit"
             />
             <p>Flowers</p>
           </li>
         </NavLink>
-        <NavLink to="/store/dried-fruits-&-nuts">
+        <NavLink to="/store/driedFruits">
           <li className="flex flex-col items-center">
             <img
-              className="md:h-28 h-14 rounded-full hover:shadow-lg hover:cursor-pointer"
+              className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
               src="/store-navbar/dried-fruit.png"
               alt="fruit"
             />

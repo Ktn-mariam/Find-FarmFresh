@@ -8,7 +8,7 @@ import AuthenticationContext from '../context/authentication'
 import { Role } from '../types/Auth'
 
 function Navbar() {
-  const { role } = useContext(AuthenticationContext)
+  const { logInData } = useContext(AuthenticationContext)
   return (
     <nav className="flex justify-between items-center font-noto px-36 py-3 shadow-sm">
       <div>
@@ -50,14 +50,14 @@ function Navbar() {
               <ShoppingBagIcon />
             </NavLink>
           </li>
-          {role === Role.Consumer && (
+          {logInData.role === Role.Consumer && (
             <li className="pr-2">
               <NavLink to="/shopping-cart">
                 <ShoppingCartIcon />
               </NavLink>
             </li>
           )}
-          {role === Role.Farmer && (
+          {logInData.role === Role.Farmer && (
             <li className="pr-2">
               <NavLink to="/orders">
                 <ListAltIcon />
