@@ -1,9 +1,35 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Order from './Order'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
+import AuthenticationContext from '../../context/authentication'
+import { OrderType } from '../../types/Order'
 
 const OrdersPage = () => {
+  const { logInData } = useContext(AuthenticationContext)
+  const [orders, setOrders] = useState<OrderType[] | null>(null)
+  const [refetchOrders, setRefetchOrders] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem('token')
+      const parsedToken = JSON.parse(token!)
+      const orderResponse = await fetch('http://localhost:5000/api/v1/orders', {
+        mode: 'cors',
+        headers: {
+          Authorization: `Bearer ${parsedToken}`,
+        },
+      })
+      const orderData = await orderResponse.json()
+      console.log(orderData)
+
+      setOrders(orderData.orders)
+      setRefetchOrders(false)
+    }
+
+    fetchData()
+  }, [refetchOrders])
+
   return (
     <div className="md:px-36 px-14 pt-10 pb-52">
       <h1 className="text-2xl font-bold mb-6">Your Orders</h1>
@@ -33,10 +59,10 @@ const OrdersPage = () => {
             </div>
           </AccordionSummary>
         </Accordion>
-        <Order />
-        <Order />
-        <Order />
-        <Order />
+        {orders &&
+          orders.map((order) => {
+            return <Order setRefetchOrders={setRefetchOrders} order={order} />
+          })}
       </div>
     </div>
   )
