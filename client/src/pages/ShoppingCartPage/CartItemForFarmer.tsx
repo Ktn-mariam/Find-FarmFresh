@@ -7,6 +7,7 @@ import { CartItem } from '../../types/Order'
 import { NavLink } from 'react-router-dom'
 import { ProductDetailForOrder } from '../../types/Product'
 import AuthenticationContext from '../../context/authentication'
+import ShoppingCartContext from '../../context/shoppingCart'
 
 interface CartItemForFarmerPropsType {
   cartItem: CartItem
@@ -18,11 +19,10 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
   findTotalPriceAndItems,
 }) => {
   const { updateTotalPrice, deleteAllItemsFromCartofFarmer } = useContext(
-    AuthenticationContext,
+    ShoppingCartContext,
   )
   const [products, setProducts] = useState<ProductDetailForOrder[] | null>()
   const [refetchProducts, setRefetchProducts] = useState(false)
-  const [displayCartItem, setDisplayCartItem] = useState(true)
 
   useEffect(() => {
     let totalPrice = 0
@@ -82,11 +82,7 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
     console.log(orderData)
 
     deleteAllItemsFromCartofFarmer(cartItem.farmerID)
-    setDisplayCartItem(false)
-  }
-
-  if (!displayCartItem) {
-    return <div></div>
+    setRefetchProducts(true)
   }
 
   return (
@@ -99,7 +95,7 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
           className="flex items-center gap-1"
           onClick={() => {
             deleteAllItemsFromCartofFarmer(cartItem.farmerID)
-            setDisplayCartItem(false)
+            setRefetchProducts(true)
           }}
         >
           <DeleteIcon fontSize="small" />

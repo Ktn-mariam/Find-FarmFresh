@@ -1,27 +1,28 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import StoreNavbar from '../../components/StoreNavbar'
 import CartItemForFarmer from './CartItemForFarmer'
+import ShoppingCartContext from '../../context/shoppingCart'
 import AuthenticationContext from '../../context/authentication'
 
 const ShoppingCartPage = () => {
-  const { logInData, checkOutAllHandler } = useContext(AuthenticationContext)
+  const { cart, checkOutAllHandler } = useContext(ShoppingCartContext)
+  const { logInData } = useContext(AuthenticationContext)
   const [totalPrice, setTotalPrice] = useState(0)
   const [totalItems, setTotalItems] = useState(0)
-  const [displayNoProducts, setDisplayNoProducts] = useState(true)
 
   const findTotalPriceAndItems = () => {
     const sumPrice =
-      logInData.cart?.reduce((sum, cartItem) => sum + cartItem.totalPrice, 0) ||
-      0
+      cart.reduce((sum, cartItem) => sum + cartItem.totalPrice, 0) || 0
     setTotalPrice(sumPrice)
 
     const sumItems =
-      logInData.cart?.reduce(
-        (sum, cartItem) => sum + cartItem.products.length,
-        0,
-      ) || 0
+      cart.reduce((sum, cartItem) => sum + cartItem.products.length, 0) || 0
     setTotalItems(sumItems)
   }
+
+  useEffect(() => {
+    findTotalPriceAndItems()
+  }, [cart])
 
   return (
     <div className="font-workSans">
@@ -29,24 +30,20 @@ const ShoppingCartPage = () => {
       <div className="md:px-36 px-14 py-5 text-xs md:text-sm mb-40">
         <h1 className="text-2xl font-bold mb-6 mt-3">Shopping Cart</h1>
         <div className="flex gap-10">
-          {displayNoProducts ? (
-            <div className="flex flex-col gap-10 w-2/3">
-              {logInData.cart ? (
-                logInData.cart.map((cartItem) => {
-                  return (
-                    <CartItemForFarmer
-                      cartItem={cartItem}
-                      findTotalPriceAndItems={findTotalPriceAndItems}
-                    />
-                  )
-                })
-              ) : (
-                <div>Please sign in/up to add items</div>
-              )}
-            </div>
-          ) : (
-            <div className="w-2/3"></div>
-          )}
+          <div className="flex flex-col gap-10 w-2/3">
+            {logInData.loggedIn ? (
+              cart.map((cartItem) => {
+                return (
+                  <CartItemForFarmer
+                    cartItem={cartItem}
+                    findTotalPriceAndItems={findTotalPriceAndItems}
+                  />
+                )
+              })
+            ) : (
+              <div>Please sign in/up to add items</div>
+            )}
+          </div>
           <div className="w-1/3">
             <div className="px-10 py-10 border border-1 border-zinc-300 rounded-2xl">
               <div className="text-lg font-bold mb-5">Order Summary</div>
@@ -61,7 +58,6 @@ const ShoppingCartPage = () => {
               <button
                 onClick={() => {
                   checkOutAllHandler()
-                  setDisplayNoProducts(false)
                   setTotalItems(0)
                   setTotalPrice(0)
                 }}
