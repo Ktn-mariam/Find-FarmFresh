@@ -74,50 +74,53 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
     }
 
     fetchCart()
-  }, [])
+    if (refetchCart) setRefetchCart(false)
+  }, [refetchCart])
 
   const handleAddToCart = (addToCartItem: AddToCartItemType) => {
-    const cartPrev = [...cart]
-    const existingFarmerIndex = cartPrev.findIndex((farmer) => {
-      return farmer.farmerID === addToCartItem.farmerID
-    })!
-    if (existingFarmerIndex !== -1) {
-      const existingProductIndex = cartPrev[
-        existingFarmerIndex
-      ].products.findIndex((product) => {
-        return product.productID === addToCartItem.productID
-      })
-
-      if (existingProductIndex !== -1) {
-        cartPrev[existingFarmerIndex].products[existingProductIndex].quantity +=
-          addToCartItem.quantity
-      } else {
-        cartPrev[existingFarmerIndex].products.unshift({
-          productID: addToCartItem.productID,
-          quantity: addToCartItem.quantity,
+    setCart((cartPrev: CartItem[]) => {
+      const existingFarmerIndex = cartPrev.findIndex((farmer) => {
+        return farmer.farmerID === addToCartItem.farmerID
+      })!
+      if (existingFarmerIndex !== -1) {
+        const existingProductIndex = cartPrev[
+          existingFarmerIndex
+        ].products.findIndex((product) => {
+          return product.productID === addToCartItem.productID
         })
-      }
-      cartPrev[existingFarmerIndex].totalPrice =
-        cartPrev[existingFarmerIndex].totalPrice +
-        addToCartItem.productPrice * addToCartItem.quantity
-      setCart(cartPrev)
-    } else {
-      const cartItem = {
-        farmerID: addToCartItem.farmerID,
-        farmerName: addToCartItem.farmerName,
-        totalPrice: addToCartItem.productPrice,
-        products: [
-          {
+
+        if (existingProductIndex !== -1) {
+          cartPrev[existingFarmerIndex].products[
+            existingProductIndex
+          ].quantity += addToCartItem.quantity
+        } else {
+          cartPrev[existingFarmerIndex].products.unshift({
             productID: addToCartItem.productID,
             quantity: addToCartItem.quantity,
-          },
-        ],
-      }
+          })
+        }
+        cartPrev[existingFarmerIndex].totalPrice =
+          cartPrev[existingFarmerIndex].totalPrice +
+          addToCartItem.productPrice * addToCartItem.quantity
+        return cartPrev
+      } else {
+        const cartItem = {
+          farmerID: addToCartItem.farmerID,
+          farmerName: addToCartItem.farmerName,
+          totalPrice: addToCartItem.productPrice,
+          products: [
+            {
+              productID: addToCartItem.productID,
+              quantity: addToCartItem.quantity,
+            },
+          ],
+        }
 
-      cartPrev.unshift(cartItem)
-      setCart(cartPrev)
-      updateCartForConsumer()
-    }
+        cartPrev.unshift(cartItem)
+        return cartPrev
+      }
+    })
+    updateCartForConsumer()
   }
 
   const updateCartForConsumer = async () => {
@@ -143,21 +146,23 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
   }
 
   const updateQuantityInCart = (updateQuantityItem: UpdateQuantityItemType) => {
-    const cartPrev = cart
-    const existingFarmerIndex = cartPrev.findIndex((farmer) => {
-      return farmer.farmerID === updateQuantityItem.farmerID
-    })!
+    setCart((cartPrev) => {
+      const existingFarmerIndex = cartPrev.findIndex((farmer) => {
+        return farmer.farmerID === updateQuantityItem.farmerID
+      })!
 
-    const existingProductIndex = cartPrev[
-      existingFarmerIndex
-    ].products.findIndex((product) => {
-      return product.productID === updateQuantityItem.productID
+      const existingProductIndex = cartPrev[
+        existingFarmerIndex
+      ].products.findIndex((product) => {
+        return product.productID === updateQuantityItem.productID
+      })
+
+      cartPrev[existingFarmerIndex].products[existingProductIndex].quantity =
+        updateQuantityItem.quantity
+
+      return cartPrev
     })
 
-    cartPrev[existingFarmerIndex].products[existingProductIndex].quantity =
-      updateQuantityItem.quantity
-
-    setCart(cartPrev)
     updateCartForConsumer()
   }
 
@@ -165,14 +170,15 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
     farmerID: string
     totalPrice: number
   }) => {
-    const cartPrev = cart
-    const existingFarmerIndex = cartPrev.findIndex((farmer) => {
-      return farmer.farmerID === updatePrice.farmerID
+    setCart((cartPrev) => {
+      const existingFarmerIndex = cartPrev.findIndex((farmer) => {
+        return farmer.farmerID === updatePrice.farmerID
+      })
+
+      cartPrev[existingFarmerIndex].totalPrice = updatePrice.totalPrice
+
+      return cartPrev
     })
-
-    cartPrev[existingFarmerIndex].totalPrice = updatePrice.totalPrice
-
-    setCart(cartPrev)
     updateCartForConsumer()
   }
 
@@ -180,34 +186,39 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
     farmerID: string
     productID: string
   }) => {
-    const cartPrev = [...cart]
-    const existingFarmerIndex = cartPrev.findIndex((farmer) => {
-      return farmer.farmerID === deleteItem.farmerID
+    setCart((cartPrev) => {
+      const existingFarmerIndex = cartPrev.findIndex((farmer) => {
+        return farmer.farmerID === deleteItem.farmerID
+      })
+
+      const existingProductIndex = cartPrev[
+        existingFarmerIndex
+      ].products.findIndex((product) => {
+        return product.productID === deleteItem.productID
+      })
+
+      cartPrev[existingFarmerIndex].products.splice(existingProductIndex, 1)
+
+      if (cartPrev[existingFarmerIndex].products.length === 0) {
+        cartPrev.splice(existingFarmerIndex, 1)
+      }
+
+      return cartPrev
     })
 
-    const existingProductIndex = cartPrev[
-      existingFarmerIndex
-    ].products.findIndex((product) => {
-      return product.productID === deleteItem.productID
-    })
-
-    cartPrev[existingFarmerIndex].products.splice(existingProductIndex, 1)
-
-    if (cartPrev[existingFarmerIndex].products.length === 0) {
-      cartPrev.splice(existingFarmerIndex, 1)
-    }
-    setCart(cartPrev)
     updateCartForConsumer()
+    setRefetchCart(true)
   }
 
   const deleteAllItemsFromCartofFarmer = (farmerID: string) => {
-    const cartPrev = [...cart]
-    const existingFarmerIndex = cartPrev.findIndex((farmer) => {
-      return farmer.farmerID === farmerID
+    setCart((cartPrev) => {
+      const existingFarmerIndex = cartPrev.findIndex((farmer) => {
+        return farmer.farmerID === farmerID
+      })
+      cartPrev.splice(existingFarmerIndex, 1)
+      return cartPrev
     })
-    cartPrev.splice(existingFarmerIndex, 1)
 
-    setCart(cartPrev)
     updateCartForConsumer()
   }
 

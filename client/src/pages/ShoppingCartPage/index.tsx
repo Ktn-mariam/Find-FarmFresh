@@ -35,6 +35,7 @@ const ShoppingCartPage = () => {
               cart.map((cartItem) => {
                 return (
                   <CartItemForFarmer
+                    key={cartItem.farmerID}
                     cartItem={cartItem}
                     findTotalPriceAndItems={findTotalPriceAndItems}
                   />

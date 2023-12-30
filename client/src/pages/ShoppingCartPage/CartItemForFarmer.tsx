@@ -6,7 +6,6 @@ import 'slick-carousel/slick/slick-theme.css'
 import { CartItem } from '../../types/Order'
 import { NavLink } from 'react-router-dom'
 import { ProductDetailForOrder } from '../../types/Product'
-import AuthenticationContext from '../../context/authentication'
 import ShoppingCartContext from '../../context/shoppingCart'
 
 interface CartItemForFarmerPropsType {
@@ -23,6 +22,7 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
   )
   const [products, setProducts] = useState<ProductDetailForOrder[] | null>()
   const [refetchProducts, setRefetchProducts] = useState(false)
+  const [displayCartItem, setDisplayCartItem] = useState(true)
 
   useEffect(() => {
     let totalPrice = 0
@@ -62,9 +62,13 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
     updateTotalPrice,
     refetchProducts,
     findTotalPriceAndItems,
+    cartItem,
   ])
 
   const addOrderHandler = async () => {
+    if (!cartItem) {
+      return
+    }
     const token = localStorage.getItem('token')
     const parsedToken = JSON.parse(token!)
 
@@ -85,6 +89,10 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
     setRefetchProducts(true)
   }
 
+  if (!displayCartItem) {
+    return null
+  }
+
   return (
     <div className="flex font-workSans flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -95,7 +103,8 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
           className="flex items-center gap-1"
           onClick={() => {
             deleteAllItemsFromCartofFarmer(cartItem.farmerID)
-            setRefetchProducts(true)
+            findTotalPriceAndItems()
+            setDisplayCartItem(false)
           }}
         >
           <DeleteIcon fontSize="small" />

@@ -44,8 +44,6 @@ const ProductCart: React.FC<ProductCartProps> = ({
       quantity: newQuantity,
     }
 
-    console.log(updateQuantityItem)
-
     updateQuantityInCart(updateQuantityItem)
     if (setRefetchProducts) setRefetchProducts(true)
   }
