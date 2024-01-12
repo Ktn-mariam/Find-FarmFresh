@@ -15,3 +15,20 @@ export interface ConsumerType {
   mobileNo: string
   location: string
 }
+
+export interface ConsumerTypeForOrder {
+  locationCoordinates: {
+    latitude: {
+      coordinate: number
+      direction: 'N' | 'S'
+    }
+    longitude: {
+      coordinate: number
+      direction: 'E' | 'W'
+    }
+  }
+  _id: string
+  name: string
+  mobileNo: string
+  location: string
+}
