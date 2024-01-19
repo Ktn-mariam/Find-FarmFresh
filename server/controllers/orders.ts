@@ -11,7 +11,7 @@ const getOrders = async (req: Request, res: Response) => {
   if (role === Role.Farmer) {
     orders = await Order.find({ farmerID: userID })
   } else {
-    orders = await Order.find({ consumerID: userID })
+    orders = await Order.find({ consumerID: userID }).sort({ orderDate: -1 })
   }
   res.status(StatusCodes.OK).json({ orders })
 }

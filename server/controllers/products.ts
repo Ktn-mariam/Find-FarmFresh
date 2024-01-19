@@ -11,6 +11,7 @@ import { Types } from 'mongoose'
 interface QueryObjectType {
   category?: string
   parentCategory: string
+  isVisible: boolean
   title?: { $regex: string; $options: string }
   [key: string]: any
 }
@@ -44,10 +45,48 @@ const getAllProducts = async (req: Request, res: Response) => {
 }
 
 const getTopRatedProducts = async (req: Request, res: Response) => {
-  const queryObject = { 'productRating.rating': { $gte: 4.5 } }
-  const topRatedProducts = await Product.find(queryObject)
+  const queryObject = { 'productRating.rating': { $gte: 4.5 }, isVisible: true }
+  const topRatedProducts = await Product.find(queryObject).sort({
+    createdAt: -1,
+  })
 
   res.status(StatusCodes.OK).json({ products: topRatedProducts })
+}
+
+const getDiscountedProducts = async (req: Request, res: Response) => {
+  const discountedProducts = await Product.find({
+    hasDiscount: true,
+    isVisible: true,
+  }).sort({
+    createdAt: -1,
+  })
+
+  res.status(StatusCodes.OK).json({ products: discountedProducts })
+}
+
+const getProductsLast30Days = async (req: Request, res: Response) => {
+  const { farmerID } = req.params
+  const thirtyDaysAgo = new Date()
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+
+  const products = await Product.find({
+    farmerID: farmerID,
+    isVisible: true,
+    createdAt: {
+      $gte: thirtyDaysAgo,
+      $lt: new Date(),
+    },
+  })
+
+  res.status(200).json({ products })
+}
+
+const getProductDetailForOrder = async (req: Request, res: Response) => {
+  const { productID } = req.params
+  const product = await Product.findOne({ _id: productID }).select(
+    '_id title price images parentCategory category farmerID farmerName',
+  )
+  res.status(StatusCodes.OK).json({ product })
 }
 
 const getProductsOfCategory = async (req: Request, res: Response) => {
@@ -59,6 +98,7 @@ const getProductsOfCategory = async (req: Request, res: Response) => {
 
   let queryObject: QueryObjectType = {
     parentCategory,
+    isVisible: true,
   }
   if (category) {
     queryObject.category = category as string
@@ -125,18 +165,6 @@ const updateProduct = async (req: Request, res: Response) => {
     updateFields.returnableChoice = req.body.returnableChoice
   if (req.body.hasOwnProperty('onSiteShopping'))
     updateFields.onSiteShopping = req.body.onSiteShopping
-  if (req.body.productRating) {
-    updateFields.productRating = {
-      rating: req.body.productRating.rating,
-      voteCount: {
-        five: req.body.productRating.voteCount.five,
-        four: req.body.productRating.voteCount.four,
-        three: req.body.productRating.voteCount.three,
-        two: req.body.productRating.voteCount.two,
-        one: req.body.productRating.voteCount.one,
-      },
-    }
-  }
 
   const newComment = req.body.comment
     ? {
@@ -160,10 +188,50 @@ const updateProduct = async (req: Request, res: Response) => {
   }
 
   if (newComment && role === Role.Consumer) {
+    const product = await Product.findOne({ _id: productID })
+    let fiveNew = product?.productRating?.voteCount?.five!
+    let fourNew = product?.productRating?.voteCount?.four!
+    let threeNew = product?.productRating?.voteCount?.three!
+    let twoNew = product?.productRating?.voteCount?.two!
+    let oneNew = product?.productRating?.voteCount?.one!
+
+    switch (req.body.comment.rating) {
+      case 5:
+        fiveNew++
+        break
+      case 4:
+        fourNew++
+        break
+      case 3:
+        threeNew++
+        break
+      case 2:
+        twoNew++
+        break
+      case 5:
+        oneNew++
+        break
+    }
+
+    const totalRating =
+      (fiveNew * 5 + fourNew * 4 + threeNew * 3 + twoNew * 2 + oneNew * 1) /
+      (fiveNew + fourNew + threeNew + twoNew + oneNew)
+
+    const productRating = {
+      rating: totalRating,
+      voteCount: {
+        five: fiveNew,
+        four: fourNew,
+        three: threeNew,
+        two: twoNew,
+        one: oneNew,
+      },
+    }
     updatedProduct = await Product.findOneAndUpdate(
       { _id: productID },
       {
-        $push: { comments: newComment },
+        $push: { comments: { $each: [newComment], $position: 0 } },
+        $set: { productRating: productRating },
       },
       { new: true, runValidators: true },
     )
@@ -175,12 +243,12 @@ const updateProduct = async (req: Request, res: Response) => {
 
     if (updatedProduct.comments.length > 6) {
       const leastRecentComment: RemovedCommentType = updatedProduct
-        .comments[0] as RemovedCommentType
+        .comments[6] as RemovedCommentType
       updatedProduct = await Product.findByIdAndUpdate(
         { _id: productID },
         {
           $pull: {
-            comments: updatedProduct.comments[0],
+            comments: updatedProduct.comments[6],
           },
         },
         { new: true, runValidators: true },
@@ -233,7 +301,10 @@ export {
   getAllProducts,
   getProductsOfCategory,
   getTopRatedProducts,
+  getDiscountedProducts,
   getProductDetail,
   deleteProduct,
   updateProduct,
+  getProductDetailForOrder,
+  getProductsLast30Days,
 }

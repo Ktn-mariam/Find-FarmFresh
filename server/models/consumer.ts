@@ -114,18 +114,15 @@ const ConsumerSchema = new Schema({
   ],
   cart: [
     {
-      farmer: {
-        farmerID: {
-          type: Schema.Types.ObjectId,
-          ref: 'Farmer',
-        },
-        name: {
-          type: String,
-        },
+      farmerID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Farmer',
+      },
+      farmerName: {
+        type: String,
       },
       totalPrice: {
         type: Number,
-        required: true,
       },
       products: [
         {
@@ -135,7 +132,6 @@ const ConsumerSchema = new Schema({
           },
           quantity: {
             type: Number,
-            required: true,
           },
         },
       ],

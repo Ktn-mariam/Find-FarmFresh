@@ -9,7 +9,10 @@ const getCommentsOfFarmer = async (req: Request, res: Response) => {
   const page = Number(req.query.page) - 2 || 1
   const skip = (page - 1) * limit
 
-  let result = Comment.find({ farmerID }).skip(skip).limit(limit)
+  let result = Comment.find({ farmerID })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
   const comments = await result.exec()
   res.status(StatusCodes.OK).json({ comments })
 }
@@ -28,7 +31,10 @@ const getCommentsOfProduct = async (req: Request, res: Response) => {
   const page = Number(req.query.page) - 2 || 1
   const skip = (page - 1) * limit
 
-  let result = Comment.find({ productID }).skip(skip).limit(limit)
+  let result = Comment.find({ productID })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
   const comments = await result.exec()
   res.status(StatusCodes.OK).json({ comments })
 }

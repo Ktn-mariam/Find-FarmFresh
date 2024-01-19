@@ -32,10 +32,17 @@ const updateConsumer = async (req: Request, res: Response) => {
       },
     }
   }
-  const consumer = await Consumer.findOneAndUpdate({ _id: userID }, req.body, {
-    new: true,
-    runValidators: true,
-  }).select(
+  if (req.body.cart) {
+    updateFields.cart = req.body.cart
+  }
+  const consumer = await Consumer.findOneAndUpdate(
+    { _id: userID },
+    updateFields,
+    {
+      new: true,
+      runValidators: true,
+    },
+  ).select(
     'name image location mobileNo locationCoordinates following cart _id',
   )
   res.status(StatusCodes.OK).json({ consumer })
@@ -58,6 +65,13 @@ const followFarmer = async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ consumer: updatedConsumer })
 }
 
+const getShoppingCart = async (req: Request, res: Response) => {
+  const { userID } = req.user
+  const shoppingcart = await Consumer.find({ _id: userID }).select('cart')
+
+  res.status(StatusCodes.OK).json({ cart: shoppingcart })
+}
+
 const unFollowFarmer = async (req: Request, res: Response) => {
   const { userID } = req.user
 
@@ -74,4 +88,10 @@ const unFollowFarmer = async (req: Request, res: Response) => {
   res.status(StatusCodes.GONE).json({ consumer: updatedConsumer })
 }
 
-export { getConsumer, updateConsumer, followFarmer, unFollowFarmer }
+export {
+  getConsumer,
+  updateConsumer,
+  followFarmer,
+  unFollowFarmer,
+  getShoppingCart,
+}

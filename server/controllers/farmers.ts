@@ -42,18 +42,6 @@ const updateFarmer = async (req: Request, res: Response) => {
         },
       },
     }),
-    ...(req.body.farmerRating && {
-      farmerRating: {
-        rating: req.body.farmerRating.rating,
-        voteCount: {
-          five: req.body.farmerRating.voteCount.five,
-          four: req.body.farmerRating.voteCount.four,
-          three: req.body.farmerRating.voteCount.three,
-          two: req.body.farmerRating.voteCount.two,
-          one: req.body.farmerRating.voteCount.one,
-        },
-      },
-    }),
   }
 
   const updateQuery =
@@ -83,6 +71,46 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
   const { userID, role, name } = req.user
   const { farmerID } = req.params
 
+  const farmer = await Farmer.findOne({ _id: farmerID })
+  let fiveNew = farmer?.farmerRating?.voteCount?.five!
+  let fourNew = farmer?.farmerRating?.voteCount?.four!
+  let threeNew = farmer?.farmerRating?.voteCount?.three!
+  let twoNew = farmer?.farmerRating?.voteCount?.two!
+  let oneNew = farmer?.farmerRating?.voteCount?.one!
+
+  switch (req.body.comment.rating) {
+    case 5:
+      fiveNew++
+      break
+    case 4:
+      fourNew++
+      break
+    case 3:
+      threeNew++
+      break
+    case 2:
+      twoNew++
+      break
+    case 5:
+      oneNew++
+      break
+  }
+
+  const totalRating =
+    (fiveNew * 5 + fourNew * 4 + threeNew * 3 + twoNew * 2 + oneNew * 1) /
+    (fiveNew + fourNew + threeNew + twoNew + oneNew)
+
+  const farmerRating = {
+    rating: totalRating,
+    voteCount: {
+      five: fiveNew,
+      four: fourNew,
+      three: threeNew,
+      two: twoNew,
+      one: oneNew,
+    },
+  }
+
   const newComment = req.body.comment
     ? {
         userID: userID,
@@ -98,7 +126,8 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
     updatedFarmer = await Farmer.findOneAndUpdate(
       { _id: farmerID },
       {
-        $push: { comments: newComment },
+        $push: { comments: { $each: [newComment], $position: 0 } },
+        $set: { farmerRating: farmerRating },
       },
       { new: true, runValidators: true },
     ).select(
@@ -112,12 +141,12 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
 
     if (updatedFarmer.comments.length > 6) {
       const leastRecentComment: RemovedCommentType = updatedFarmer
-        .comments[0] as RemovedCommentType
+        .comments[6] as RemovedCommentType
       updatedFarmer = await Product.findByIdAndUpdate(
         { _id: farmerID },
         {
           $pull: {
-            comments: updatedFarmer.comments[0],
+            comments: updatedFarmer.comments[6],
           },
         },
         { new: true, runValidators: true },

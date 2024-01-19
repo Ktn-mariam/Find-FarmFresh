@@ -69,7 +69,7 @@ const getUserProfileInformation = async (req: Request, res: Response) => {
     )
   } else {
     userDetail = await Consumer.find({ _id: userID }).select(
-      'locationCoordinates name mobileNo location image following cart',
+      'locationCoordinates name mobileNo location image following',
     )
   }
 
