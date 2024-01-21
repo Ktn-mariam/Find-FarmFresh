@@ -50,6 +50,14 @@
 
 FarmFresh Finder is a platform designed to seamlessly connect farmers with consumers, fostering a direct and transparent exchange of fresh, locally sourced produce. Our application empowers farmers by providing a digital space to showcase their yields while offering consumers a convenient way to discover and purchase high-quality, sustainably grown products.
 
+![image](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/6e3359da-2dcb-49b2-94fb-fcfbfb2f7b43)
+
+![image](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/e3255f6f-fd4f-4f9c-a8ce-261537175a15)
+
+![Screenshot 2024-01-20 092609](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/4fb9208e-e726-41da-8f6d-e9967939e54e)
+
+![Screenshot 2024-01-20 092238](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/97f292fe-60e7-4aae-8f1c-8b57730e9e6e)
+
 ### As a consumer, you can:
 * Discover fresh farm produce with doorstep delivery.
 * Connect with local farmers, explore profiles, and access contact information.
