@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import ProductSlider from '../../components/ProductSlider'
 import StoreNavbar from '../../components/StoreNavbar'
@@ -28,6 +28,10 @@ import getCategory from '../../utils/getCategory'
 import { ProductDetailType, ProductType } from '../../types/Product'
 import { FarmerType } from '../../types/Farmer'
 import { Comment } from '../../types/Comment'
+import AuthenticationContext from '../../context/authentication'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import ShoppingCartContext from '../../context/shoppingCart'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -57,6 +61,8 @@ const NextArrow: React.FC<ArrowProps> = ({ onClick }) => {
 }
 
 function ProductDetailPage() {
+  const { logInData, setLogInData } = useContext(AuthenticationContext)
+  const { handleAddToCart } = useContext(ShoppingCartContext)
   const { parentCategory, category, productID } = useParams()
   const [product, setProduct] = useState<ProductDetailType | undefined>(
     undefined,
@@ -66,9 +72,11 @@ function ProductDetailPage() {
   const [comments, setComments] = useState<Comment[] | undefined>(undefined)
   const [page, setPage] = useState(1)
   const [pageCount, setPageCount] = useState(3)
-  const [similarProducts, setSimilarProducts] = useState<ProductType[] | null>(
-    null,
-  )
+  const [similarProducts, setSimilarProducts] = useState<
+    ProductDetailType[] | null
+  >(null)
+  const [quantity, setQuantity] = useState(1)
+  const [openToastOnAddToCart, setOpenToastOnAddToCart] = useState(false)
 
   const parentCategoryDisplay = getCategory(parentCategory || 'Fruits')
 
@@ -130,12 +138,24 @@ function ProductDetailPage() {
         `http://localhost:5000/api/v1/comments/product/${productID}?page=${page}`,
       )
       const commentData = await commentResponse.json()
-      console.log(commentData)
 
       setComments(commentData.comments)
     }
     fetchComments()
   }, [page, product?.comments, productID])
+
+  const addToCartHandler = () => {
+    const addToCartItem = {
+      farmerID: product?.farmerID!,
+      farmerName: product?.farmerName!,
+      productID: product?._id!,
+      quantity: quantity!,
+      productPrice: product?.price!,
+    }
+
+    handleAddToCart(addToCartItem)
+    setOpenToastOnAddToCart(true)
+  }
 
   const settings = {
     dots: false,
@@ -254,6 +274,9 @@ function ProductDetailPage() {
                       title="quantity"
                       name="quantity"
                       id=""
+                      onChange={(e) => {
+                        setQuantity(Number(e.target.value))
+                      }}
                     >
                       {quantityOptions.map((option) => {
                         return <option value={option}>{option}</option>
@@ -261,10 +284,33 @@ function ProductDetailPage() {
                     </select>
                   </div>
                   <div className="mt-7">
-                    <button className="flex items-center gap-2 py-2 px-3 rounded-lg bg-night text-white">
+                    <button
+                      onClick={addToCartHandler}
+                      className="flex items-center gap-2 py-2 px-3 rounded-lg bg-night text-white"
+                    >
                       <AddShoppingCartIcon style={{ color: '#fff' }} />
                       <h1 className="text-md">Add to cart</h1>
                     </button>
+                    <Snackbar
+                      open={openToastOnAddToCart}
+                      autoHideDuration={6000}
+                      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                      onClose={() => {
+                        setOpenToastOnAddToCart(false)
+                      }}
+                    >
+                      <MuiAlert
+                        onClose={() => {
+                          setOpenToastOnAddToCart(false)
+                        }}
+                        severity="success"
+                        sx={{ width: '100%' }}
+                        elevation={6}
+                        variant="standard"
+                      >
+                        This is a success message!
+                      </MuiAlert>
+                    </Snackbar>
                   </div>
                 </div>
                 <div className="font-noto w-88 px-5 py-8 border border-1 border-zinc-300 rounded-2xl">
