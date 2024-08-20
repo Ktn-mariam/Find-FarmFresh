@@ -31,10 +31,14 @@ export type RemovedCommentType =
 const createProduct = async (req: Request, res: Response) => {
   const { userID, name } = req.user
 
+  console.log(req.body)
+  console.log(req.file)
+
   const product = await Product.create({
     ...req.body,
     farmerID: userID,
     farmerName: name,
+    images: req.file?.filename,
   })
   res.status(StatusCodes.CREATED).json({ product })
 }
