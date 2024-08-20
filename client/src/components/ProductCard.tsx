@@ -5,14 +5,18 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import Rating from '@mui/material/Rating'
-import { ProductDetailType } from '../types/Product'
+import { ProductDetailTypeForDisplay } from '../types/Product'
 
 interface ProductCardProps {
   height: number
   editable: boolean
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
-  product: ProductDetailType
-  setRefetchProducts: React.Dispatch<React.SetStateAction<boolean>>
+  product: ProductDetailTypeForDisplay
+  setRefetchProducts?: React.Dispatch<React.SetStateAction<boolean>>
+  setIsEditModal: React.Dispatch<React.SetStateAction<boolean>>
+  setEditProduct: React.Dispatch<
+    React.SetStateAction<ProductDetailTypeForDisplay | null>
+  >
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -21,11 +25,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
   setOpenModal,
   product,
   setRefetchProducts,
+  setIsEditModal,
+  setEditProduct,
 }) => {
   const width = height - 8
   const {
     parentCategory,
     category,
+    images,
     _id,
     farmerID,
     price,
@@ -34,7 +41,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
     title,
     isVisible,
   } = product
-  console.log(width)
 
   const handleProductUpdate = async (): Promise<void> => {
     const token = localStorage.getItem('token')
@@ -56,8 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     )
 
     const updateData = await updateResponse.json()
-    setRefetchProducts(true)
-    console.log(updateData)
+    if (setRefetchProducts) setRefetchProducts(true)
   }
 
   const handleProductDelete = async (): Promise<void> => {
@@ -79,9 +84,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
     )
 
     const updateData = await updateResponse.json()
-    setRefetchProducts(true)
-    console.log(updateData)
+    if (setRefetchProducts) setRefetchProducts(true)
   }
+
+  console.log(isVisible)
+  console.log(`http://localhost:5000/uploads/${images[0]}`)
 
   return (
     <div className="mx-1">
@@ -93,18 +100,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* 4:5 ratio */}
         <NavLink to={`/store/${parentCategory}/${category}/${_id}`}>
           <div
-            className={`h-${height} w-${width} flex items-center justify-center overflow-hidden hover:cursor-pointer`}
+            className={`h-${height.toString()} w-${width.toString()} flex items-center justify-center overflow-hidden hover:cursor-pointer`}
           >
             <img
               className="object-cover w-full h-full"
-              src="/apple.png"
+              src={`http://localhost:5000/uploads/${images[0]}`}
               alt=""
             />
           </div>
         </NavLink>
         <div>
           <NavLink to={`/store/${parentCategory}/${category}/${_id}`}>
-            <h4 className={`truncate w-${width} hover:cursor-pointer`}>
+            <h4
+              className={`truncate w-${width.toString()} hover:cursor-pointer`}
+            >
               {title}
             </h4>
           </NavLink>
@@ -132,6 +141,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   title="edit"
                   className="rounded-md py-0.5 px-1 hover:bg-gray-300"
                   onClick={() => {
+                    setIsEditModal(true)
+                    setEditProduct(product)
                     setOpenModal(true)
                   }}
                 >

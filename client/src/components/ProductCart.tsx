@@ -60,7 +60,7 @@ const ProductCart: React.FC<ProductCartProps> = ({
           <div className="h-40 mb-3 md:h-40 md:w-32 flex items-center justify-center overflow-hidden hover:cursor-pointer">
             <img
               className="object-cover w-full h-full"
-              src="/apple.png"
+              src={`http://localhost:5000/uploads/${images[0]}`}
               alt=""
             />
           </div>

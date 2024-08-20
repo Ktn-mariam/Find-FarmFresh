@@ -7,7 +7,8 @@ import AddIcon from '@mui/icons-material/Add'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { ProductDetailType, ProductType } from '../types/Product'
+import { ProductDetailTypeForDisplay, ProductType } from '../types/Product'
+import { FamilyRestroomOutlined } from '@mui/icons-material'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -42,8 +43,8 @@ interface ProductSliderProps {
   height: number
   heading: string
   editable: boolean
-  products: ProductDetailType[]
-  setRefetchProducts: React.Dispatch<React.SetStateAction<boolean>>
+  products: ProductDetailTypeForDisplay[]
+  setRefetchProducts?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ProductSlider: React.FC<ProductSliderProps> = ({
@@ -55,6 +56,11 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   setRefetchProducts,
 }) => {
   const [openModal, setOpenModal] = useState(false)
+  const [isEditModal, setIsEditModal] = useState(false)
+  const [
+    editProduct,
+    setEditProduct,
+  ] = useState<ProductDetailTypeForDisplay | null>(null)
 
   const settings = {
     dots: false,
@@ -113,6 +119,9 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
               openModal={openModal}
               setOpenModal={setOpenModal}
               setRefetchProducts={setRefetchProducts}
+              isEditModal={isEditModal}
+              setIsEditModal={setIsEditModal}
+              editProduct={editProduct}
             />
           </div>
         )}
@@ -128,6 +137,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                 setOpenModal={setOpenModal}
                 product={product}
                 setRefetchProducts={setRefetchProducts}
+                setIsEditModal={setIsEditModal}
+                setEditProduct={setEditProduct}
               />
             ))}
           </Slider>
@@ -141,6 +152,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                 setOpenModal={setOpenModal}
                 product={product}
                 setRefetchProducts={setRefetchProducts}
+                setIsEditModal={setIsEditModal}
+                setEditProduct={setEditProduct}
               />
             ))}
           </div>

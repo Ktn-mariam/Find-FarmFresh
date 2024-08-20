@@ -1,13 +1,14 @@
-import React, { useContext, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import Modal from '@mui/material/Modal'
 import { FormControlLabel, FormGroup, Switch } from '@mui/material'
 import getChildCategories from '../utils/getChildCategories'
+import { ProductDetailTypeForDisplay } from '../types/Product'
 
 // https://stackoverflow.com/questions/74536534/react-js-how-to-upload-image-with-preview-and-display-the-processe-image
 
 interface AddProductFormValues {
-  images: string[]
+  images: File
   title: string
   parentCategory: string
   category: string
@@ -35,16 +36,24 @@ interface ErrorType {
 interface AddProductModalProps {
   openModal: boolean
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
-  setRefetchProducts: React.Dispatch<React.SetStateAction<boolean>>
+  setRefetchProducts?: React.Dispatch<React.SetStateAction<boolean>>
+  isEditModal: boolean
+  setIsEditModal: React.Dispatch<React.SetStateAction<boolean>>
+  editProduct: ProductDetailTypeForDisplay | null
 }
 
 const AddProductModal: React.FC<AddProductModalProps> = ({
   openModal,
   setOpenModal,
   setRefetchProducts,
+  isEditModal,
+  setIsEditModal,
+  editProduct,
 }) => {
   const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
-  const [uploadedImage, setUploadedImage] = useState(null)
+  const [previewImageFile, setPreviewImageFile] = useState<File | null>(null)
+  const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null)
+  const [uploadedImageURL, setUploadedImageURL] = useState<string | null>(null)
   const [discountAvailable, setDiscountAvailable] = useState(false)
   const [childCategories, setChildCategories] = useState<string[]>([
     'Bananas',
@@ -54,6 +63,19 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     'Pinapples',
     'Strawberries',
   ])
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      const response = await fetch(
+        `${process.env.PUBLIC_URL}/public/previewImage.jpg`,
+      )
+      const blob = await response.blob()
+      const file = new File([blob], 'image.jpg', { type: blob.type })
+      setPreviewImageFile(file)
+    }
+
+    fetchImage()
+  }, [])
 
   const validate = (values: AddProductFormValues) => {
     const errors: ErrorType = {}
@@ -88,9 +110,25 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     return errors
   }
 
-  const formik = useFormik({
-    initialValues: {
-      images: [],
+  let values
+  if (isEditModal) {
+    values = {
+      images: editProduct?.images!,
+      title: editProduct?.title!,
+      parentCategory: editProduct?.parentCategory!,
+      category: editProduct?.category!,
+      price: editProduct?.price!,
+      hasDiscount: editProduct?.hasDiscount!,
+      delivery: editProduct?.delivery!,
+      organic: editProduct?.organic!,
+      transaction: editProduct?.transaction!,
+      cashOnDelivery: editProduct?.cashOnDelivery!,
+      returnableChoice: editProduct?.returnableChoice!,
+      onSiteShopping: editProduct?.onSiteShopping!,
+    }
+  } else {
+    values = {
+      images: previewImageFile!,
       title: '',
       parentCategory: '',
       category: '',
@@ -102,7 +140,11 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       cashOnDelivery: false,
       returnableChoice: false,
       onSiteShopping: false,
-    },
+    }
+  }
+
+  const formik = useFormik({
+    initialValues: values,
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
       const result = {
@@ -114,13 +156,18 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
         returnableChoice: values.returnableChoice === 'on',
         onSiteShopping: values.onSiteShopping === 'on',
         hasDiscount: discountAvailable,
-        images: ['image.png', 'images2.png'],
+        images: uploadedImageFile,
       }
-      console.log(result)
 
-      await alert(JSON.stringify(result, null, 2))
+      // await alert(JSON.stringify(result, null, 2))
       const token = localStorage.getItem('token')
       const parsedToken = JSON.parse(token!)
+
+      const formData = new FormData()
+      Object.keys(result).forEach((key) => {
+        const value = (result as Record<string, any>)[key]
+        formData.append(key, value)
+      })
 
       const productsResponse = await fetch(
         `http://localhost:5000/api/v1/products`,
@@ -128,20 +175,18 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
           method: 'POST',
           mode: 'cors',
           headers: {
-            'Content-Type': 'application/json',
             Authorization: `Bearer ${parsedToken}`,
           },
-          body: JSON.stringify(result),
+          body: formData,
         },
       )
 
       const productData = await productsResponse.json()
-      console.log(productData)
 
-      setRefetchProducts(true)
+      if (setRefetchProducts) setRefetchProducts(true)
 
       setValues({
-        images: [],
+        images: previewImageFile,
         title: '',
         parentCategory: '',
         category: '',
@@ -156,7 +201,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       } as AddProductFormValues)
 
       setOpenModal(false)
+      setIsEditModal(false)
       setDiscountAvailable(false)
+      setPreviewImage('/previewImage.jpg')
       setTouched({})
       setErrors({})
     },
@@ -179,7 +226,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     fetch(__filename, { method: 'POST', body: data })
       .then(async (response) => {
         const imageResponse = await response.json()
-        setUploadedImage(imageResponse)
+        setUploadedImageFile(imageResponse)
       })
       .catch((err) => {})
   }
@@ -188,6 +235,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     const file = event.target.files?.[0]
 
     if (file) {
+      const imageUrl = URL.createObjectURL(file)
+      setUploadedImageURL(imageUrl)
       const fileReader = new FileReader()
 
       fileReader.addEventListener('load', () => {
@@ -198,7 +247,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
         }
       })
 
-      fileReader.readAsDataURL(file)
+      setUploadedImageFile(file)
     }
   }
 
@@ -245,13 +294,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       onBlur={formik.handleBlur}
                       onChange={(e) => {
                         formik.handleChange(e)
-                        console.log(e.target.value)
-
                         const childCategories = getChildCategories(
                           e.target.value,
                         )
-                        console.log(childCategories)
-
                         setChildCategories(childCategories)
                       }}
                     >
@@ -450,7 +495,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
               </div>
               <div className="w-1/3 flex flex-col">
                 <div>
-                  {previewImage ? (
+                  {previewImage && !uploadedImageURL ? (
                     <div className="h-40 mb-3 md:h-68 md:w-56 flex items-center justify-center overflow-hidden">
                       <img
                         className="object-cover w-full h-full"
@@ -459,11 +504,20 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       />
                     </div>
                   ) : null}
-                  {uploadedImage ? (
-                    <img src={uploadedImage} alt="uploaded" />
+                  {uploadedImageURL ? (
+                    <div className="h-40 mb-3 md:h-68 md:w-56 flex items-center justify-center overflow-hidden">
+                      <img
+                        className="object-cover w-full h-full"
+                        src={uploadedImageURL}
+                        alt="uploaded"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                    </div>
                   ) : null}
                   <input
-                    title="image"
+                    title="productImage"
+                    name="productImage"
                     type="file"
                     onChange={handleSelectImage}
                   />
@@ -476,6 +530,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                 className="bg-gray-300 rounded-md px-3 py-2"
                 onClick={() => {
                   setOpenModal(false)
+                  setPreviewImage('/previewImage.jpg')
                 }}
               >
                 Cancel
