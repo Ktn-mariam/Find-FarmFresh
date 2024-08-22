@@ -14,21 +14,25 @@ const getConsumer = async (req: Request, res: Response) => {
 
 const updateConsumer = async (req: Request, res: Response) => {
   const { userID } = req.user
+  const { locationCoordinates } = req.body
+  const parsedLocationCoordinates = JSON.parse(locationCoordinates)
+
+  const image = req.file?.filename || req.body.image
 
   let updateFields: any = {}
 
-  if (req.body.image) updateFields.image = req.body.image
+  if (image) updateFields.image = image
   if (req.body.location) updateFields.location = req.body.location
   if (req.body.mobileNo) updateFields.mobileNo = req.body.mobileNo
   if (req.body.locationCoordinates) {
     updateFields.locationCoordinates = {
       latitude: {
-        coordinate: req.body.locationCoordinates.latitude.coordinate,
-        direction: req.body.locationCoordinates.latitude.direction,
+        coordinate: parsedLocationCoordinates.latitude.coordinate,
+        direction: parsedLocationCoordinates.latitude.direction,
       },
       longitude: {
-        coordinate: req.body.locationCoordinates.longitude.coordinate,
-        direction: req.body.locationCoordinates.longitude.direction,
+        coordinate: parsedLocationCoordinates.longitude.coordinate,
+        direction: parsedLocationCoordinates.longitude.direction,
       },
     }
   }

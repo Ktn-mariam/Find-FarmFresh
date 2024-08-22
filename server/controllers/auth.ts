@@ -8,9 +8,28 @@ import { BadRequestError, UnauthenticatedError } from '../errors'
 import { Role } from '../middleware/authentication'
 
 const registerFarmer = async (req: Request, res: Response) => {
-  const farmer = (await Farmer.create({ ...req.body })) as IFarmer
+  const { locationCoordinates } = req.body
+  const parsedLocationCoordinates = JSON.parse(locationCoordinates)
+
+  console.log({
+    ...req.body,
+    image: req.file?.filename,
+    locationCoordinates: parsedLocationCoordinates,
+  })
+
+  const farmer = (await Farmer.create({
+    ...req.body,
+    image: req.file?.filename,
+    locationCoordinates: parsedLocationCoordinates,
+  })) as IFarmer
+
+  if (!farmer) {
+    throw new Error('Farmer creation failed')
+  }
+
   const token = farmer.createJWT()
   const farmerDetails = farmer.getFarmerDetails()
+  console.log(farmerDetails)
   res.status(StatusCodes.CREATED).json({
     farmer: farmerDetails,
     token,
@@ -18,7 +37,10 @@ const registerFarmer = async (req: Request, res: Response) => {
 }
 
 const registerConsumer = async (req: Request, res: Response) => {
-  const consumer = (await Consumer.create({ ...req.body })) as IConsumer
+  const consumer = (await Consumer.create({
+    ...req.body,
+    image: req.file?.filename,
+  })) as IConsumer
   const token = consumer.createJWT()
   const consumerDetails = consumer.getConsumerDetails()
   res.status(StatusCodes.CREATED).json({

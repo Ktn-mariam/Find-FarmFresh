@@ -10,6 +10,7 @@ import {
   unFollowFarmer,
   getShoppingCart,
 } from '../controllers/consumers'
+import uploadFileMiddleware from '../middleware/uploadFile'
 
 router
   .route('/shoppingCart')
@@ -21,6 +22,13 @@ router
   .route('/unFollowFarmer')
   .patch(authMiddleware, authorizeConsumer, unFollowFarmer)
 router.route('/:consumerID').get(authMiddleware, authorizeFarmer, getConsumer)
-router.route('/').patch(authMiddleware, authorizeConsumer, updateConsumer)
+router
+  .route('/')
+  .patch(
+    authMiddleware,
+    authorizeConsumer,
+    uploadFileMiddleware.single('image'),
+    updateConsumer,
+  )
 
 export default router

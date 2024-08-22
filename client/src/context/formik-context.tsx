@@ -1,11 +1,11 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { useFormik, FormikTouched, FormikErrors } from 'formik'
 import { ProfileSidebarInformationType, Role } from '../types/Auth'
 import AuthenticationContext from './authentication'
 
 interface SignUpDetailsType {
   name: string
-  image: string
+  image: string | File
   email: string
   password: string
   description?: string
@@ -42,6 +42,14 @@ export interface FormikContextType {
   errors: FormikErrors<ProfileInformationType> | null
   submitted: boolean
   setSignUpInfo: React.Dispatch<React.SetStateAction<SignUpInformation | null>>
+  uploadedImageFile: File | null
+  setUploadedImageFile: React.Dispatch<React.SetStateAction<File | null>>
+  uploadedImageURL: string | null
+  setUploadedImageURL: React.Dispatch<React.SetStateAction<string | null>>
+  missingImageError: boolean
+  setMissingImageError: React.Dispatch<React.SetStateAction<boolean>>
+  previewImage: string
+  setPreviewImage: React.Dispatch<React.SetStateAction<string>>
 }
 
 interface Props {
@@ -52,6 +60,7 @@ interface Props {
 
 export interface ProfileInformationType {
   name: string
+  image: File | string
   description?: string
   mobileNo: string
   location: string
@@ -67,6 +76,7 @@ const FormikContext = createContext<FormikContextType>({
   handleSubmit: (e) => {},
   values: {
     name: '',
+    image: '',
     description: '',
     mobileNo: '',
     location: '',
@@ -79,6 +89,14 @@ const FormikContext = createContext<FormikContextType>({
   errors: null,
   submitted: false,
   setSignUpInfo: () => {},
+  uploadedImageFile: null,
+  setUploadedImageFile: () => {},
+  uploadedImageURL: null,
+  setUploadedImageURL: () => {},
+  missingImageError: false,
+  setMissingImageError: () => {},
+  previewImage: '',
+  setPreviewImage: () => {},
 })
 
 interface FormikErrorType {
@@ -102,11 +120,22 @@ export const FormikContextProvider = ({
   profileInformation,
 }: Props) => {
   const isFarmer = false
+
+  const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
+  const [missingImageError, setMissingImageError] = useState<boolean>(false)
+  const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null)
+  const [uploadedImageURL, setUploadedImageURL] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
-  const [isFarmerChecked, setIsFarmerChecked] = useState(true)
-  const [isConsumerChecked, setIsConsumerChecked] = useState(false)
   const [signUpInfo, setSignUpInfo] = useState<SignUpInformation | null>(null)
   const { logInData, setLogInData } = useContext(AuthenticationContext)
+
+  useEffect(() => {
+    if (profileInformation) {
+      setPreviewImage(
+        `http://localhost:5000/uploads/${profileInformation.image}`,
+      )
+    }
+  }, [setPreviewImage, profileInformation])
 
   const validate = (values: ProfileInformationType) => {
     const errors: FormikErrorType = {}
@@ -157,10 +186,11 @@ export const FormikContextProvider = ({
     return errors
   }
 
-  let intialValues: ProfileInformationType
+  let initialValues: ProfileInformationType
   if (profileInformation) {
-    intialValues = {
+    initialValues = {
       name: profileInformation?.name,
+      image: profileInformation?.image,
       description: profileInformation?.description,
       mobileNo: profileInformation?.mobileNo,
       location: profileInformation?.location,
@@ -174,8 +204,9 @@ export const FormikContextProvider = ({
         profileInformation?.locationCoordinates.longitude.direction,
     }
   } else {
-    intialValues = {
+    initialValues = {
       name: '',
+      image: '',
       description: '',
       mobileNo: '',
       location: '',
@@ -186,17 +217,23 @@ export const FormikContextProvider = ({
     }
   }
 
+  console.log('initial valuess')
+  console.log(initialValues)
+
   const formik = useFormik({
-    initialValues: intialValues,
+    initialValues: initialValues,
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
       // await alert(JSON.stringify(values, null, 2))
+      if (!uploadedImageFile && !profileInformation) {
+        return
+      }
 
       if (!profileInformation) {
         const signUpDetails: SignUpDetailsType = {
           email: signUpInfo?.email || 'random email',
           password: signUpInfo?.password || 'random password',
-          image: 'image.png',
+          image: uploadedImageFile!,
           name: values.name,
           mobileNo: values.mobileNo,
           location: values.location,
@@ -216,7 +253,6 @@ export const FormikContextProvider = ({
           signUpDetails.description = values.description
         }
         signUpUser(signUpDetails)
-        console.log('I AM CALLING SIGN UP TOO')
         setValues({
           image: '',
           name: '',
@@ -231,7 +267,7 @@ export const FormikContextProvider = ({
       } else {
         const updateUserDetails: ProfileSidebarInformationType = {
           name: values.name,
-          image: 'image2.png',
+          image: uploadedImageFile || profileInformation?.image,
           mobileNo: values.mobileNo,
           location: values.location,
           locationCoordinates: {
@@ -253,9 +289,9 @@ export const FormikContextProvider = ({
       }
 
       setTouched({})
-      console.log('IN ON SUBMIT')
       setSubmitted(true)
       setErrors({})
+      setMissingImageError(false)
       if (setOpenModal) setOpenModal(false)
     },
   })
@@ -270,14 +306,27 @@ export const FormikContextProvider = ({
       url = 'http://localhost:5000/api/v1/auth/register/consumer'
     }
 
+    const formDataSignUp = new FormData()
+
+    Object.keys(signUpDetails).forEach((key) => {
+      const value = (signUpDetails as Record<string, any>)[key]
+
+      if (typeof value === 'object' && !(value instanceof File)) {
+        formDataSignUp.append(key, JSON.stringify(value))
+      } else {
+        formDataSignUp.append(key, value)
+      }
+    })
+
+    console.log(Array.from(formDataSignUp.entries()))
+
     try {
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(signUpDetails),
+        body: formDataSignUp,
       })
+
+      console.log(response)
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`)
@@ -300,20 +349,30 @@ export const FormikContextProvider = ({
     } else {
       url = 'http://localhost:5000/api/v1/consumers'
     }
-    console.log(updateUserDetails)
 
     const token = localStorage.getItem('token')
     const parsedToken = JSON.parse(token!)
+
+    const formDataSignUp = new FormData()
+
+    Object.keys(updateUserDetails).forEach((key) => {
+      const value = (updateUserDetails as Record<string, any>)[key]
+
+      if (typeof value === 'object' && !(value instanceof File)) {
+        formDataSignUp.append(key, JSON.stringify(value))
+      } else {
+        formDataSignUp.append(key, value)
+      }
+    })
 
     try {
       const response = await fetch(url, {
         method: 'PATCH',
         mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${parsedToken}`,
         },
-        body: JSON.stringify(updateUserDetails),
+        body: formDataSignUp,
       })
 
       if (!response.ok) {
@@ -321,7 +380,6 @@ export const FormikContextProvider = ({
       }
 
       const result = await response.json()
-      console.log(result)
 
       if (logInData.role === Role.Farmer) {
         setLogInData((logInData) => {
@@ -362,6 +420,14 @@ export const FormikContextProvider = ({
     errors: formik.errors,
     submitted,
     setSignUpInfo,
+    uploadedImageFile,
+    setUploadedImageFile,
+    uploadedImageURL,
+    setUploadedImageURL,
+    missingImageError,
+    setMissingImageError,
+    previewImage,
+    setPreviewImage,
   }
 
   return (

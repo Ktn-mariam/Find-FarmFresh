@@ -80,11 +80,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       <div className="flex items-center mt-10 justify-center">
         <div className="font-noto p-12 w-100 bg-white rounded-md flex flex-col gap-5">
           <form onSubmit={handleEditProfileSubmit}>
-            <AddProfileInformation
-              role={logInData.role!}
-              edit={true}
-              profileInformation={profileInformation}
-            />
+            <AddProfileInformation role={logInData.role!} edit={true} />
             <div className="flex gap-3 justify-end font-bold mt-5">
               <button
                 className="bg-gray-300 rounded-md px-3 py-2"

@@ -24,21 +24,25 @@ const getProductsOfFarmer = async (req: Request, res: Response) => {
 
 const updateFarmer = async (req: Request, res: Response) => {
   const { userID } = req.user
+  const { locationCoordinates } = req.body
+  const parsedLocationCoordinates = JSON.parse(locationCoordinates)
+
+  const image = req.file?.filename || req.body.image
 
   const updateFields = {
     ...(req.body.mobileNo && { mobileNo: req.body.mobileNo }),
-    ...(req.body.image && { image: req.body.image }),
+    ...(image && { image: image }),
     ...(req.body.description && { description: req.body.description }),
     ...(req.body.location && { location: req.body.location }),
     ...(req.body.locationCoordinates && {
       locationCoordinates: {
         latitude: {
-          coordinate: req.body.locationCoordinates.latitude.coordinate,
-          direction: req.body.locationCoordinates.latitude.direction,
+          coordinate: parsedLocationCoordinates.latitude.coordinate,
+          direction: parsedLocationCoordinates.latitude.direction,
         },
         longitude: {
-          coordinate: req.body.locationCoordinates.longitude.coordinate,
-          direction: req.body.locationCoordinates.longitude.direction,
+          coordinate: parsedLocationCoordinates.longitude.coordinate,
+          direction: parsedLocationCoordinates.longitude.direction,
         },
       },
     }),

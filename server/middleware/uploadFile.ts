@@ -5,10 +5,13 @@ const storage = multer.diskStorage({
     cb(null, './uploads')
   },
   filename: function (req, file, cb) {
-    return cb(null, `${Date.now()}-${req.user.userID}-${file.originalname}`)
+    return cb(
+      null,
+      `${Date.now()}-${Math.random()}-${file.originalname.replace(' ', '-')}`,
+    )
   },
 })
 
-const upload = multer({ storage })
+const uploadFileMiddleware = multer({ storage })
 
-export default upload
+export default uploadFileMiddleware

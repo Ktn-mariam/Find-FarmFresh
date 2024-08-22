@@ -1,40 +1,39 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import FormikContext from '../context/formik-context'
 import { Role, ProfileSidebarInformationType } from '../types/Auth'
 
 interface AddProfileInformationProps {
   edit: boolean
   role: 'Farmer' | 'Consumer'
-  profileInformation: ProfileSidebarInformationType
 }
 
 const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
   edit,
   role,
-  profileInformation,
 }) => {
-  const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
-  const [uploadedImage, setUploadedImage] = useState(null)
-  const { handleBlur, handleChange, values, errors, touched } = useContext(
-    FormikContext,
-  )
-
-  const handleUploadImage = () => {
-    const data = new FormData()
-    data.append('file', previewImage)
-
-    fetch(__filename, { method: 'POST', body: data })
-      .then(async (response) => {
-        const imageResponse = await response.json()
-        setUploadedImage(imageResponse)
-      })
-      .catch((err) => {})
-  }
+  const {
+    handleBlur,
+    handleChange,
+    values,
+    errors,
+    touched,
+    setUploadedImageFile,
+    setUploadedImageURL,
+    uploadedImageURL,
+    missingImageError,
+    setMissingImageError,
+    previewImage,
+    setPreviewImage,
+  } = useContext(FormikContext)
 
   const handleSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
     if (file) {
+      const imageUrl = URL.createObjectURL(file)
+      console.log(`Image URL: ${imageUrl}`)
+
+      setUploadedImageURL(imageUrl)
       const fileReader = new FileReader()
 
       fileReader.addEventListener('load', () => {
@@ -45,7 +44,7 @@ const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
         }
       })
 
-      fileReader.readAsDataURL(file)
+      setUploadedImageFile(file)
     }
   }
 
@@ -191,7 +190,7 @@ const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
         </div>
         <div className="w-2/5 flex flex-col">
           <div>
-            {previewImage ? (
+            {previewImage && !uploadedImageURL ? (
               <div className="h-40 mb-3 md:h-68 md:w-68 flex items-center justify-center overflow-hidden">
                 <img
                   className="object-cover w-full h-full"
@@ -200,8 +199,28 @@ const AddProfileInformation: React.FC<AddProfileInformationProps> = ({
                 />
               </div>
             ) : null}
-            {uploadedImage ? <img src={uploadedImage} alt="uploaded" /> : null}
-            <input title="image" type="file" onChange={handleSelectImage} />
+            {uploadedImageURL ? (
+              <div className="h-40 mb-3 md:h-68 md:w-68 flex items-center justify-center overflow-hidden">
+                <img
+                  className="object-cover w-full h-full"
+                  src={uploadedImageURL}
+                  alt="uploaded"
+                />
+              </div>
+            ) : null}
+            <input
+              title="image"
+              type="file"
+              onClick={() => {
+                setMissingImageError(false)
+              }}
+              onChange={handleSelectImage}
+            />
+            {missingImageError ? (
+              <div className="text-sm text-red-900">
+                Please upload a profile image
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
