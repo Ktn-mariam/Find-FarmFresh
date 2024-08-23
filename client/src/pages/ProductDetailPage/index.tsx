@@ -23,15 +23,17 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import Pagination from '@mui/material/Pagination'
+import InfoIcon from '@mui/icons-material/Info'
 import getParentCategoryRoute from '../../utils/getParentCategoryRoute'
 import getCategory from '../../utils/getCategory'
-import { ProductDetailType, ProductType } from '../../types/Product'
+import { ProductDetailTypeForDisplay } from '../../types/Product'
+import { ProductType } from '../../types/Product'
 import { FarmerType } from '../../types/Farmer'
 import { Comment } from '../../types/Comment'
-import AuthenticationContext from '../../context/authentication'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import ShoppingCartContext from '../../context/shoppingCart'
+import AuthenticationContext from '../../context/authentication'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -61,19 +63,19 @@ const NextArrow: React.FC<ArrowProps> = ({ onClick }) => {
 }
 
 function ProductDetailPage() {
-  const { logInData, setLogInData } = useContext(AuthenticationContext)
   const { handleAddToCart } = useContext(ShoppingCartContext)
+  const { logInData } = useContext(AuthenticationContext)
   const { parentCategory, category, productID } = useParams()
-  const [product, setProduct] = useState<ProductDetailType | undefined>(
-    undefined,
-  )
+  const [product, setProduct] = useState<
+    ProductDetailTypeForDisplay | undefined
+  >(undefined)
   const [farmer, setFarmer] = useState<FarmerType | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(true)
   const [comments, setComments] = useState<Comment[] | undefined>(undefined)
   const [page, setPage] = useState(1)
   const [pageCount, setPageCount] = useState(3)
   const [similarProducts, setSimilarProducts] = useState<
-    ProductDetailType[] | null
+    ProductDetailTypeForDisplay[] | null
   >(null)
   const [quantity, setQuantity] = useState(1)
   const [openToastOnAddToCart, setOpenToastOnAddToCart] = useState(false)
@@ -116,7 +118,13 @@ function ProductDetailPage() {
         )
 
         const similarProductsData = await similarProductsResponse.json()
-        setSimilarProducts(similarProductsData.products)
+
+        const similarProductsDataWithoutTheSameProduct = similarProductsData.products.filter(
+          (product: ProductType) => {
+            return product._id !== productID
+          },
+        )
+        setSimilarProducts(similarProductsDataWithoutTheSameProduct)
       } catch (error) {
         console.log(error)
       }
@@ -168,7 +176,6 @@ function ProductDetailPage() {
     prevArrow: <PrevArrow />,
   }
   const quantityOptions = [1, 2, 3, 4, 5]
-  const imageLocation = ['/apple.png', '/vegetable-1.png', '/vegetable-2.png']
 
   return (
     <div>
@@ -189,13 +196,13 @@ function ProductDetailPage() {
           <div className="py-6 w-full flex gap-x-7">
             <div className="w-40 md:w-96">
               <Slider {...settings}>
-                {imageLocation.map((location) => {
+                {product?.images.map((image) => {
                   return (
                     <div>
                       <div className="w-40 h-40 md:w-96 md:h-110 flex items-center justify-center overflow-hidden">
                         <img
                           className="object-cover w-full h-full"
-                          src={location}
+                          src={`http://localhost:5000/uploads/${image}`}
                           alt=""
                         />
                       </div>
@@ -267,51 +274,66 @@ function ProductDetailPage() {
                       </div>
                     )}
                   </div>
-                  <div className="mt-6">
-                    <label htmlFor="quantity">Qty in kg:</label>
-                    <select
-                      className="px-3 ml-3 py-1 border border-1 border-gray-500 rounded-md"
-                      title="quantity"
-                      name="quantity"
-                      id=""
-                      onChange={(e) => {
-                        setQuantity(Number(e.target.value))
-                      }}
-                    >
-                      {quantityOptions.map((option) => {
-                        return <option value={option}>{option}</option>
-                      })}
-                    </select>
-                  </div>
-                  <div className="mt-7">
-                    <button
-                      onClick={addToCartHandler}
-                      className="flex items-center gap-2 py-2 px-3 rounded-lg bg-night text-white"
-                    >
-                      <AddShoppingCartIcon style={{ color: '#fff' }} />
-                      <h1 className="text-md">Add to cart</h1>
-                    </button>
-                    <Snackbar
-                      open={openToastOnAddToCart}
-                      autoHideDuration={6000}
-                      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                      onClose={() => {
-                        setOpenToastOnAddToCart(false)
-                      }}
-                    >
-                      <MuiAlert
-                        onClose={() => {
-                          setOpenToastOnAddToCart(false)
-                        }}
-                        severity="success"
-                        sx={{ width: '100%' }}
-                        elevation={6}
-                        variant="standard"
-                      >
-                        This is a success message!
-                      </MuiAlert>
-                    </Snackbar>
-                  </div>
+                  {logInData.role === 'Consumer' ? (
+                    <div>
+                      <div className="mt-6">
+                        <label htmlFor="quantity">Qty in kg:</label>
+                        <select
+                          className="px-3 ml-3 py-1 border border-1 border-gray-500 rounded-md"
+                          title="quantity"
+                          name="quantity"
+                          id=""
+                          onChange={(e) => {
+                            setQuantity(Number(e.target.value))
+                          }}
+                        >
+                          {quantityOptions.map((option) => {
+                            return <option value={option}>{option}</option>
+                          })}
+                        </select>
+                      </div>
+                      <div className="mt-7">
+                        <button
+                          onClick={addToCartHandler}
+                          className="flex items-center gap-2 py-2 px-3 rounded-lg bg-night text-white"
+                        >
+                          <AddShoppingCartIcon style={{ color: '#fff' }} />
+                          <h1 className="text-md">Add to cart</h1>
+                        </button>
+                        <Snackbar
+                          open={openToastOnAddToCart}
+                          autoHideDuration={6000}
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                          }}
+                          onClose={() => {
+                            setOpenToastOnAddToCart(false)
+                          }}
+                        >
+                          <MuiAlert
+                            onClose={() => {
+                              setOpenToastOnAddToCart(false)
+                            }}
+                            severity="success"
+                            sx={{ width: '100%' }}
+                            elevation={6}
+                            variant="standard"
+                          >
+                            This is a success message!
+                          </MuiAlert>
+                        </Snackbar>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="mr-20 bg-lime-100 rounded-md p-3 inline-flex items-center gap-3">
+                      <InfoIcon />
+                      <div className="text-sm">
+                        You cannot add products to cart as a Farmer. Create an
+                        account as Consumer to buy products.
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="font-noto w-88 px-5 py-8 border border-1 border-zinc-300 rounded-2xl">
                   <RatingStats productRating={product?.productRating} />
