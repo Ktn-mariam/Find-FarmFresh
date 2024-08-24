@@ -20,7 +20,7 @@ const Product: React.FC<ProductPropType> = ({ product }) => {
           <div className="w-40 h-40 md:w-64 md:h-64 mb-3 flex items-center justify-center overflow-hidden">
             <img
               className="object-cover w-full h-full"
-              src="/apple.png"
+              src={`http://localhost:5000/uploads/${product.images[0]}`}
               alt=""
             />
           </div>
@@ -31,14 +31,40 @@ const Product: React.FC<ProductPropType> = ({ product }) => {
             <NavLink to={`/farmer-profile/${product.farmerID}`}>
               <h6 className="text-sm hover:underline">Mariam Khatoon</h6>
             </NavLink>
-            <div className="flex">
-              <p className="text-xs md:text-sm py-0.5 pr-1">AED</p>
-              <p className="text-red-600">
-                <span className="font-bold text-md md:text-xl">
-                  {product.price}
-                </span>
-                /kg
-              </p>
+            <div className="flex justify-between">
+              <div className="flex">
+                <p className="text-xs md:text-sm py-0.5 pr-1">AED</p>
+                <p className="text-red-600">
+                  {product.hasDiscount ? (
+                    <span className="font-bold text-md md:text-xl">
+                      <span className="line-through">{product.price}</span>
+                      <span className="ml-1 text-neonYellow">
+                        {product.price -
+                          product.price * (product.discountPercentage / 100)}
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="font-bold text-md md:text-xl">
+                      {product.price}
+                    </span>
+                  )}
+                  <span
+                    className={`${
+                      product.hasDiscount ? 'text-neonYellow' : 'text-red-600'
+                    }`}
+                  >
+                    /kg
+                  </span>
+                </p>
+              </div>
+              {product.hasDiscount && (
+                <div className="text-white bg-neonYellow text-sm m-1 border-2 border-dashed border-white px-2">
+                  <span className="font-bold">
+                    {`${product.discountPercentage}%`}
+                  </span>
+                  {` OFF`}
+                </div>
+              )}
             </div>
             <div className="flex items-center">
               <Rating
