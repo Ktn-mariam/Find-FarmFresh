@@ -98,8 +98,7 @@ const getProductsOfCategory = async (req: Request, res: Response) => {
   parentCategory = getCategory(parentCategory)
 
   // // api/v1/products/category/fruits?category=Apples&rating=4
-  const { category, search, rating, sort } = req.query
-
+  const { category, search, rating, sortBy } = req.query
   let queryObject: QueryObjectType = {
     parentCategory,
     isVisible: true,
@@ -117,12 +116,17 @@ const getProductsOfCategory = async (req: Request, res: Response) => {
   }
 
   let result = Product.find(queryObject).select(
-    '_id title price farmerID farmerName images parentCategory category productRating',
+    '_id title price farmerID farmerName images parentCategory category productRating hasDiscount discountPercentage isVisible',
   )
 
-  if (sort) {
-    const sortList = (sort as string).split(',').join(' ')
-    result = result.sort(sortList)
+  const noOfTotalProducts = await Product.countDocuments(queryObject)
+
+  if ((sortBy as string) === 'rating') {
+    result = result.sort('productRating.rating')
+  } else if ((sortBy as string) === 'lowToHigh') {
+    result = result.sort('price')
+  } else if ((sortBy as string) === 'highToLow') {
+    result = result.sort('-price')
   } else {
     result = result.sort('createdAt')
   }
@@ -134,7 +138,7 @@ const getProductsOfCategory = async (req: Request, res: Response) => {
   result = result.skip(skip).limit(limit)
   const products = await result
 
-  res.status(StatusCodes.OK).json({ products, nbHits: products.length })
+  res.status(StatusCodes.OK).json({ products, nbHits: noOfTotalProducts })
 }
 
 const getProductDetail = async (req: Request, res: Response) => {
