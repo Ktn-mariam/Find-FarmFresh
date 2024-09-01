@@ -129,7 +129,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
         <div className="text-center mt-5">
           Dont have an account?{' '}
           <span className="underline">
-            <NavLink to="/sign-in">Register Now</NavLink>
+            <NavLink to="/sign-up">Register Now</NavLink>
           </span>
         </div>
       ) : (
