@@ -109,6 +109,10 @@ const ProductSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    discountPercentage: {
+      type: Number,
+      default: 0,
+    },
     farmerID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Farmer',
