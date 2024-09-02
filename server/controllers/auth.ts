@@ -37,9 +37,12 @@ const registerFarmer = async (req: Request, res: Response) => {
 }
 
 const registerConsumer = async (req: Request, res: Response) => {
+  const { locationCoordinates } = req.body
+  const parsedLocationCoordinates = JSON.parse(locationCoordinates)
   const consumer = (await Consumer.create({
     ...req.body,
     image: req.file?.filename,
+    locationCoordinates: parsedLocationCoordinates,
   })) as IConsumer
   const token = consumer.createJWT()
   const consumerDetails = consumer.getConsumerDetails()
