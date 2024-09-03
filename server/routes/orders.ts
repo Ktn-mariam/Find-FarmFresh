@@ -6,6 +6,7 @@ import {
   addOrder,
   updateOrder,
   deleteOrder,
+  getOrderByDate,
 } from '../controllers/orders'
 import authenticateMiddleware from '../middleware/authentication'
 import authorizeConsumer from '../middleware/authorizationConsumer'
@@ -16,8 +17,10 @@ router
   .get(authenticateMiddleware, getOrders)
   .post(authenticateMiddleware, authorizeConsumer, addOrder)
 router
+  .route('/date/:date')
+  .get(authenticateMiddleware, authorizeFarmer, getOrderByDate)
+router
   .route('/:orderID')
   .patch(authenticateMiddleware, updateOrder)
   .delete(authenticateMiddleware, authorizeFarmer, deleteOrder)
-
 export default router

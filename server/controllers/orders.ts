@@ -74,10 +74,31 @@ const deleteOrder = async (req: Request, res: Response) => {
     _id: orderID,
     farmerID: req.user.userID,
   })
-  if (!order) {
-    throw new NotFoundError('Order not found')
-  }
+
   res.status(StatusCodes.GONE).json({ order })
 }
 
-export { getOrders, addOrder, updateOrder, deleteOrder }
+const getOrderByDate = async (req: Request, res: Response) => {
+  const { date } = req.params
+  console.log(date)
+
+  const startDate = new Date(date)
+  startDate.setHours(0, 0, 0, 0)
+
+  const endDate = new Date(date)
+  endDate.setHours(23, 59, 59, 999)
+
+  const query = {
+    orderDate: {
+      $gte: startDate,
+      $lt: endDate,
+    },
+    farmerID: req.user.userID,
+  }
+
+  const results = await Order.find(query)
+  const totalAmount = results.reduce((sum, order) => sum + order.totalPrice, 0)
+  res.status(StatusCodes.OK).json({ totalAmount })
+}
+
+export { getOrders, addOrder, updateOrder, deleteOrder, getOrderByDate }
