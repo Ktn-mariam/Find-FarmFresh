@@ -152,26 +152,24 @@ const updateProduct = async (req: Request, res: Response) => {
   const { productID } = req.params
 
   let updateFields: any = {}
+  let images = req.file ? req.file.filename : req.body.images
 
-  if (req.body.images) updateFields.images = req.body.images
+  if (images) updateFields.images = images
   if (req.body.title) updateFields.title = req.body.title
   if (req.body.price) updateFields.price = req.body.price
   if (req.body.parentCategory)
     updateFields.parentCategory = req.body.parentCategory
   if (req.body.category) updateFields.category = req.body.category
-  if (req.body.hasOwnProperty('isVisible'))
+  if (Object.prototype.hasOwnProperty.call(req.body, 'isVisible'))
     updateFields.isVisible = req.body.isVisible
-  if (req.body.hasOwnProperty('delivery'))
-    updateFields.delivery = req.body.delivery
-  if (req.body.hasOwnProperty('organic'))
-    updateFields.organic = req.body.organic
-  if (req.body.hasOwnProperty('transaction'))
-    updateFields.transaction = req.body.transaction
-  if (req.body.hasOwnProperty('cashOnDelivery'))
+  if (req.body.delivery) updateFields.delivery = req.body.delivery
+  if (req.body.organic) updateFields.organic = req.body.organic
+  if (req.body.transaction) updateFields.transaction = req.body.transaction
+  if (req.body.cashOnDelivery)
     updateFields.cashOnDelivery = req.body.cashOnDelivery
-  if (req.body.hasOwnProperty('returnableChoice'))
+  if (req.body.returnableChoice)
     updateFields.returnableChoice = req.body.returnableChoice
-  if (req.body.hasOwnProperty('onSiteShopping'))
+  if (req.body.onSiteShopping)
     updateFields.onSiteShopping = req.body.onSiteShopping
 
   const newComment = req.body.comment

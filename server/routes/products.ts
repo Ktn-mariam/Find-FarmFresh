@@ -15,12 +15,12 @@ import {
 } from '../controllers/products'
 import authenticateMiddleware from '../middleware/authentication'
 import authorizeFarmer from '../middleware/authorizationFarmer'
-import upload from '../middleware/uploadFile'
+import uploadFileMiddleware from '../middleware/uploadFile'
 
 router.route('/').get(getAllProducts).post(
   authenticateMiddleware,
   authorizeFarmer,
-  upload.single('images'),
+  uploadFileMiddleware.single('images'),
   // upload.array('productImage', 3),
   createProduct,
 )
@@ -31,7 +31,12 @@ router
   .route('/:productID')
   .get(getProductDetail)
   .delete(authenticateMiddleware, authorizeFarmer, deleteProduct)
-  .patch(authenticateMiddleware, updateProduct)
+  .patch(
+    authenticateMiddleware,
+    authorizeFarmer,
+    uploadFileMiddleware.single('image'),
+    updateProduct,
+  )
 router.route('/category/:parentCategory').get(getProductsOfCategory)
 router.route('/orderDetail/:productID').get(getProductDetailForOrder)
 
