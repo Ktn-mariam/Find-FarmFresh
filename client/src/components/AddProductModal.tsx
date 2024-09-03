@@ -8,7 +8,7 @@ import { ProductDetailTypeForDisplay } from '../types/Product'
 // https://stackoverflow.com/questions/74536534/react-js-how-to-upload-image-with-preview-and-display-the-processe-image
 
 interface AddProductFormValues {
-  images: File
+  images: File | string[]
   title: string
   parentCategory: string
   category: string
@@ -77,6 +77,18 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     fetchImage()
   }, [])
 
+  useEffect(() => {
+    if (isEditModal) {
+      setDiscountAvailable(editProduct?.hasDiscount || false)
+    }
+  }, [isEditModal, editProduct?.hasDiscount])
+
+  useEffect(() => {
+    if (isEditModal) {
+      setPreviewImage(`http://localhost:5000/uploads/${editProduct?.images[0]}`)
+    }
+  }, [isEditModal, setPreviewImage, editProduct?.images])
+
   const validate = (values: AddProductFormValues) => {
     const errors: ErrorType = {}
 
@@ -110,95 +122,114 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     return errors
   }
 
-  let values
-  if (isEditModal) {
-    values = {
-      images: editProduct?.images!,
-      title: editProduct?.title!,
-      parentCategory: editProduct?.parentCategory!,
-      category: editProduct?.category!,
-      price: editProduct?.price!,
-      hasDiscount: editProduct?.hasDiscount!,
-      delivery: editProduct?.delivery!,
-      organic: editProduct?.organic!,
-      transaction: editProduct?.transaction!,
-      cashOnDelivery: editProduct?.cashOnDelivery!,
-      returnableChoice: editProduct?.returnableChoice!,
-      onSiteShopping: editProduct?.onSiteShopping!,
-    }
-  } else {
-    values = {
-      images: previewImageFile!,
-      title: '',
-      parentCategory: '',
-      category: '',
-      price: 0,
-      hasDiscount: discountAvailable,
-      delivery: false,
-      organic: false,
-      transaction: false,
-      cashOnDelivery: false,
-      returnableChoice: false,
-      onSiteShopping: false,
-    }
-  }
-
   const formik = useFormik({
-    initialValues: values,
+    initialValues: isEditModal
+      ? {
+          images: editProduct?.images!,
+          title: editProduct?.title!,
+          parentCategory: editProduct?.parentCategory!,
+          category: editProduct?.category!,
+          price: editProduct?.price!,
+          hasDiscount: editProduct?.hasDiscount!,
+          discountPercentage: editProduct?.discountPercentage,
+          delivery: editProduct?.delivery!,
+          organic: editProduct?.organic!,
+          transaction: editProduct?.transaction!,
+          cashOnDelivery: editProduct?.cashOnDelivery!,
+          returnableChoice: editProduct?.returnableChoice!,
+          onSiteShopping: editProduct?.onSiteShopping!,
+        }
+      : {
+          images: previewImageFile!,
+          title: '',
+          parentCategory: '',
+          category: '',
+          price: 0,
+          hasDiscount: discountAvailable,
+          discountPercentage: 0,
+          delivery: false,
+          organic: false,
+          transaction: false,
+          cashOnDelivery: false,
+          returnableChoice: false,
+          onSiteShopping: false,
+        },
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
       const result = {
         ...values,
-        delivery: values.delivery === 'on',
-        organic: values.organic === 'on',
-        transaction: values.transaction === 'on',
-        cashOnDelivery: values.cashOnDelivery === 'on',
-        returnableChoice: values.returnableChoice === 'on',
-        onSiteShopping: values.onSiteShopping === 'on',
+        delivery: values.delivery,
+        organic: values.organic,
+        transaction: values.transaction,
+        cashOnDelivery: values.cashOnDelivery,
+        returnableChoice: values.returnableChoice,
+        onSiteShopping: values.onSiteShopping,
         hasDiscount: discountAvailable,
-        images: uploadedImageFile,
+        discountPercentage: values.discountPercentage || 0,
+        images: uploadedImageFile || editProduct?.images,
       }
 
       // await alert(JSON.stringify(result, null, 2))
       const token = localStorage.getItem('token')
       const parsedToken = JSON.parse(token!)
 
-      const formData = new FormData()
-      Object.keys(result).forEach((key) => {
-        const value = (result as Record<string, any>)[key]
-        formData.append(key, value)
-      })
+      if (isEditModal) {
+        const editProductFormData = new FormData()
+        Object.keys(result).forEach((key) => {
+          const value = (result as Record<string, any>)[key]
+          editProductFormData.append(key, value)
+        })
 
-      const productsResponse = await fetch(
-        `http://localhost:5000/api/v1/products`,
-        {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            Authorization: `Bearer ${parsedToken}`,
+        const editProductResponse = await fetch(
+          `http://localhost:5000/api/v1/products/${editProduct?._id}`,
+          {
+            method: 'PATCH',
+            mode: 'cors',
+            headers: {
+              Authorization: `Bearer ${parsedToken}`,
+            },
+            body: editProductFormData,
           },
-          body: formData,
-        },
-      )
+        )
 
-      const productData = await productsResponse.json()
+        const editProductResponseData = await editProductResponse.json()
+      } else {
+        const addProductFormData = new FormData()
+        Object.keys(result).forEach((key) => {
+          const value = (result as Record<string, any>)[key]
+          addProductFormData.append(key, value)
+        })
+
+        const addProductResponse = await fetch(
+          `http://localhost:5000/api/v1/products`,
+          {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+              Authorization: `Bearer ${parsedToken}`,
+            },
+            body: addProductFormData,
+          },
+        )
+      }
 
       if (setRefetchProducts) setRefetchProducts(true)
 
       setValues({
-        images: previewImageFile,
+        images: previewImageFile!,
         title: '',
         parentCategory: '',
         category: '',
         price: 0,
         hasDiscount: discountAvailable,
+        discountPercentage: 0,
         delivery: false,
         organic: false,
         transaction: false,
         cashOnDelivery: false,
         returnableChoice: false,
         onSiteShopping: false,
-      } as AddProductFormValues)
+      })
 
       setOpenModal(false)
       setIsEditModal(false)
@@ -208,6 +239,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       setErrors({})
     },
   })
+
   const parentCategories = [
     'Fruits',
     'Vegetables',
@@ -219,17 +251,34 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     'Dried Fruits & Nuts',
   ]
 
-  const handleUploadImage = () => {
-    const data = new FormData()
-    data.append('file', previewImage)
-
-    fetch(__filename, { method: 'POST', body: data })
-      .then(async (response) => {
-        const imageResponse = await response.json()
-        setUploadedImageFile(imageResponse)
+  useEffect(() => {
+    if (editProduct) {
+      formik.setValues({
+        images: editProduct.images,
+        title: editProduct.title,
+        parentCategory: editProduct.parentCategory,
+        category: editProduct.category,
+        price: editProduct.price,
+        hasDiscount: editProduct.hasDiscount,
+        discountPercentage: editProduct.discountPercentage,
+        delivery: editProduct.delivery,
+        organic: editProduct.organic,
+        transaction: editProduct.transaction,
+        cashOnDelivery: editProduct.cashOnDelivery,
+        returnableChoice: editProduct.returnableChoice,
+        onSiteShopping: editProduct.onSiteShopping,
       })
-      .catch((err) => {})
-  }
+    }
+  }, [editProduct, formik])
+
+  useEffect(() => {
+    if (isEditModal) {
+      const childCategories = getChildCategories(
+        editProduct?.parentCategory || 'Fruits',
+      )
+      setChildCategories(childCategories)
+    }
+  }, [editProduct?.parentCategory, isEditModal])
 
   const handleSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -357,8 +406,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                     <div className="grid-col-1">
                       <div className="flex gap-1 items-center">
                         <input
-                          title="radio"
-                          type="radio"
+                          title="checkbox"
+                          type="checkbox"
                           name="delivery"
                           id=""
                           onChange={formik.handleChange}
@@ -369,8 +418,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       </div>
                       <div className="flex gap-1 items-center">
                         <input
-                          title="radio"
-                          type="radio"
+                          title="checkbox"
+                          type="checkbox"
                           name="organic"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -380,8 +429,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       </div>
                       <div className="flex gap-1 items-center">
                         <input
-                          title="radio"
-                          type="radio"
+                          title="checkbox"
+                          type="checkbox"
                           name="transaction"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -393,8 +442,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                     <div className="grid-col-1">
                       <div className="flex gap-1 items-center">
                         <input
-                          title="radio"
-                          type="radio"
+                          title="checkbox"
+                          type="checkbox"
                           name="cashOnDelivery"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -404,8 +453,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       </div>
                       <div className="flex gap-1 items-center">
                         <input
-                          title="radio"
-                          type="radio"
+                          title="checkbox"
+                          type="checkbox"
                           name="returnableChoice"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -415,8 +464,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                       </div>
                       <div className="flex gap-1 items-center">
                         <input
-                          title="radio"
-                          type="radio"
+                          title="checkbox"
+                          type="checkbox"
                           name="onSiteShopping"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -537,10 +586,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
               </button>
               <button
                 className="bg-black text-white rounded-md px-3 py-2"
-                onClick={handleUploadImage}
                 type="submit"
               >
-                Add Product
+                {isEditModal ? 'Save changes' : 'Add Product'}
               </button>
             </div>
           </form>
