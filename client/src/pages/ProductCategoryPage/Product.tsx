@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import Rating from '@mui/material/Rating'
 import { ProductType } from '../../types/Product'
@@ -9,7 +9,10 @@ interface ProductPropType {
 }
 
 const Product: React.FC<ProductPropType> = ({ product }) => {
+  const [farmerName, setFarmerName] = useState('')
   const parentCategoryRoute = getParentCategoryRoute(product.parentCategory)
+
+  useEffect(() => {}, [])
   return (
     <NavLink
       to={`/store/${parentCategoryRoute}/${product.category}/${product._id}`}
@@ -29,7 +32,7 @@ const Product: React.FC<ProductPropType> = ({ product }) => {
               {product.title}
             </h4>
             <NavLink to={`/farmer-profile/${product.farmerID}`}>
-              <h6 className="text-sm hover:underline">Mariam Khatoon</h6>
+              <h6 className="text-sm hover:underline">{product.farmerName}</h6>
             </NavLink>
             <div className="flex justify-between">
               <div className="flex">
@@ -39,8 +42,12 @@ const Product: React.FC<ProductPropType> = ({ product }) => {
                     <span className="font-bold text-md md:text-xl">
                       <span className="line-through">{product.price}</span>
                       <span className="ml-1 text-neonYellow">
-                        {product.price -
-                          product.price * (product.discountPercentage / 100)}
+                        {Math.round(
+                          (product.price -
+                            product.price *
+                              (product.discountPercentage / 100)) *
+                            100,
+                        ) / 100}
                       </span>
                     </span>
                   ) : (

@@ -40,6 +40,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
     farmerName,
     title,
     isVisible,
+    hasDiscount,
+    discountPercentage,
   } = product
 
   const handleProductUpdate = async (): Promise<void> => {
@@ -87,20 +89,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
     if (setRefetchProducts) setRefetchProducts(true)
   }
 
-  console.log(isVisible)
-  console.log(`http://localhost:5000/uploads/${images[0]}`)
-
   return (
     <div className="mx-1">
       <div
-        className={`py-5 flex flex-col items-center rounded-md font-noto ${
-          isVisible ? null : 'bg-white opacity-50'
-        }`}
+        className={
+          isVisible
+            ? 'py-5 flex flex-col items-start rounded-md font-noto'
+            : 'py-5 flex flex-col items-start rounded-md font-noto bg-white opacity-50'
+        }
       >
         {/* 4:5 ratio */}
         <NavLink to={`/store/${parentCategory}/${category}/${_id}`}>
           <div
-            className={`h-${height.toString()} w-${width.toString()} flex items-center justify-center overflow-hidden hover:cursor-pointer`}
+            className={
+              height === 64
+                ? 'h-64 w-58 flex items-center justify-center overflow-hidden hover:cursor-pointer'
+                : 'h-48 w-40 flex items-center justify-center overflow-hidden hover:cursor-pointer'
+            }
           >
             <img
               className="object-cover w-full h-full"
@@ -112,7 +117,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div>
           <NavLink to={`/store/${parentCategory}/${category}/${_id}`}>
             <h4
-              className={`truncate w-${width.toString()} hover:cursor-pointer`}
+              className={
+                height === 64
+                  ? 'truncate w-58 hover:cursor-pointer'
+                  : 'truncate w-40 hover:cursor-pointer'
+              }
             >
               {title}
             </h4>
@@ -121,12 +130,40 @@ const ProductCard: React.FC<ProductCardProps> = ({
             <h6 className="text-xs hover:underline">{farmerName}</h6>
           </NavLink>
           <div className="flex justify-between items-end">
-            <div>
-              <div className="flex">
-                <p className="text-xs py-0.5 pr-1">AED</p>
-                <p>
-                  <span className="font-bold">{price}</span>/kg
-                </p>
+            <div className="w-full">
+              <div className="flex justify-between">
+                <div className="flex">
+                  <p className="text-xs py-0.5 pr-1">AED</p>
+                  <p>
+                    {hasDiscount ? (
+                      <span className="font-bold">
+                        <span className="line-through">{price}</span>
+                        <span className="ml-1 text-neonYellow">
+                          {Math.round(
+                            (price - price * (discountPercentage / 100)) * 100,
+                          ) / 100}
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="font-bold">{price}</span>
+                    )}
+                    <span
+                      className={`${
+                        hasDiscount ? 'text-neonYellow' : 'text-black'
+                      } text-xs`}
+                    >
+                      /kg
+                    </span>
+                  </p>
+                </div>
+                {hasDiscount && (
+                  <div className="text-white bg-neonYellow text-xs m-1 px-1 rounded-sm">
+                    -
+                    <span className="font-bold">
+                      {`${discountPercentage}%`}
+                    </span>
+                  </div>
+                )}
               </div>
               <Rating
                 defaultValue={productRating.rating}
@@ -170,7 +207,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
             )}
           </div>
         </div>
-        <div></div>
       </div>
     </div>
   )

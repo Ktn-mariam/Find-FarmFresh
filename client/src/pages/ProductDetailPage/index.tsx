@@ -230,11 +230,40 @@ function ProductDetailPage() {
                   <div className="flex mt-6">
                     <p className="text-sm md:text-base py-0.5 pr-1">AED</p>
                     <p className="text-red-600">
-                      <span className="font-bold text-xl md:text-4xl">
-                        {product?.price}
+                      {product?.hasDiscount ? (
+                        <span className="font-bold text-xl md:text-4xl">
+                          <span className="line-through">{product?.price}</span>
+                          <span className="ml-1 text-neonYellow">
+                            {Math.round(
+                              (product.price -
+                                product.price *
+                                  (product.discountPercentage / 100)) *
+                                100,
+                            ) / 100}
+                          </span>
+                        </span>
+                      ) : (
+                        <span className="font-bold text-xl md:text-4xl">
+                          {product?.price}
+                        </span>
+                      )}
+                      <span
+                        className={`${
+                          product?.hasDiscount
+                            ? 'text-neonYellow'
+                            : 'text-red-600'
+                        }`}
+                      >
+                        /kg
                       </span>
-                      /kg
                     </p>
+                    {product?.hasDiscount && (
+                      <div className="text-white bg-neonYellow text-xs m-1 border-2 border-dashed border-white px-2 ml-5 h-fit self-center">
+                        <span className="font-bold">
+                          {`${product?.discountPercentage}% OFF`}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div className="flex text-xs gap-x-5 my-10">
                     {product?.delivery && (
@@ -318,9 +347,9 @@ function ProductDetailPage() {
                             severity="success"
                             sx={{ width: '100%' }}
                             elevation={6}
-                            variant="standard"
+                            variant="filled"
                           >
-                            This is a success message!
+                            {product?.title} has been added to cart!
                           </MuiAlert>
                         </Snackbar>
                       </div>
