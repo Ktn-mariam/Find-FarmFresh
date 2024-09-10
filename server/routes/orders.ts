@@ -7,6 +7,7 @@ import {
   updateOrder,
   deleteOrder,
   getOrderByDate,
+  getOrderToReview,
 } from '../controllers/orders'
 import authenticateMiddleware from '../middleware/authentication'
 import authorizeConsumer from '../middleware/authorizationConsumer'
@@ -16,6 +17,9 @@ router
   .route('/')
   .get(authenticateMiddleware, getOrders)
   .post(authenticateMiddleware, authorizeConsumer, addOrder)
+router
+  .route('/reviewOrders')
+  .get(authenticateMiddleware, authorizeConsumer, getOrderToReview)
 router
   .route('/date/:date')
   .get(authenticateMiddleware, authorizeFarmer, getOrderByDate)
