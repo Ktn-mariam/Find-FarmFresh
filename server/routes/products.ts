@@ -33,8 +33,7 @@ router
   .delete(authenticateMiddleware, authorizeFarmer, deleteProduct)
   .patch(
     authenticateMiddleware,
-    authorizeFarmer,
-    uploadFileMiddleware.single('image'),
+    uploadFileMiddleware.single('images'),
     updateProduct,
   )
 router.route('/category/:parentCategory').get(getProductsOfCategory)
