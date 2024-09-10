@@ -17,7 +17,7 @@ const OrderSchema = new mongoose.Schema({
   },
   orderDate: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
   totalPrice: {
     type: Number,
@@ -32,6 +32,10 @@ const OrderSchema = new mongoose.Schema({
       productID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
+        required: true,
+      },
+      productPrice: {
+        type: Number,
         required: true,
       },
       quantity: {
@@ -52,7 +56,7 @@ const OrderSchema = new mongoose.Schema({
   },
   notifyConsumer: {
     type: Boolean,
-    default: false,
+    default: true,
   },
 })
 
