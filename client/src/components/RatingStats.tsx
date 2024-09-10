@@ -55,7 +55,7 @@ const RatingStats: React.FC<RatingStatsPropType> = ({
         {productRating ? 'Product' : 'Farmer'}'s Rating
       </h1>
       <div className="flex items-center mt-1 gap-2">
-        <Rating defaultValue={rating} precision={0.5} readOnly />
+        <Rating defaultValue={rating} precision={0.1} readOnly />
         <h3>{rating} out of 5</h3>
       </div>
       <p className="mt-3 text-sm text-gray-800">{totalCount} votes overall</p>

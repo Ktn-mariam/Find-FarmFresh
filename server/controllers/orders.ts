@@ -3,7 +3,6 @@ import Order from '../models/order'
 import { StatusCodes } from 'http-status-codes'
 import { Role } from '../middleware/authentication'
 import UnAuthorizedError from '../errors/unauthorized'
-import NotFoundError from '../errors/not-found'
 
 const getOrders = async (req: Request, res: Response) => {
   const { userID, role } = req.user
@@ -36,7 +35,10 @@ const updateOrder = async (req: Request, res: Response) => {
     updateFields.paymentStatus = req.body.paymentStatus
   }
 
-  if (req.body.notifyConsumer && role === Role.Consumer) {
+  if (
+    Object.prototype.hasOwnProperty.call(req.body, 'notifyConsumer') &&
+    role === Role.Consumer
+  ) {
     updateFields.notifyConsumer = req.body.notifyConsumer
   }
 
@@ -80,7 +82,6 @@ const deleteOrder = async (req: Request, res: Response) => {
 
 const getOrderByDate = async (req: Request, res: Response) => {
   const { date } = req.params
-  console.log(date)
 
   const startDate = new Date(date)
   startDate.setHours(0, 0, 0, 0)
@@ -101,4 +102,21 @@ const getOrderByDate = async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ totalAmount })
 }
 
-export { getOrders, addOrder, updateOrder, deleteOrder, getOrderByDate }
+const getOrderToReview = async (req: Request, res: Response) => {
+  const { userID } = req.user
+  const orders = await Order.find({
+    consumerID: userID,
+    notifyConsumer: true,
+    deliveryStatus: 'Delivered',
+  })
+  res.status(StatusCodes.OK).json({ orders })
+}
+
+export {
+  getOrders,
+  addOrder,
+  updateOrder,
+  deleteOrder,
+  getOrderByDate,
+  getOrderToReview,
+}

@@ -17,9 +17,9 @@ const CommentSection: React.FC<CommentSectionPropsType> = ({ comments }) => {
     <div>
       <h1 className="text-xl font-bold mb-4">Reviews</h1>
       <div className="flex flex-col gap-10">
-        {comments.map((comment) => {
+        {comments.map((comment, index) => {
           return (
-            <div>
+            <div key={index}>
               <div className="flex items-center gap-1">
                 <AccountCircleIcon fontSize="medium" />
                 <h1>{comment.username}</h1>
