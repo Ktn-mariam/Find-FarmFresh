@@ -18,15 +18,19 @@ const ProductCategoryPage = () => {
   const [sortFilter, setSortFilter] = useState<String>('createdAt')
   useEffect(() => {
     const fetchProductData = async () => {
-      let fetchDataRoute = `http://localhost:5000/api/v1/products/category/${parentCategory}?page=${page}&rating=${ratingFilter}&sortBy=${sortFilter}`
-      if (childCategory) {
-        fetchDataRoute = fetchDataRoute + `&category=${childCategory}`
-      }
+      try {
+        let fetchDataRoute = `http://localhost:5000/api/v1/products/category/${parentCategory}?page=${page}&rating=${ratingFilter}&sortBy=${sortFilter}`
+        if (childCategory) {
+          fetchDataRoute = fetchDataRoute + `&category=${childCategory}`
+        }
 
-      const productResponse = await fetch(fetchDataRoute)
-      const productData = await productResponse.json()
-      setProducts(productData.products)
-      setNoOfPages(Math.ceil(productData.nbHits / 9))
+        const productResponse = await fetch(fetchDataRoute)
+        const productData = await productResponse.json()
+        setProducts(productData.products)
+        setNoOfPages(Math.ceil(productData.nbHits / 9))
+      } catch (error) {
+        console.log('Failed to fetch products of a category: ', error)
+      }
     }
 
     fetchProductData()
@@ -48,9 +52,9 @@ const ProductCategoryPage = () => {
             Category
           </h3>
           <div className="py-2">
-            {categories.map((subCategory) => {
+            {categories.map((subCategory, index) => {
               return (
-                <div className="flex pb-2 text-sm items-center">
+                <div key={index} className="flex pb-2 text-sm items-center">
                   <input
                     title={subCategory}
                     type="checkbox"
@@ -134,7 +138,7 @@ const ProductCategoryPage = () => {
               <h1 className="text-xl font-bold">Results</h1>
             </div>
             <div className="flex gap-3">
-              <select
+              {/* <select
                 className="px-2 py-1 border border-gray-200"
                 title="location=filter"
                 name="location-filter"
@@ -145,7 +149,7 @@ const ProductCategoryPage = () => {
                 <option value="">Within 15 Miles</option>
                 <option value="">Within 10 Miles</option>
                 <option value="">Within 5 Miles</option>
-              </select>
+              </select> */}
               <select
                 className="px-2 py-1 border border-gray-200"
                 title="sort"
@@ -164,11 +168,11 @@ const ProductCategoryPage = () => {
           </div>
           <div className="grid grid-cols-1 justify-center sm:grid-cols-2 md:grid-cols-3 pl-10 gap-x-4 gap-y-1">
             {products && products.length > 0 ? (
-              products.map((product) => {
-                return <Product product={product} />
+              products.map((product, index) => {
+                return <Product key={index} product={product} />
               })
             ) : (
-              <div>No products found under this category</div>
+              <div className="py-5">No products found under this category</div>
             )}
           </div>
           <div className="mt-3 flex justify-center">
