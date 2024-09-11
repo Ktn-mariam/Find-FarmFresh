@@ -29,10 +29,14 @@ const SignUpPage = () => {
   const [isFarmerChecked, setIsFarmerChecked] = useState(true)
   const [isConsumerChecked, setIsConsumerChecked] = useState(false)
   const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
-  const [uploadedImage, setUploadedImage] = useState(null)
   const navigate = useNavigate()
-  const { submitted, setSignUpInfo, handleSubmit } = useContext(FormikContext)
-  console.log(`submitted: ${submitted}`)
+  const {
+    submitted,
+    setSignUpInfo,
+    handleSubmit,
+    setMissingImageError,
+    uploadedImageFile,
+  } = useContext(FormikContext)
 
   useEffect(() => {
     if (submitted) {
@@ -52,7 +56,7 @@ const SignUpPage = () => {
     handleSubmit()
   }
 
-  const validate = (values: SignUpInformation) => {
+  const validate = async (values: SignUpInformation) => {
     const errors: FormErrorType = {}
 
     if (!values.email) {
@@ -61,6 +65,16 @@ const SignUpPage = () => {
       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
     ) {
       errors.email = 'Invalid Email Address'
+    }
+
+    if (values.email) {
+      const userexistsResponse = await fetch(
+        `http://localhost:5000/api/v1/auth/userExists/email/${values.email}`,
+      )
+      const userExistsData = await userexistsResponse.json()
+      if (userExistsData.emailExists) {
+        errors.email = 'An account with this email already exists'
+      }
     }
 
     if (!values.password) {
@@ -90,7 +104,6 @@ const SignUpPage = () => {
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
       await alert(JSON.stringify(values, null, 2))
-      console.log(values)
 
       setSignUpInfo({
         email: values.email,
@@ -117,21 +130,11 @@ const SignUpPage = () => {
     errors: formik.errors,
   }
 
-  const handleReset = () => {
-    setActiveStep(0)
-  }
-
   const handleUploadImage = () => {
     const data = new FormData()
     data.append('file', previewImage)
-
-    // fetch(__filename, { method: 'POST', body: data })
-    //   .then(async (response) => {
-    //     const imageResponse = await response.json()
-    //     setUploadedImage(imageResponse)
-    //   })
-    //   .catch((err) => {})
   }
+
   return (
     <div className="md:px-36 px-14 pt-5 pb-8 font-noto flex justify-center flex-col gap-5">
       <div className="flex justify-center items-center">
@@ -196,6 +199,11 @@ const SignUpPage = () => {
                   <button
                     type="submit"
                     className="bg-black w-68 text-white rounded-md px-3 py-2 hover:shadow-lg"
+                    onClick={() => {
+                      if (!uploadedImageFile) {
+                        setMissingImageError(true)
+                      }
+                    }}
                   >
                     Complete Profile
                   </button>

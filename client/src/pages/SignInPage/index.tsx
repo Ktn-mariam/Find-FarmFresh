@@ -1,10 +1,10 @@
 import React from 'react'
 import { useFormik } from 'formik'
 import AuthForm from '../../components/AuthForm'
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
 import AgricultureIcon from '@mui/icons-material/Agriculture'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
+import { Role } from '../../types/Auth'
 
 interface LogInInformation {
   email: string
@@ -42,7 +42,25 @@ const SignInPage = () => {
     },
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
-      await alert(JSON.stringify(values, null, 2))
+      try {
+        const response = await fetch(
+          'http://localhost:5000/api/v1/auth/login',
+          {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(values),
+          },
+        )
+
+        const responseData = await response.json()
+        console.log(responseData)
+      } catch (error) {
+        console.log('Failed to login: ', error)
+      }
+
       setValues({
         email: '',
         password: '',
@@ -51,6 +69,43 @@ const SignInPage = () => {
       setErrors({})
     },
   })
+
+  const demoLogin = async (role: string) => {
+    let loginData
+    console.log('role', role)
+
+    if (role === 'Farmer') {
+      console.log('yes')
+
+      loginData = {
+        email: 'mariamkhatoon@gmmail.com',
+        password: '12345',
+      }
+    } else {
+      loginData = {
+        email: 'mariamkhatoon@gmmail.com',
+        password: '12345',
+      }
+    }
+
+    console.log('Logindata: ', loginData)
+
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/auth/login', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      })
+
+      const responseData = await response.json()
+      console.log(responseData)
+    } catch (error) {
+      console.log('Failed to login: ', error)
+    }
+  }
 
   const formikProps = {
     handleSubmit: formik.handleSubmit,
@@ -71,11 +126,21 @@ const SignInPage = () => {
             </div>
           </div>
           <div className="flex gap-5">
-            <button className="p-3 flex gap-2 bg-gray-100 rounded-md">
+            <button
+              className="p-3 flex gap-2 bg-gray-100 rounded-md"
+              onClick={() => {
+                demoLogin(Role.Farmer)
+              }}
+            >
               <AgricultureIcon />
               <div>Log in as farmer</div>
             </button>
-            <button className="p-3 flex gap-2 bg-gray-100 rounded-md">
+            <button
+              className="p-3 flex gap-2 bg-gray-100 rounded-md"
+              onClick={() => {
+                demoLogin(Role.Consumer)
+              }}
+            >
               <ShoppingBasketIcon />
               <div>Log in as customer</div>
             </button>

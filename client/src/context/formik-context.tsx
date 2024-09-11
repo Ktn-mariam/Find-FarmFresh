@@ -137,12 +137,23 @@ export const FormikContextProvider = ({
     }
   }, [setPreviewImage, profileInformation])
 
-  const validate = (values: ProfileInformationType) => {
+  const validate = async (values: ProfileInformationType) => {
     const errors: FormikErrorType = {}
 
     if (!values.name) {
       errors.name = 'Required field'
     }
+
+    if (values.name) {
+      const userexistsResponse = await fetch(
+        `http://localhost:5000/api/v1/auth/userExists/name/${values.name}`,
+      )
+      const userExistsData = await userexistsResponse.json()
+      if (userExistsData.nameExists) {
+        errors.name = 'An account with this name already exists'
+      }
+    }
+
     if (signUpInfo?.role === Role.Farmer && !values.description) {
       errors.description = 'Required field'
     } else if (
@@ -217,14 +228,10 @@ export const FormikContextProvider = ({
     }
   }
 
-  console.log('initial valuess')
-  console.log(initialValues)
-
   const formik = useFormik({
     initialValues: initialValues,
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
-      // await alert(JSON.stringify(values, null, 2))
       if (!uploadedImageFile && !profileInformation) {
         return
       }
@@ -318,8 +325,6 @@ export const FormikContextProvider = ({
       }
     })
 
-    console.log(Array.from(formDataSignUp.entries()))
-
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -336,7 +341,6 @@ export const FormikContextProvider = ({
       localStorage.setItem('token', JSON.stringify(result.token))
     } catch (error) {
       console.error('Error during sign-up:', error)
-      throw error
     }
   }
 

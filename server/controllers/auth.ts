@@ -11,12 +11,6 @@ const registerFarmer = async (req: Request, res: Response) => {
   const { locationCoordinates } = req.body
   const parsedLocationCoordinates = JSON.parse(locationCoordinates)
 
-  console.log({
-    ...req.body,
-    image: req.file?.filename,
-    locationCoordinates: parsedLocationCoordinates,
-  })
-
   const farmer = (await Farmer.create({
     ...req.body,
     image: req.file?.filename,
@@ -29,7 +23,6 @@ const registerFarmer = async (req: Request, res: Response) => {
 
   const token = farmer.createJWT()
   const farmerDetails = farmer.getFarmerDetails()
-  console.log(farmerDetails)
   res.status(StatusCodes.CREATED).json({
     farmer: farmerDetails,
     token,
@@ -50,6 +43,28 @@ const registerConsumer = async (req: Request, res: Response) => {
     consumer: consumerDetails,
     token,
   })
+}
+
+const emailAlreadyExists = async (req: Request, res: Response) => {
+  const { email } = req.params
+
+  const farmer = (await Farmer.findOne({ email })) as IFarmer | null
+  const consumer = (await Consumer.findOne({ email })) as IConsumer | null
+
+  return res
+    .status(StatusCodes.OK)
+    .json({ emailExists: farmer || consumer ? true : false })
+}
+
+const nameAlreadyExists = async (req: Request, res: Response) => {
+  const { name } = req.params
+
+  const farmer = (await Farmer.findOne({ name })) as IFarmer | null
+  const consumer = (await Consumer.findOne({ name })) as IConsumer | null
+
+  return res
+    .status(StatusCodes.OK)
+    .json({ nameExists: farmer || consumer ? true : false })
 }
 
 const login = async (req: Request, res: Response) => {
@@ -107,4 +122,11 @@ const getUserProfileInformation = async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ user })
 }
 
-export { registerFarmer, registerConsumer, login, getUserProfileInformation }
+export {
+  registerFarmer,
+  registerConsumer,
+  nameAlreadyExists,
+  emailAlreadyExists,
+  login,
+  getUserProfileInformation,
+}
