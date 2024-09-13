@@ -1,5 +1,5 @@
 &nbsp;
-       
+
 <p display="flex" align="center" justify="center">
     <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/148e7c5a-ad43-480c-bb06-725f77eae9df" alt="farmfresh-logo" />
     <h3 align="center">Farm Fresh Finder</h3>
@@ -62,13 +62,11 @@ FarmFresh Finder is a platform designed to seamlessly connect farmers with consu
 </div>
 
 <h3 align="center">Products displayed under categories</h3>
-
 <div align="center">
        <img src="https://github.com/user-attachments/assets/c00a2793-44fe-4453-b96c-ee8960547914" alt="image1" width="70%"/>
 </div>
 
 <h3 align="center">Product Detail Page</h3>
-
 <div align="center">
        <img src="https://github.com/user-attachments/assets/ac5584a2-0f74-4dd9-8305-efc775bf4cbf" alt="image1" width="70%"/>
 </div>
@@ -79,7 +77,6 @@ FarmFresh Finder is a platform designed to seamlessly connect farmers with consu
 </div>
 
 <h3 align="center">Farmer's Profile</h3>
-
 <div align="center">
     <img src="https://github.com/user-attachments/assets/2ef62fde-ffe9-4d83-99bf-6e04b60ce616" alt="image1" width="70%"/>
     <img src="https://github.com/user-attachments/assets/4f705312-ef52-4250-8b24-8ffe1d753b93" alt="image2" width="70%"/>
@@ -98,29 +95,29 @@ FarmFresh Finder is a platform designed to seamlessly connect farmers with consu
 </div>
 
 ### As a consumer, you can:
-* Discover fresh farm produce with doorstep delivery.
-* Connect with local farmers, explore profiles, and access contact information.
-* Leave and read reviews for transparent, trustworthy relationships.
-* Join for free, enjoying an open marketplace for farmers and consumers.
+
+- Discover fresh farm produce with doorstep delivery.
+- Connect with local farmers, explore profiles, and access contact information.
+- Leave and read reviews for transparent, trustworthy relationships.
+- Join for free, enjoying an open marketplace for farmers and consumers.
 
 ### As a farmer, you can:
-* Expand your market, and sell directly to consumers beyond local markets.
-* Tailor product offerings, pricing, and promotions for market demands and consumer preferences.
-* Collect valuable consumer feedback for continuous improvement in product quality and farming practices.
-* Utilize a 30-day sales graph to track daily sales, gaining valuable insights.
-* Showcase products online for visibility, even without delivery services.
+
+- Expand your market, and sell directly to consumers beyond local markets.
+- Tailor product offerings, pricing, and promotions for market demands and consumer preferences.
+- Collect valuable consumer feedback for continuous improvement in product quality and farming practices.
+- Utilize a 30-day sales graph to track daily sales, gaining valuable insights.
+- Showcase products online for visibility, even without delivery services.
 
 <p align="right"><a href="#readme-top">back to top</a></p>
 
 <h2>Built with</h2>
 
-* <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
-* <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" /> 
-* <img src="https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
-* <img src="https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black" />
-* <img src="https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white" />  
-* <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" />
+- <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+- <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
+- <img src="https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+- <img src="https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black" />
+- <img src="https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white" />
+- <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" />
 
 <p align="right"><a href="#readme-top">back to top</a></p>
-
-
