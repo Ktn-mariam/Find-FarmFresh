@@ -43,16 +43,22 @@
 
 <h2>About the Project:</h2>
 
-<img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/7c2ff919-aeae-421d-b300-0f32aa1de144" alt="image1" width="75%"/>
+<div align="center">
+       <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/7c2ff919-aeae-421d-b300-0f32aa1de144" alt="image1" width="75%"/>
+</div>
 
 <h3 align="center" >!! Note: This is a Demo Project !!</h3>
 <p align="center">This project is for demonstration purposes only. The data displayed or curated is for illustrative purposes only and does not represent real-world information.</p>
 
 FarmFresh Finder is a platform designed to seamlessly connect farmers with consumers, fostering a direct and transparent exchange of fresh, locally sourced produce. Our application empowers farmers by providing a digital space to showcase their yields while offering consumers a convenient way to discover and purchase high-quality, sustainably grown products.
 
-<img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/4fb9208e-e726-41da-8f6d-e9967939e54e" alt="image1" width="75%"/>
+<div align="center">
+       <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/4fb9208e-e726-41da-8f6d-e9967939e54e" alt="image1" width="75%"/>
+</div>
 
-![Screenshot 2024-01-20 092238](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/97f292fe-60e7-4aae-8f1c-8b57730e9e6e)
+<div align="center">
+       <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/97f292fe-60e7-4aae-8f1c-8b57730e9e6e" alt="image1" width="75%"/>
+</div>
 
 
 <h4 align="center">Products displayed under categories</h4>
