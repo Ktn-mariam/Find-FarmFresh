@@ -74,11 +74,17 @@ FarmFresh Finder is a platform designed to seamlessly connect farmers with consu
     <img src="https://github.com/user-attachments/assets/4f705312-ef52-4250-8b24-8ffe1d753b93" alt="image2" width="75%"/>
 </div>
 
-![image](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/6e3359da-2dcb-49b2-94fb-fcfbfb2f7b43)
+<div align="center">
+       <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/6e3359da-2dcb-49b2-94fb-fcfbfb2f7b43" alt="image1" width="75%"/>
+</div>
 
-![image](https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/e3255f6f-fd4f-4f9c-a8ce-261537175a15)
+<div align="center">
+       <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/e3255f6f-fd4f-4f9c-a8ce-261537175a15" alt="image1" width="75%"/>
+</div>
 
-![image](https://github.com/user-attachments/assets/1837b757-7666-43dd-bc34-c8f3f977796d)
+<div align="center">
+       <img src="https://github.com/user-attachments/assets/1837b757-7666-43dd-bc34-c8f3f977796d" alt="image1" width="75%"/>
+</div>
 
 ### As a consumer, you can:
 * Discover fresh farm produce with doorstep delivery.
