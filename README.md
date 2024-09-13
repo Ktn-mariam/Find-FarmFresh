@@ -61,15 +61,23 @@ FarmFresh Finder is a platform designed to seamlessly connect farmers with consu
        <img src="https://github.com/user-attachments/assets/ca45ba1b-c05b-4886-8456-144e740b3fe6" alt="image1" width="70%"/>
 </div>
 
-<h3 align="center">Shopping Cart</h3>
-<div align="center">
-       <img src="https://github.com/user-attachments/assets/0f109b2f-8fc9-4922-aae4-724240f2da00" alt="image1" width="70%"/>
-</div>
-
 <h3 align="center">Products displayed under categories</h3>
 
 <div align="center">
        <img src="https://github.com/user-attachments/assets/c00a2793-44fe-4453-b96c-ee8960547914" alt="image1" width="70%"/>
+</div>
+
+![image](https://github.com/user-attachments/assets/ac5584a2-0f74-4dd9-8305-efc775bf4cbf)
+
+<h3 align="center">Product Detail Page</h3>
+
+<div align="center">
+       <img src="https://github.com/user-attachments/assets/ac5584a2-0f74-4dd9-8305-efc775bf4cbf" alt="image1" width="70%"/>
+</div>
+
+<h3 align="center">Shopping Cart Page</h3>
+<div align="center">
+       <img src="https://github.com/user-attachments/assets/0f109b2f-8fc9-4922-aae4-724240f2da00" alt="image1" width="70%"/>
 </div>
 
 <h3 align="center">Farmer's Profile</h3>
