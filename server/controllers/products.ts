@@ -31,9 +31,6 @@ export type RemovedCommentType =
 const createProduct = async (req: Request, res: Response) => {
   const { userID, name } = req.user
 
-  console.log(req.body)
-  console.log(req.file)
-
   const product = await Product.create({
     ...req.body,
     farmerID: userID,
@@ -88,7 +85,7 @@ const getProductsLast30Days = async (req: Request, res: Response) => {
 const getProductDetailForOrder = async (req: Request, res: Response) => {
   const { productID } = req.params
   const product = await Product.findOne({ _id: productID }).select(
-    '_id title price images parentCategory category farmerID farmerName',
+    '_id title price images parentCategory category farmerID farmerName hasDiscount discountPercentage',
   )
   res.status(StatusCodes.OK).json({ product })
 }
@@ -171,6 +168,11 @@ const updateProduct = async (req: Request, res: Response) => {
     updateFields.returnableChoice = req.body.returnableChoice
   if (req.body.onSiteShopping)
     updateFields.onSiteShopping = req.body.onSiteShopping
+  if (Object.prototype.hasOwnProperty.call(req.body, 'hasDiscount')) {
+    updateFields.hasDiscount = req.body.hasDiscount
+  }
+  if (req.body.discountPercentage)
+    updateFields.discountPercentage = req.body.discountPercentage
 
   const newComment = req.body.comment
     ? {
@@ -195,6 +197,7 @@ const updateProduct = async (req: Request, res: Response) => {
 
   if (newComment && role === Role.Consumer) {
     const product = await Product.findOne({ _id: productID })
+
     let fiveNew = product?.productRating?.voteCount?.five!
     let fourNew = product?.productRating?.voteCount?.four!
     let threeNew = product?.productRating?.voteCount?.three!
@@ -214,7 +217,7 @@ const updateProduct = async (req: Request, res: Response) => {
       case 2:
         twoNew++
         break
-      case 5:
+      case 1:
         oneNew++
         break
     }
@@ -224,7 +227,7 @@ const updateProduct = async (req: Request, res: Response) => {
       (fiveNew + fourNew + threeNew + twoNew + oneNew)
 
     const productRating = {
-      rating: totalRating,
+      rating: Math.round(totalRating * 100) / 100,
       voteCount: {
         five: fiveNew,
         four: fourNew,
@@ -233,6 +236,7 @@ const updateProduct = async (req: Request, res: Response) => {
         one: oneNew,
       },
     }
+
     updatedProduct = await Product.findOneAndUpdate(
       { _id: productID },
       {
