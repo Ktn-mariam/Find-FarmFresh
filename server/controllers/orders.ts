@@ -3,12 +3,13 @@ import Order from '../models/order'
 import { StatusCodes } from 'http-status-codes'
 import { Role } from '../middleware/authentication'
 import UnAuthorizedError from '../errors/unauthorized'
+import moment from 'moment'
 
 const getOrders = async (req: Request, res: Response) => {
   const { userID, role } = req.user
   let orders
   if (role === Role.Farmer) {
-    orders = await Order.find({ farmerID: userID })
+    orders = await Order.find({ farmerID: userID }).sort({ orderDate: -1 })
   } else {
     orders = await Order.find({ consumerID: userID }).sort({ orderDate: -1 })
   }
@@ -72,7 +73,20 @@ const updateOrder = async (req: Request, res: Response) => {
 
 const deleteOrder = async (req: Request, res: Response) => {
   const { orderID } = req.params
-  const order = await Order.findOneAndDelete({
+
+  const order = await Order.findOne({
+    _id: orderID,
+    farmerID: req.user.userID,
+  })
+
+  const thirtyDaysAgo = moment().subtract(30, 'days').toDate()
+  if (order!.orderDate > thirtyDaysAgo) {
+    return res
+      .status(StatusCodes.FORBIDDEN)
+      .json({ message: 'Cannot delete an order from the last 30 days' })
+  }
+
+  await Order.findOneAndDelete({
     _id: orderID,
     farmerID: req.user.userID,
   })
