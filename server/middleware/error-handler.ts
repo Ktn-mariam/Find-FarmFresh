@@ -9,8 +9,10 @@ const errorHandlerMiddleware = (
   next: NextFunction,
 ) => {
   if (err instanceof CustomAPIError) {
+    console.log(err.message)
     return res.status(err.statusCode).json({ msg: err.message })
   }
+  console.log(err.message)
   return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ err })
 }
 
