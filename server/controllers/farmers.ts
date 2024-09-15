@@ -105,7 +105,7 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
     (fiveNew + fourNew + threeNew + twoNew + oneNew)
 
   const farmerRating = {
-    rating: totalRating,
+    rating: Math.round(totalRating * 100) / 100,
     voteCount: {
       five: fiveNew,
       four: fourNew,
@@ -146,11 +146,17 @@ const addCommentsToFarmer = async (req: Request, res: Response) => {
     if (updatedFarmer.comments.length > 6) {
       const leastRecentComment: RemovedCommentType = updatedFarmer
         .comments[6] as RemovedCommentType
-      updatedFarmer = await Product.findByIdAndUpdate(
+
+      if (!leastRecentComment) {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .json({ error: 'Comment not found' })
+      }
+      updatedFarmer = await Farmer.findByIdAndUpdate(
         { _id: farmerID },
         {
           $pull: {
-            comments: updatedFarmer.comments[6],
+            comments: { _id: leastRecentComment._id },
           },
         },
         { new: true, runValidators: true },
