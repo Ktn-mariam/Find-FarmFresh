@@ -123,7 +123,7 @@ const FarmerSchema = new Schema({
   farmerRating: {
     rating: {
       type: Number,
-      default: 4.5,
+      default: 5,
       min: 0.0,
       max: 5.0,
     },
@@ -134,7 +134,7 @@ const FarmerSchema = new Schema({
       },
       four: {
         type: Number,
-        default: 1,
+        default: 0,
       },
       three: {
         type: Number,
@@ -174,7 +174,7 @@ const FarmerSchema = new Schema({
       },
       createdAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
       },
     },
   ],
