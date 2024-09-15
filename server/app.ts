@@ -20,8 +20,12 @@ const app = express()
 // middleware
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'))
+
+// middleware
+app.use(notFoundMiddleware)
+app.use(errorHandlerMiddleware)
 
 // routes
 app.use('/api/v1/auth', authRouter)
@@ -30,10 +34,6 @@ app.use('/api/v1/products', productRouter)
 app.use('/api/v1/comments', commentsRouter)
 app.use('/api/v1/consumers', consumerRouter)
 app.use('/api/v1/orders', ordersRouter)
-
-// middleware
-app.use(notFoundMiddleware)
-app.use(errorHandlerMiddleware)
 
 const PORT = process.env.PORT || 5000
 
