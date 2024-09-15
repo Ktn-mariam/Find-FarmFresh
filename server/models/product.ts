@@ -132,7 +132,7 @@ const ProductSchema = new mongoose.Schema(
       voteCount: {
         five: {
           type: Number,
-          default: 1,
+          default: 0,
         },
         four: {
           type: Number,
