@@ -15,7 +15,10 @@ const getConsumer = async (req: Request, res: Response) => {
 const updateConsumer = async (req: Request, res: Response) => {
   const { userID } = req.user
   const { locationCoordinates } = req.body
-  const parsedLocationCoordinates = JSON.parse(locationCoordinates)
+  let parsedLocationCoordinates
+  if (locationCoordinates) {
+    parsedLocationCoordinates = JSON.parse(locationCoordinates)
+  }
 
   const image = req.file?.filename || req.body.image
 
