@@ -64,6 +64,8 @@ export interface ProductType {
   farmerID: string
   farmerName: string
   isVisible: boolean
+  hasDiscount: boolean
+  discountPercentage: number
 }
 
 export interface ProductDetailType {
@@ -136,6 +138,7 @@ export interface ProductDetailType {
   cashOnDelivery: boolean
   returnableChoice: boolean
   hasDiscount: boolean
+  discountPercentage: number
   onSiteShopping: boolean
   comments: Comment[]
 }
@@ -209,6 +212,7 @@ export interface ProductDetailTypeForDisplay {
   cashOnDelivery: boolean
   returnableChoice: boolean
   hasDiscount: boolean
+  discountPercentage: number
   onSiteShopping: boolean
   comments: Comment[]
 }
@@ -218,6 +222,8 @@ export interface ProductDetailForOrder {
   images: string[]
   title: string
   price: number
+  hasDiscount: boolean
+  discountPercentage: number
   quantity: number
   category:
     | 'Bananas'
