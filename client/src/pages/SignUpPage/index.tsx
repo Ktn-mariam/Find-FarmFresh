@@ -9,6 +9,7 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
 import AgricultureIcon from '@mui/icons-material/Agriculture'
 import FormikContext from '../../context/formik-context'
 import { useNavigate } from 'react-router-dom'
+import AuthenticationContext from '../../context/authentication'
 
 const steps = ['Create your account', 'Add required Information']
 
@@ -25,6 +26,7 @@ interface FormErrorType {
 }
 
 const SignUpPage = () => {
+  const { logInData } = useContext(AuthenticationContext)
   const [activeStep, setActiveStep] = useState(0)
   const [isFarmerChecked, setIsFarmerChecked] = useState(true)
   const [isConsumerChecked, setIsConsumerChecked] = useState(false)
@@ -103,8 +105,6 @@ const SignUpPage = () => {
     },
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
-      await alert(JSON.stringify(values, null, 2))
-
       setSignUpInfo({
         email: values.email,
         password: values.password,
@@ -133,6 +133,10 @@ const SignUpPage = () => {
   const handleUploadImage = () => {
     const data = new FormData()
     data.append('file', previewImage)
+  }
+
+  if (logInData.loggedIn) {
+    navigate('/my-profile')
   }
 
   return (
