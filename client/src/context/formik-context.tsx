@@ -149,7 +149,7 @@ export const FormikContextProvider = ({
         `http://localhost:5000/api/v1/auth/userExists/name/${values.name}`,
       )
       const userExistsData = await userexistsResponse.json()
-      if (userExistsData.nameExists) {
+      if (userExistsData.nameExists && !profileInformation) {
         errors.name = 'An account with this name already exists'
       }
     }
@@ -206,15 +206,18 @@ export const FormikContextProvider = ({
       mobileNo: profileInformation?.mobileNo,
       location: profileInformation?.location,
       latitudeCoordinate:
-        profileInformation?.locationCoordinates.latitude.coordinate,
+        profileInformation?.locationCoordinates?.latitude?.coordinate ||
+        undefined,
       latitudeDirection:
-        profileInformation?.locationCoordinates.latitude.direction,
+        profileInformation?.locationCoordinates?.latitude?.direction || 'N',
       longitudeCoordinate:
-        profileInformation?.locationCoordinates.longitude.coordinate,
+        profileInformation?.locationCoordinates?.longitude?.coordinate ||
+        undefined,
       longitudeDirection:
-        profileInformation?.locationCoordinates.longitude.direction,
+        profileInformation?.locationCoordinates?.longitude?.direction || 'E',
     }
   } else {
+    console.log('no here')
     initialValues = {
       name: '',
       image: '',

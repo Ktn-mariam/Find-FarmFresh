@@ -7,6 +7,8 @@ interface AuthenticationContextType {
   loadingLogInData: boolean
   setLogInData: React.Dispatch<React.SetStateAction<UserProfileType>>
   logInError: boolean
+  token: string | null
+  setToken: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 const AuthenticationContext = createContext<AuthenticationContextType>({
@@ -16,6 +18,8 @@ const AuthenticationContext = createContext<AuthenticationContextType>({
   loadingLogInData: true,
   setLogInData: () => {},
   logInError: false,
+  token: null,
+  setToken: () => {},
 })
 
 interface AuthenticationContextProviderPropsType {
@@ -25,54 +29,76 @@ interface AuthenticationContextProviderPropsType {
 export const AuthenticationContextProvider: React.FC<AuthenticationContextProviderPropsType> = ({
   children,
 }) => {
-  const token = localStorage.getItem('token')
-
   const [loadingLogInData, setLoadingLogInData] = useState(true)
   const [logInData, setLogInData] = useState<UserProfileType>({
     loggedIn: false,
   })
   const [logInError, setLogInError] = useState(false)
+  const [token, setToken] = useState<string | null>(null)
+
+  useEffect(() => {
+    const getToken = localStorage.getItem('token')
+    if (getToken) {
+      const parsedToken = JSON.parse(getToken)
+      setToken(parsedToken)
+    }
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!token) {
+      console.log('token inside fetchData', token)
+
+      try {
+        const userResponse = await fetch('http://localhost:5000/api/v1/auth', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        const userData = await userResponse.json()
+
+        console.log(userData)
+
+        if (userResponse.ok) {
+          const loginInfo: UserProfileType = {
+            loggedIn: true,
+            userID: userData.user.userID,
+            role: userData.user.role,
+            name: userData.user.userDetail[0].name,
+            image: userData.user.userDetail[0].image,
+            location: userData.user.userDetail[0].location,
+            locationCoordinates:
+              userData.user.userDetail[0].locationCoordinates,
+            mobileNo: userData.user.userDetail[0].mobileNo,
+          }
+
+          if (userData.user.role === Role.Farmer) {
+            loginInfo.comments = userData.user.userDetail[0].comments
+            loginInfo.farmerRating = userData.user.userDetail[0].farmerRating
+            loginInfo.description = userData.user.userDetail[0].description
+          } else {
+            loginInfo.following = userData.user.userDetail[0].following
+          }
+
+          console.log(loginInfo)
+
+          setLogInData({ ...loginInfo })
+        } else {
+          setLogInError(true)
+        }
+      } catch (error) {
+        console.log(`Could not fetch user data: ${error}`)
+      } finally {
         setLoadingLogInData(false)
-        return
+        console.log(logInData)
       }
-      const parsedToken = JSON.parse(token)
-      const userResponse = await fetch('http://localhost:5000/api/v1/auth', {
-        headers: {
-          Authorization: `Bearer ${parsedToken}`,
-        },
-      })
-      const userData = await userResponse.json()
-
-      if (userResponse.ok) {
-        const loginInfo: UserProfileType = {
-          loggedIn: true,
-          userID: userData.user.userID,
-          role: userData.user.role,
-          name: userData.user.userDetail[0].name,
-          image: userData.user.userDetail[0].image,
-          location: userData.user.userDetail[0].location,
-          locationCoordinates: userData.user.userDetail[0].locationCoordinates,
-          mobileNo: userData.user.userDetail[0].mobileNo,
-        }
-
-        if (userData.user.role === Role.Farmer) {
-          loginInfo.comments = userData.user.userDetail[0].comments
-          loginInfo.farmerRating = userData.user.userDetail[0].farmerRating
-          loginInfo.description = userData.user.userDetail[0].description
-        }
-        setLogInData(loginInfo)
-      } else {
-        setLogInError(true)
-      }
-
-      setLoadingLogInData(false)
     }
 
-    fetchData()
+    console.log('token', token)
+
+    if (token) {
+      console.log('HI')
+      fetchData()
+    }
   }, [token])
 
   let contextValue = {
@@ -80,6 +106,8 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
     loadingLogInData,
     setLogInData,
     logInError,
+    token,
+    setToken,
   }
 
   return (

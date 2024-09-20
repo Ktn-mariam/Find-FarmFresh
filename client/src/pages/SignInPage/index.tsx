@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useFormik } from 'formik'
 import AuthForm from '../../components/AuthForm'
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
 import AgricultureIcon from '@mui/icons-material/Agriculture'
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import { Role } from '../../types/Auth'
+import AuthenticationContext from '../../context/authentication'
+import { useNavigate } from 'react-router-dom'
 
 interface LogInInformation {
   email: string
@@ -17,6 +19,9 @@ interface FormErrorType {
 }
 
 const SignInPage = () => {
+  const { logInData, setToken } = useContext(AuthenticationContext)
+  const navigate = useNavigate()
+
   const validate = (values: LogInInformation) => {
     const errors: FormErrorType = {}
 
@@ -57,6 +62,9 @@ const SignInPage = () => {
 
         const responseData = await response.json()
         console.log(responseData)
+        localStorage.setItem('token', JSON.stringify(responseData.token))
+        setToken(responseData.token)
+        navigate('/my-profile')
       } catch (error) {
         console.log('Failed to login: ', error)
       }
@@ -78,17 +86,15 @@ const SignInPage = () => {
       console.log('yes')
 
       loginData = {
-        email: 'mariamkhatoon@gmmail.com',
-        password: '12345',
+        email: 'oliviathompson219@gmail.com',
+        password: 'Olivia219',
       }
     } else {
       loginData = {
-        email: 'mariamkhatoon@gmmail.com',
-        password: '12345',
+        email: 'liamjohnson879@gmail.com',
+        password: 'Liam$879',
       }
     }
-
-    console.log('Logindata: ', loginData)
 
     try {
       const response = await fetch('http://localhost:5000/api/v1/auth/login', {
@@ -102,6 +108,9 @@ const SignInPage = () => {
 
       const responseData = await response.json()
       console.log(responseData)
+      localStorage.setItem('token', JSON.stringify(responseData.token))
+      setToken(responseData.token)
+      navigate('/my-profile')
     } catch (error) {
       console.log('Failed to login: ', error)
     }
@@ -115,6 +124,11 @@ const SignInPage = () => {
     values: formik.values,
     errors: formik.errors,
   }
+
+  if (logInData.loggedIn) {
+    navigate('/my-profile')
+  }
+
   return (
     <div className="md:px-36 px-14 pt-5 pb-32 font-noto flex justify-center items-center gap-5">
       <div className="mt-5">
