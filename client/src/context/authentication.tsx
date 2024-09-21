@@ -79,8 +79,6 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
             loginInfo.following = userData.user.userDetail[0].following
           }
 
-          console.log(loginInfo)
-
           setLogInData({ ...loginInfo })
         } else {
           setLogInError(true)
@@ -89,14 +87,10 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
         console.log(`Could not fetch user data: ${error}`)
       } finally {
         setLoadingLogInData(false)
-        console.log(logInData)
       }
     }
 
-    console.log('token', token)
-
     if (token) {
-      console.log('HI')
       fetchData()
     }
   }, [token])
