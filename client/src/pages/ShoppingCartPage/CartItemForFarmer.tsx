@@ -27,27 +27,40 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
   useEffect(() => {
     let totalPrice = 0
     const fetchProductDetails = async () => {
-      const productDetails = await Promise.all(
-        cartItem.products.map(async (product) => {
-          const productDetailResponse = await fetch(
-            `http://localhost:5000/api/v1/products/orderDetail/${product.productID}`,
-          )
-          const productDetailData = await productDetailResponse.json()
+      console.log('I am running again')
 
-          console.log(productDetailData.product.price)
+      try {
+        const productDetails = await Promise.all(
+          cartItem.products.map(async (product) => {
+            const productDetailResponse = await fetch(
+              `http://localhost:5000/api/v1/products/orderDetail/${product.productID}`,
+            )
+            const productDetailData = await productDetailResponse.json()
 
-          totalPrice += productDetailData.product.price * product.quantity
+            const price = productDetailData.product.hasDiscount
+              ? Math.round(
+                  (productDetailData.product.price -
+                    productDetailData.product.price *
+                      (productDetailData.product.discountPercentage / 100)) *
+                    100,
+                ) / 100
+              : productDetailData.product?.price!
 
-          return {
-            ...productDetailData.product,
-            quantity: product.quantity,
-          }
-        }),
-      )
+            totalPrice += price * product.quantity
 
-      setProducts(productDetails)
-      updateTotalPrice({ farmerID: cartItem.farmerID, totalPrice })
-      findTotalPriceAndItems()
+            return {
+              ...productDetailData.product,
+              quantity: product.quantity,
+            }
+          }),
+        )
+
+        setProducts(productDetails)
+        updateTotalPrice({ farmerID: cartItem.farmerID, totalPrice })
+        findTotalPriceAndItems()
+      } catch (error) {
+        console.log('Failed to fetch product details for cart items: ', error)
+      }
     }
 
     fetchProductDetails()
@@ -56,37 +69,34 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
       fetchProductDetails()
       setRefetchProducts(false)
     }
-  }, [
-    cartItem.products,
-    cartItem.farmerID,
-    updateTotalPrice,
-    refetchProducts,
-    findTotalPriceAndItems,
-    cartItem,
-  ])
+  }, [cartItem.products, cartItem.farmerID, refetchProducts, cartItem])
 
   const addOrderHandler = async () => {
     if (!cartItem) {
       return
     }
-    const token = localStorage.getItem('token')
-    const parsedToken = JSON.parse(token!)
+    try {
+      const token = localStorage.getItem('token')
+      const parsedToken = JSON.parse(token!)
 
-    const orderResponse = await fetch(`http://localhost:5000/api/v1/orders`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${parsedToken}`,
-      },
-      body: JSON.stringify(cartItem),
-    })
+      const orderResponse = await fetch(`http://localhost:5000/api/v1/orders`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${parsedToken}`,
+        },
+        body: JSON.stringify(cartItem),
+      })
 
-    const orderData = await orderResponse.json()
-    console.log(orderData)
+      const orderData = await orderResponse.json()
+      console.log(orderData)
 
-    deleteAllItemsFromCartofFarmer(cartItem.farmerID)
-    setRefetchProducts(true)
+      deleteAllItemsFromCartofFarmer(cartItem.farmerID)
+      setRefetchProducts(true)
+    } catch (error) {
+      console.log('Failed to checkout: ', error)
+    }
   }
 
   if (!displayCartItem) {
@@ -96,7 +106,7 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
   return (
     <div className="flex font-workSans flex-col gap-2">
       <div className="flex items-center justify-between">
-        <NavLink to={`farmer=profile/${cartItem.farmerID}`}>
+        <NavLink to={`/farmer-profile/${cartItem.farmerID}`}>
           <div className="text-xl font-bold">{cartItem.farmerName}</div>
         </NavLink>
         <button
@@ -115,9 +125,10 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
         <div className="w-3/4">
           {products && products.length < 4 && (
             <div className="flex flex-col gap-1">
-              {products.map((product) => {
+              {products.map((product, index) => {
                 return (
                   <ProductCart
+                    key={index}
                     isShoppingCart={true}
                     product={product}
                     setRefetchProducts={setRefetchProducts}

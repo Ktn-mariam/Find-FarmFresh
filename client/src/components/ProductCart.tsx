@@ -29,6 +29,8 @@ const ProductCart: React.FC<ProductCartProps> = ({
     quantity,
     farmerID,
     farmerName,
+    hasDiscount,
+    discountPercentage,
   } = product
   const [cartQuantity, setCartQuantity] = useState(quantity)
 
@@ -76,7 +78,14 @@ const ProductCart: React.FC<ProductCartProps> = ({
               <div className="flex items-center">
                 <p className="text-sm py-0.5 pr-1">AED</p>
                 <p>
-                  <span className="font-bold text-lg">{price}</span>/kg
+                  <span className="font-bold text-lg">
+                    {hasDiscount
+                      ? Math.round(
+                          (price - price * (discountPercentage / 100)) * 100,
+                        ) / 100
+                      : price!}
+                  </span>
+                  /kg
                 </p>
               </div>
             </div>
@@ -94,8 +103,12 @@ const ProductCart: React.FC<ProductCartProps> = ({
                   name="quantity"
                   onChange={handleUpdateQuantity}
                 >
-                  {quantityOptions.map((option) => {
-                    return <option value={option}>{option}</option>
+                  {quantityOptions.map((option, index) => {
+                    return (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    )
                   })}
                 </select>
               </div>
