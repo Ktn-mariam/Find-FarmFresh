@@ -6,7 +6,6 @@ import StorePage from './pages/StorePage'
 import ProductCategoryPage from './pages/ProductCategoryPage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import FarmerProfile from './pages/FarmerProfile'
-import ConsumerProfile from './pages/ConsumerProfile'
 import ShoppingCartPage from './pages/ShoppingCartPage'
 import OrdersPage from './pages/OrdersPage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
@@ -16,17 +15,13 @@ import SignUpPage from './pages/SignUpPage'
 import AuthenticationContext from './context/authentication'
 import { FormikContextProvider } from './context/formik-context'
 import { Role } from './types/Auth'
-
-enum Status {
-  Waiting = 'Waiting',
-  Transported = 'Transported',
-  Delivered = 'Delivered',
-}
+import { ShoppingCartContextProvider } from './context/shoppingCart'
+import MyProfilePage from './pages/MyProfilePage'
 
 function App() {
   const { logInData } = useContext(AuthenticationContext)
   return (
-    <FormikContextProvider>
+    <ShoppingCartContextProvider>
       <Router>
         <Navbar />
         <ScrollToTop />
@@ -42,35 +37,33 @@ function App() {
             element={<ProductCategoryPage />}
           />
           <Route
-            path="/my-profile"
-            element={
-              logInData.role === Role.Farmer ? (
-                <FarmerProfile editable={true} />
-              ) : (
-                <ConsumerProfile status={Status.Delivered} />
-              )
-            }
+            path="/store/:parentCategory/:category/:productID"
+            element={<ProductDetailPage />}
           />
           <Route
             path="/farmer-profile/:farmerID"
             element={<FarmerProfile editable={false} />}
           />
           <Route
-            path="/store/:parentCategory/:category/:productID"
-            element={<ProductDetailPage />}
+            path="/sign-up"
+            element={
+              <FormikContextProvider>
+                <SignUpPage />
+              </FormikContextProvider>
+            }
           />
+          <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/my-profile" element={<MyProfilePage />} />
           {logInData.role === Role.Consumer && (
             <Route path="/shopping-cart" element={<ShoppingCartPage />} />
           )}
-          <Route path="/sign-in" element={<SignInPage />} />
-          <Route path="/sign-up" element={<SignUpPage />} />
           {logInData.role === Role.Farmer && (
             <Route path="/orders" element={<OrdersPage />} />
           )}
         </Routes>
         <Footer />
       </Router>
-    </FormikContextProvider>
+    </ShoppingCartContextProvider>
   )
 }
 
