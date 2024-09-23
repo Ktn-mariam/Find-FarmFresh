@@ -1,8 +1,11 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { useContext } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import AuthenticationContext from '../../context/authentication'
 
 const HeroSection = () => {
+  const { logInData } = useContext(AuthenticationContext)
+  const navigate = useNavigate()
   return (
     <div className="flex gap-5 mb-20 mt-10 justify-between items-center">
       <div>
@@ -17,12 +20,20 @@ const HeroSection = () => {
           savoring the taste of truly fresh, seasonal delights.
         </div>
         <div className="mt-10 flex gap-5">
-          <NavLink to="/sign-up">
-            <button className="text-lg px-4 py-3 bg-appleGreen flex items-center rounded-md hover:bg-asparagus">
-              Create Account
-              <KeyboardArrowRightIcon />
-            </button>
-          </NavLink>
+          <button
+            className="text-lg px-4 py-3 bg-appleGreen flex items-center rounded-md hover:bg-asparagus"
+            type="button"
+            onClick={() => {
+              if (logInData.loggedIn) {
+                navigate('/my-profile')
+              } else {
+                navigate('/sign-up')
+              }
+            }}
+          >
+            Create Account
+            <KeyboardArrowRightIcon />
+          </button>
           <NavLink to="/store">
             <button className="text-lg px-4 py-3 bg-teaGreen1 hover:bg-teaGreen2 items-center rounded-md hover:shadow-sm">
               View Products
