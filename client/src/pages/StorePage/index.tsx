@@ -1,54 +1,69 @@
 import React, { useContext, useEffect, useState } from 'react'
 import ProductSlider from '../../components/ProductSlider'
 import CategoryNavbar from '../../components/CategoryNavbar'
-import { ProductDetailType } from '../../types/Product'
+import { ProductDetailTypeForDisplay } from '../../types/Product'
 import AuthenticationContext from '../../context/authentication'
 
 const StorePage = () => {
   const [topRatedProducts, setTopRatedProducts] = useState<
-    ProductDetailType[] | null
+    ProductDetailTypeForDisplay[] | null
   >(null)
   const [discountedProducts, setDiscountedProducts] = useState<
-    ProductDetailType[] | null
+    ProductDetailTypeForDisplay[] | null
   >(null)
   const { logInData } = useContext(AuthenticationContext)
   const [followingProducts, setFollowingProducts] = useState<
-    ProductDetailType[] | null
-  >(null)
+    ProductDetailTypeForDisplay[] | null
+  >([])
 
   useEffect(() => {
     const fetchTopRatedProducts = async () => {
-      const topRatedProductsResponse = await fetch(
-        `http://localhost:5000/api/v1/products/topRatedProducts`,
-      )
+      try {
+        const topRatedProductsResponse = await fetch(
+          `http://localhost:5000/api/v1/products/topRatedProducts`,
+        )
 
-      const topRatedProductData = await topRatedProductsResponse.json()
-      setTopRatedProducts(topRatedProductData.products)
+        const topRatedProductData = await topRatedProductsResponse.json()
+        setTopRatedProducts(topRatedProductData.products)
+      } catch (error) {
+        console.log('Failed to fetch top rated products: ', error)
+      }
     }
 
     const fetchDiscountedProducts = async () => {
-      const discountedProductsResponse = await fetch(
-        `http://localhost:5000/api/v1/products/discountedProducts`,
-      )
+      try {
+        const discountedProductsResponse = await fetch(
+          `http://localhost:5000/api/v1/products/discountedProducts`,
+        )
 
-      const discountedProductsData = await discountedProductsResponse.json()
-      setDiscountedProducts(discountedProductsData.products)
+        const discountedProductsData = await discountedProductsResponse.json()
+        setDiscountedProducts(discountedProductsData.products)
+      } catch (error) {
+        console.log('Failed to fetch discounted products: ', error)
+      }
     }
 
     const fetchFollowingFarmerProducts = async () => {
       if (logInData && logInData.following) {
-        const products = await Promise.all(
-          logInData.following.map(async (farmer) => {
-            const orderResponse = await fetch(
-              `http://localhost:5000/api/v1/products/lastThirtyDayProducts/${farmer.farmerID}`,
-            )
+        try {
+          const products = await Promise.all(
+            logInData.following.map(async (farmer) => {
+              const orderResponse = await fetch(
+                `http://localhost:5000/api/v1/products/lastThirtyDayProducts/${farmer.farmerID}`,
+              )
 
-            const productsData = await orderResponse.json()
-            return productsData.products
-          }),
-        )
-        const allProducts = [].concat(...products)
-        setFollowingProducts(allProducts)
+              const productsData = await orderResponse.json()
+              return productsData.products
+            }),
+          )
+          const allProducts = [].concat(...products)
+          setFollowingProducts(allProducts)
+        } catch (error) {
+          console.log(
+            'Failed to fetch products of farmers that the customer is following: ',
+            error,
+          )
+        }
       } else {
         setFollowingProducts(null)
       }
@@ -57,14 +72,14 @@ const StorePage = () => {
     fetchTopRatedProducts()
     fetchDiscountedProducts()
     fetchFollowingFarmerProducts()
-  })
+  }, [logInData])
   return (
     <div>
       <div className="md:px-36 px-14 py-5 text-xs md:text-sm font-serif">
         <CategoryNavbar />
       </div>
       <div className="flex flex-col gap-4 mb-32 md:px-36 px-14 pt-20">
-        {followingProducts && (
+        {followingProducts && followingProducts.length > 0 && (
           <ProductSlider
             noOfSlides={6}
             height={48}
@@ -72,6 +87,17 @@ const StorePage = () => {
             editable={false}
             products={followingProducts}
           />
+        )}
+        {logInData.following && logInData.following.length === 0 && (
+          <div>
+            <h1 className="font-bold text-xl  font-noto">
+              Recent Products From My Following
+            </h1>
+            <p className="py-3 mb-5">
+              No products to display yet. Follow farmers to view their recent
+              products here.
+            </p>
+          </div>
         )}
         {topRatedProducts && (
           <ProductSlider
