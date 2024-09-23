@@ -63,7 +63,7 @@ interface ShoppingCartContextProviderPropsType {
 export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPropsType> = ({
   children,
 }) => {
-  const { logInData } = useContext(AuthenticationContext)
+  const { logInData, token } = useContext(AuthenticationContext)
   const [cart, setCart] = useState<CartItem[] | []>([])
   const [refetchCart, setRefetchCart] = useState(false)
   const [firstLoad, setFirstLoad] = useState(true)
@@ -71,15 +71,12 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const token = localStorage.getItem('token')
-        const parsedToken = JSON.parse(token!)
-
         const cartResponse = await fetch(
           `http://localhost:5000/api/v1/consumers/shoppingCart`,
           {
             mode: 'cors',
             headers: {
-              Authorization: `Bearer ${parsedToken}`,
+              Authorization: `Bearer ${token}`,
             },
           },
         )
@@ -138,13 +135,6 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
 
   useEffect(() => {
     const updateCartForConsumer = async () => {
-      console.log('updateCartForConsumer')
-
-      console.log(cart)
-
-      const token = localStorage.getItem('token')
-      const parsedToken = JSON.parse(token!)
-
       try {
         const consumerResponse = await fetch(
           `http://localhost:5000/api/v1/consumers`,
@@ -153,14 +143,13 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
             mode: 'cors',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${parsedToken}`,
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ cart }),
           },
         )
 
         const consumerData = await consumerResponse.json()
-        console.log(consumerData)
       } catch (error) {
         console.log('Failed to update cart for the consumer: ', error)
       }
@@ -169,11 +158,9 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
     if (!firstLoad) {
       updateCartForConsumer()
     }
-  }, [cart])
+  }, [cart, token])
 
   const handleAddToCart = (addToCartItem: AddToCartItemType) => {
-    console.log('handleAddToCart')
-
     setCart((cartPrev: CartItem[]) => {
       const existingFarmerIndex = cartPrev.findIndex((farmer) => {
         return farmer.farmerID === addToCartItem.farmerID
@@ -218,12 +205,9 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
         return [...cartPrev]
       }
     })
-    // updateCartForConsumer()
   }
 
   const updateQuantityInCart = (updateQuantityItem: UpdateQuantityItemType) => {
-    console.log('updateQuantityInCart')
-
     setCart((cartPrev) => {
       const existingFarmerIndex = cartPrev.findIndex((farmer) => {
         return farmer.farmerID === updateQuantityItem.farmerID
@@ -240,16 +224,12 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
 
       return [...cartPrev]
     })
-
-    // updateCartForConsumer()
   }
 
   const updateTotalPrice = (updatePrice: {
     farmerID: string
     totalPrice: number
   }) => {
-    console.log('updateTotalPrice')
-
     setCart((cartPrev) => {
       if (cartPrev.length === 0) {
         setRefetchCart(true)
@@ -260,20 +240,16 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
         return farmer.farmerID === updatePrice.farmerID
       })
 
-      // CANNOT SET PROPERTIES OF UNDEFINED
       cartPrev[existingFarmerIndex].totalPrice = updatePrice.totalPrice
 
       return [...cartPrev]
     })
-    // updateCartForConsumer()
   }
 
   const deleteItemFromCart = (deleteItem: {
     farmerID: string
     productID: string
   }) => {
-    console.log('deleteItemFromCart')
-
     setCart((cartPrev) => {
       const existingFarmerIndex = cartPrev.findIndex((farmer) => {
         return farmer.farmerID === deleteItem.farmerID
@@ -294,13 +270,10 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
       return [...cartPrev]
     })
 
-    // updateCartForConsumer()
     setRefetchCart(true)
   }
 
   const deleteAllItemsFromCartofFarmer = (farmerID: string) => {
-    console.log('deleteAllItemsFromCartofFarmer')
-
     setCart((cartPrev) => {
       const existingFarmerIndex = cartPrev.findIndex((farmer) => {
         return farmer.farmerID === farmerID
@@ -308,18 +281,9 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
       cartPrev.splice(existingFarmerIndex, 1)
       return [...cartPrev]
     })
-
-    // updateCartForConsumer()
   }
 
   const checkOutAllHandler = async () => {
-    console.log('checkOutAllHandler')
-
-    const token = localStorage.getItem('token')
-    const parsedToken = JSON.parse(token!)
-
-    console.log(cart)
-
     try {
       const orders = await Promise.all(
         cart.map(async (cartItem) => {
@@ -330,14 +294,13 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
               mode: 'cors',
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${parsedToken}`,
+                Authorization: `Bearer ${token}`,
               },
               body: JSON.stringify(cartItem),
             },
           )
 
           const orderData = await orderResponse.json()
-          console.log(orderData)
         }),
       )
     } catch (error) {
