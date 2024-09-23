@@ -1,7 +1,5 @@
-import React from 'react'
-
 const index = () => {
-  return <div>Page Not Found</div>
+  return <div className="h-110">Page Not Found</div>
 }
 
 export default index
