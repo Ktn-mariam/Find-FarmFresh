@@ -38,7 +38,7 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
 
   useEffect(() => {
     const getToken = localStorage.getItem('token')
-    if (getToken) {
+    if (getToken && !(getToken === undefined)) {
       const parsedToken = JSON.parse(getToken)
       setToken(parsedToken)
     }
@@ -46,8 +46,6 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log('token inside fetchData', token)
-
       try {
         const userResponse = await fetch('http://localhost:5000/api/v1/auth', {
           headers: {
@@ -55,8 +53,6 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
           },
         })
         const userData = await userResponse.json()
-
-        console.log(userData)
 
         if (userResponse.ok) {
           const loginInfo: UserProfileType = {
