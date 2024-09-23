@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useContext } from 'react'
 import FormikContext from '../context/formik-context'
-import { Role, ProfileSidebarInformationType } from '../types/Auth'
+import { Role } from '../types/Auth'
 
 interface AddProfileInformationProps {
   edit: boolean
