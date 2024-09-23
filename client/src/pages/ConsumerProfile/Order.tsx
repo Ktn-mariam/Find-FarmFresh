@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import TimelapseIcon from '@mui/icons-material/Timelapse'
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt'
 import ProductCart from '../../components/ProductCart'
 import { OrderType } from '../../types/Order'
 import { getFormattedDate } from '../../utils/getFormattedDate'
 import { ProductDetailForOrder } from '../../types/Product'
+import AuthenticationContext from '../../context/authentication'
 
 enum Status {
   Waiting = 'Waiting',
   Transported = 'Transported',
   Delivered = 'Delivered',
+  Cancelled = 'Cancelled',
 }
 
 interface OrderPropsType {
@@ -19,6 +22,7 @@ interface OrderPropsType {
 
 const Order: React.FC<OrderPropsType> = ({ order }) => {
   const {
+    _id,
     farmerID,
     farmerName,
     orderDate,
@@ -27,28 +31,55 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
     notifyConsumer,
   } = order
 
+  const { token } = useContext(AuthenticationContext)
   const [products, setProducts] = useState<ProductDetailForOrder[] | null>(null)
+  const [showCancelOrderOption, setShowCancelOrderOption] = useState(true)
 
   useEffect(() => {
     const fetchProductDetails = async () => {
-      const productDetails = await Promise.all(
-        order.products.map(async (product) => {
-          const productDetailResponse = await fetch(
-            `http://localhost:5000/api/v1/products/orderDetail/${product.productID}`,
-          )
-          const productDetailData = await productDetailResponse.json()
-          return {
-            ...productDetailData.product,
-            quantity: product.quantity,
-          }
-        }),
-      )
+      try {
+        const productDetails = await Promise.all(
+          order.products.map(async (product) => {
+            const productDetailResponse = await fetch(
+              `http://localhost:5000/api/v1/products/orderDetail/${product.productID}`,
+            )
+            const productDetailData = await productDetailResponse.json()
+            return {
+              ...productDetailData.product,
+              quantity: product.quantity,
+            }
+          }),
+        )
 
-      setProducts(productDetails)
+        setProducts(productDetails)
+      } catch (error) {
+        console.log(
+          'Failed to fetch productDetails of products in cart: ',
+          error,
+        )
+      }
     }
 
     fetchProductDetails()
   })
+
+  const cancelOrder = async () => {
+    try {
+      await fetch(`http://localhost:5000/api/v1/orders/${_id}`, {
+        method: 'PATCH',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ deliveryStatus: 'Cancelled' }),
+      })
+    } catch (error) {
+      console.log('Failed to update Order: ', error)
+    } finally {
+      setShowCancelOrderOption(false)
+    }
+  }
 
   return (
     <div>
@@ -56,15 +87,21 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
         <div className="flex items-center justify-between">
           <div className="text-md font-bold">{farmerName}</div>
           <div className="flex items-center gap-1">
-            <div className="text-md font-bold">{deliveryStatus}</div>
-            {deliveryStatus === Status.Waiting && (
-              <TimelapseIcon style={{ color: '#ffb703' }} />
+            <div className="text-md font-bold">
+              {showCancelOrderOption ? deliveryStatus : 'Cancelled'}
+            </div>
+            {showCancelOrderOption && deliveryStatus === Status.Waiting && (
+              <TimelapseIcon style={{ color: '#848c91' }} />
             )}
             {deliveryStatus === Status.Transported && (
-              <LocalShippingIcon style={{ color: '#dc2f02' }} />
+              <LocalShippingIcon style={{ color: '#1E88E5' }} />
             )}
             {deliveryStatus === Status.Delivered && (
-              <TaskAltIcon style={{ color: '#29bf12' }} />
+              <TaskAltIcon style={{ color: '#4CAF50' }} />
+            )}
+            {(!showCancelOrderOption ||
+              deliveryStatus === Status.Cancelled) && (
+              <DoDisturbAltIcon style={{ color: '#F44336' }} />
             )}
           </div>
         </div>
@@ -72,9 +109,13 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
           <div className="w-3/4">
             {products && (
               <div className="flex flex-col gap-1">
-                {products.map((product) => {
+                {products.map((product, index) => {
                   return (
-                    <ProductCart isShoppingCart={false} product={product} />
+                    <ProductCart
+                      key={index}
+                      isShoppingCart={false}
+                      product={product}
+                    />
                   )
                 })}
               </div>
@@ -91,8 +132,13 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
                 <p className="text-md pr-1">AED</p>
                 <p className="font-bold text-2xl text-red-700">{totalPrice}</p>
               </div>
-              {deliveryStatus === Status.Waiting && (
-                <button className="mt-3 px-3 py-1 bg-yellow-300 rounded-lg">
+              {showCancelOrderOption && deliveryStatus === Status.Waiting && (
+                <button
+                  onClick={() => {
+                    cancelOrder()
+                  }}
+                  className="mt-3 px-3 py-1 bg-yellow-300 rounded-lg"
+                >
                   Cancel Order
                 </button>
               )}
