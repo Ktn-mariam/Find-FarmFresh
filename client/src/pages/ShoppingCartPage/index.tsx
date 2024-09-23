@@ -3,6 +3,7 @@ import StoreNavbar from '../../components/StoreNavbar'
 import CartItemForFarmer from './CartItemForFarmer'
 import ShoppingCartContext from '../../context/shoppingCart'
 import AuthenticationContext from '../../context/authentication'
+import { CartItem } from '../../types/Order'
 
 const ShoppingCartPage = () => {
   const { cart, checkOutAllHandler } = useContext(ShoppingCartContext)
@@ -12,11 +13,17 @@ const ShoppingCartPage = () => {
 
   const findTotalPriceAndItems = () => {
     const sumPrice =
-      cart.reduce((sum, cartItem) => sum + cartItem.totalPrice, 0) || 0
+      (cart as CartItem[]).reduce(
+        (sum: number, cartItem: CartItem) => sum + cartItem.totalPrice,
+        0,
+      ) || 0
     setTotalPrice(sumPrice)
 
     const sumItems =
-      cart.reduce((sum, cartItem) => sum + cartItem.products.length, 0) || 0
+      (cart as CartItem[]).reduce(
+        (sum: number, cartItem: CartItem) => sum + cartItem.products.length,
+        0,
+      ) || 0
     setTotalItems(sumItems)
   }
 
