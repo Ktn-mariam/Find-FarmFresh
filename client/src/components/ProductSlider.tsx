@@ -7,8 +7,7 @@ import AddIcon from '@mui/icons-material/Add'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { ProductDetailTypeForDisplay, ProductType } from '../types/Product'
-import { FamilyRestroomOutlined } from '@mui/icons-material'
+import { ProductDetailTypeForDisplay } from '../types/Product'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -105,7 +104,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
       <div className="flex items-center justify-between font-noto">
         <h1 className="font-bold text-xl">{heading}</h1>
         {editable && (
-          <div>
+          <div className="float-right">
             <button
               onClick={() => {
                 setOpenModal(true)
