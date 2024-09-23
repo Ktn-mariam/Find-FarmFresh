@@ -8,7 +8,7 @@ import StoreNavbar from '../../components/StoreNavbar'
 import LogoutIcon from '@mui/icons-material/Logout'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import LineChart from './LineChart'
-import { ProductDetailType, ProductType } from '../../types/Product'
+import { ProductDetailTypeForDisplay } from '../../types/Product'
 import { FarmerType } from '../../types/Farmer'
 import { Comment } from '../../types/Comment'
 import Pagination from '@mui/material/Pagination'
@@ -30,58 +30,83 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
   const [pageCount, setPageCount] = useState(1)
   const [comments, setComments] = useState<Comment[] | undefined>(undefined)
   const [productsOfFarmer, setProductsOfFarmer] = useState<
-    ProductDetailType[] | null
+    ProductDetailTypeForDisplay[] | null
   >(null)
 
   const fetchProductData = async (farmerID: string) => {
-    const productsResponse = await fetch(
-      `http://localhost:5000/api/v1/farmers/${farmerID}/products`,
-    )
+    try {
+      const productsResponse = await fetch(
+        `http://localhost:5000/api/v1/farmers/${farmerID}/products`,
+      )
 
-    const productData = await productsResponse.json()
-    setProductsOfFarmer(productData.products)
+      const productData = await productsResponse.json()
+
+      let onlyVisibleProducts
+      if (farmerID !== logInData.userID) {
+        onlyVisibleProducts = productData.products.filter(
+          (product: ProductDetailTypeForDisplay) => {
+            return product.isVisible
+          },
+        )
+      } else {
+        onlyVisibleProducts = productData.products
+      }
+      setProductsOfFarmer(onlyVisibleProducts)
+    } catch (error) {
+      console.log('Failed to fetch products of the farmer: ', error)
+    }
   }
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const farmerResponse = await fetch(
-        `http://localhost:5000/api/v1/farmers/${farmerID}`,
-      )
-      const farmerData = await farmerResponse.json()
-      setFarmerDetails(farmerData.farmer[0])
+      try {
+        const farmerResponse = await fetch(
+          `http://localhost:5000/api/v1/farmers/${farmerID}`,
+        )
+        const farmerData = await farmerResponse.json()
+        setFarmerDetails(farmerData.farmer[0])
+      } catch (error) {
+        console.log('Failed to fetch farmer details: ', error)
+      }
     }
 
     const fetchCommentData = async (farmerID: string) => {
-      let noOfCommentsInFarmer = farmerDetails?.comments.length
-      console.log(noOfCommentsInFarmer)
-      const noOfCommentResponse = await fetch(
-        `http://localhost:5000/api/v1/comments/farmer/${farmerID}/count`,
-      )
+      try {
+        let noOfCommentsInFarmer = farmerDetails?.comments.length
 
-      const noOfCommentsData = await noOfCommentResponse.json()
-      let noOfMoreComments = noOfCommentsData.count
-      let totalNoOfComments = noOfCommentsInFarmer + noOfMoreComments
-      let totalNoOfPages = Math.ceil(totalNoOfComments / 3)
+        const noOfCommentResponse = await fetch(
+          `http://localhost:5000/api/v1/comments/farmer/${farmerID}/count`,
+        )
 
-      setPageCount(totalNoOfPages)
+        const noOfCommentsData = await noOfCommentResponse.json()
+        let noOfMoreComments = noOfCommentsData.count
+
+        let totalNoOfComments = noOfCommentsInFarmer + noOfMoreComments
+        let totalNoOfPages = Math.ceil(totalNoOfComments / 3)
+
+        setPageCount(totalNoOfPages)
+      } catch (error) {
+        console.log('Failed to fetch comments of farmer: ', error)
+      }
     }
 
     if (!editable) {
       fetchProfileData()
       fetchProductData(farmerID!)
       fetchCommentData(farmerID!)
-    } else {
+    } else if (editable && logInData.loggedIn) {
       const farmerInfo = {
         name: logInData.name!,
         _id: logInData.userID!,
         location: logInData.location!,
         locationCoordinates: logInData.locationCoordinates!,
-        comments: logInData.comments || [],
+        comments: logInData.comments!,
         description: logInData.description!,
         mobileNo: logInData.mobileNo!,
         farmerRating: logInData.farmerRating!,
         image: logInData.image!,
       }
+
       setFarmerDetails(farmerInfo)
       fetchProductData(logInData.userID!)
       fetchCommentData(logInData.userID!)
@@ -105,25 +130,33 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
         setComments(farmerDetails?.comments.slice(3, 6))
         return
       }
-      const commentResponse = await fetch(
-        `http://localhost:5000/api/v1/comments/farmer/${farmerID}?page=${page}`,
-      )
-      const commentData = await commentResponse.json()
-      console.log(commentData)
+      const ID = farmerID ? farmerID : logInData.userID
+      try {
+        const commentResponse = await fetch(
+          `http://localhost:5000/api/v1/comments/farmer/${ID}?page=${page}`,
+        )
+        const commentData = await commentResponse.json()
 
-      setComments(commentData.comments)
+        setComments(commentData.comments)
+      } catch (error) {
+        console.log('Failed to fetch comments of farmer: ', error)
+      }
     }
 
     fetchComments()
-  }, [page, farmerDetails?.comments, farmerID])
+  }, [page, farmerDetails?.comments, farmerID, logInData.userID])
 
   const BackPageExists = window.history.state && window.history.state.idx > 0
 
-  if ((!farmerDetails && !editable) || (editable && loadingLogInData)) {
+  if (
+    (!farmerDetails && !editable) ||
+    (editable && loadingLogInData && logInData.name)
+  ) {
     return <div>Loading</div>
   }
 
   const profileInformation = {
+    ID: farmerDetails?._id!,
     name: farmerDetails?.name!,
     locationCoordinates: farmerDetails?.locationCoordinates!,
     image: farmerDetails?.image!,
@@ -133,9 +166,9 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
     description: farmerDetails?.description!,
   }
 
-  if (editable && !logInData.loggedIn && !loadingLogInData) {
-    return <div>You cannot view profile without logging in</div>
-  }
+  // if (editable && !logInData.loggedIn) {
+  //   navigate('/sign-in')
+  // }
 
   if (editable && logInError) {
     return <div>Error in loading data. Please refresh again after sometime</div>
@@ -190,7 +223,9 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
                   <ProductSlider
                     noOfSlides={3}
                     height={64}
-                    heading={'Products sold by Mariam'}
+                    heading={`Products sold by ${
+                      farmerDetails?.name.split(' ')[0]
+                    }`}
                     editable={editable}
                     products={productsOfFarmer}
                     setRefetchProducts={setRefetchProducts}
@@ -199,12 +234,14 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
                   <div>Loading...</div>
                 )}
               </div>
-              <div className="mt-5">
-                <h1 className="font-noto font-bold w-full text-xl mb-5">
-                  Your Sales Last 30 Days
-                </h1>
-                <LineChart />
-              </div>
+              {logInData.userID === farmerDetails?._id && (
+                <div className="mt-5">
+                  <h1 className="font-noto font-bold w-full text-xl mb-5">
+                    Your Sales Last 30 Days
+                  </h1>
+                  <LineChart />
+                </div>
+              )}
               <div className="mt-5">
                 <h1 className="font-noto font-bold text-xl mb-5">
                   Location on Map
@@ -218,7 +255,7 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
                   </div>
                 )}
               </div>
-              <div>
+              <div className="flex flex-col justify-between gap-5">
                 <CommentSection comments={comments} />
                 {farmerDetails && farmerDetails.comments.length > 0 && (
                   <div className="mt-3">
