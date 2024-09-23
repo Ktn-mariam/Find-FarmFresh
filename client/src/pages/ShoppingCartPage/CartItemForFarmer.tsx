@@ -27,8 +27,6 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
   useEffect(() => {
     let totalPrice = 0
     const fetchProductDetails = async () => {
-      console.log('I am running again')
-
       try {
         const productDetails = await Promise.all(
           cartItem.products.map(async (product) => {
