@@ -8,6 +8,7 @@ export interface OrderType {
   products: {
     productID: string
     quantity: number
+    productPrice: number
   }[]
 
   deliveryStatus: 'Waiting' | 'Cancelled' | 'Delivered' | 'Transported'
@@ -22,5 +23,12 @@ export interface CartItem {
   products: {
     productID: string
     quantity: number
+    productPrice: number
   }[]
+}
+
+export interface ProductInCartItem {
+  productID: string
+  quantity: number
+  productPrice: number
 }
