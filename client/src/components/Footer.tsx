@@ -1,4 +1,3 @@
-import React from 'react'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import EmailIcon from '@mui/icons-material/Email'
 import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled'
