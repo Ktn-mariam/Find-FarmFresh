@@ -1,4 +1,3 @@
-import React from 'react'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
 
 const Testimonials = () => {

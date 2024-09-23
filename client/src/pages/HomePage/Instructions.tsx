@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Instructions = () => {
   return (
     <div className="mb-20 mt-24 flex flex-col gap-10">
