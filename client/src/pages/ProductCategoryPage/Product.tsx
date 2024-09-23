@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import Rating from '@mui/material/Rating'
 import { ProductType } from '../../types/Product'
@@ -9,10 +8,8 @@ interface ProductPropType {
 }
 
 const Product: React.FC<ProductPropType> = ({ product }) => {
-  const [farmerName, setFarmerName] = useState('')
   const parentCategoryRoute = getParentCategoryRoute(product.parentCategory)
 
-  useEffect(() => {}, [])
   return (
     <NavLink
       to={`/store/${parentCategoryRoute}/${product.category}/${product._id}`}
