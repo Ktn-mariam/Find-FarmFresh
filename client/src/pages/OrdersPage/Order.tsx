@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -7,6 +7,9 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { OrderType } from '../../types/Order'
 import { ConsumerTypeForOrder } from '../../types/Consumer'
 import { ProductDetailForOrder } from '../../types/Product'
+import { getFormattedDateAndTime } from '../../utils/getFormattedDate'
+import AuthenticationContext from '../../context/authentication'
+import { Role } from '../../types/Auth'
 
 interface OrderPropsType {
   order: OrderType
@@ -34,45 +37,77 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
   >(null)
   const [deliveryStatus, setDeliveryStatus] = useState(order.deliveryStatus)
   const [paymentStatus, setPaymentStatus] = useState(order.paymentStatus)
-
-  const token = localStorage.getItem('token')
-  const parsedToken = JSON.parse(token!)
+  const { logInData, token } = useContext(AuthenticationContext)
 
   useEffect(() => {
+    if (logInData.role !== Role.Farmer) return
     const fetchConsumerDetail = async () => {
-      const consumerResponse = await fetch(
-        `http://localhost:5000/api/v1/consumers/${order.consumerID}`,
-        {
-          mode: 'cors',
-          headers: {
-            Authorization: `Bearer ${parsedToken}`,
+      try {
+        const consumerResponse = await fetch(
+          `http://localhost:5000/api/v1/consumers/${order.consumerID}`,
+          {
+            mode: 'cors',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        },
-      )
-      const consumerData = await consumerResponse.json()
-      setConsumerDetail(consumerData.consumer[0])
+        )
+
+        if (!consumerResponse.ok) {
+          throw new Error(
+            `Error: ${consumerResponse.status} ${consumerResponse.statusText}`,
+          )
+        }
+
+        const consumerData = await consumerResponse.json()
+        setConsumerDetail(consumerData.consumer[0])
+      } catch (error) {
+        console.error('Error fetching consumer details:', error)
+      }
     }
 
     const fetchProductDetails = async () => {
-      const productDetails = await Promise.all(
-        order.products.map(async (product) => {
-          const productDetailResponse = await fetch(
-            `http://localhost:5000/api/v1/products/orderDetail/${product.productID}`,
-          )
-          const productDetailData = await productDetailResponse.json()
-          return {
-            ...productDetailData.product,
-            quantity: product.quantity,
-          }
-        }),
-      )
+      try {
+        const productDetails = await Promise.all(
+          order.products.map(async (product) => {
+            try {
+              const productDetailResponse = await fetch(
+                `http://localhost:5000/api/v1/products/orderDetail/${product.productID}`,
+              )
 
-      setProductDetails(productDetails)
+              if (!productDetailResponse.ok) {
+                throw new Error(
+                  `Error: ${productDetailResponse.status} ${productDetailResponse.statusText}`,
+                )
+              }
+
+              const productDetailData = await productDetailResponse.json()
+              return {
+                ...productDetailData.product,
+                quantity: product.quantity,
+              }
+            } catch (error) {
+              console.error(
+                `Error fetching details for product ${product.productID}:`,
+                error,
+              )
+              return null
+            }
+          }),
+        )
+
+        const validProductDetails = productDetails.filter(
+          (detail) => detail !== null,
+        )
+        setProductDetails(validProductDetails)
+      } catch (error) {
+        console.error('Error fetching product details:', error)
+      }
     }
 
     fetchConsumerDetail()
     fetchProductDetails()
-  }, [order, parsedToken])
+  }, [order, token])
 
   useEffect(() => {
     const updateOrder = async () => {
@@ -80,40 +115,30 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
         deliveryStatus,
         paymentStatus,
       }
-      const orderResponse = await fetch(
-        `http://localhost:5000/api/v1/orders/${order._id}`,
-        {
-          method: 'PATCH',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${parsedToken}`,
-          },
-          body: JSON.stringify(updateOrderBody),
-        },
-      )
-      const orderData = await orderResponse.json()
-      console.log(orderData)
-    }
-
-    updateOrder()
-  }, [deliveryStatus, paymentStatus, order.consumerID, parsedToken])
-
-  const handleDeleteOrder = async () => {
-    const deleteOrderResponse = await fetch(
-      `http://localhost:5000/api/v1/orders/${order._id}`,
-      {
-        method: 'DELETE',
+      await fetch(`http://localhost:5000/api/v1/orders/${order._id}`, {
+        method: 'PATCH',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${parsedToken}`,
+          Authorization: `Bearer ${token}`,
         },
-      },
-    )
+        body: JSON.stringify(updateOrderBody),
+      })
+    }
 
-    const deleteOrderData = await deleteOrderResponse.json()
-    console.log(deleteOrderData)
+    updateOrder()
+  }, [deliveryStatus, paymentStatus, order.consumerID, token, order._id])
+
+  const handleDeleteOrder = async () => {
+    await fetch(`http://localhost:5000/api/v1/orders/${order._id}`, {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
     setRefetchOrders(true)
   }
 
@@ -128,7 +153,9 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
         {consumerDetail && productDetails ? (
           <div className="grid grid-cols-14">
             <div className="col-span-1">1</div>
-            <div className="col-span-1">{order.orderDate}</div>
+            <div className="col-span-1">
+              {getFormattedDateAndTime(order.orderDate)}
+            </div>
             <div className="col-span-2 pl-2">{consumerDetail.name}</div>
             <div className="col-span-2">{consumerDetail.mobileNo}</div>
             <div className="col-span-3">{consumerDetail.location}</div>
@@ -190,17 +217,17 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
           {productDetails &&
             productDetails.map((product, index) => {
               return (
-                <div className="grid grid-cols-14">
+                <div className="grid grid-cols-14" key={index}>
                   <div className="col-span-1"></div>
                   <div className="col-span-8 grid grid-cols-8">
                     <div className="col-span-1 flex items-center">
                       {index + 1}
                     </div>
                     <div className="col-span-4 flex items-center gap-2">
-                      <div className="h-10 w-8 flex items-center justify-center overflow-hidden rounded-md">
+                      <div className="h-14 w-12 flex items-center justify-center overflow-hidden rounded-md">
                         <img
                           className="object-cover w-full h-full"
-                          src="/apple.png"
+                          src={`http://localhost:5000/uploads/${product.images[0]}`}
                           alt=""
                         />
                       </div>
@@ -210,7 +237,10 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
                       x {product.quantity}
                     </div>
                     <div className="col-span-2 flex items-center">
-                      AED {product.price}
+                      AED{' '}
+                      {`${
+                        order.products[index].productPrice * product.quantity
+                      }`}
                     </div>
                   </div>
                   <div className="col-span-5"></div>
