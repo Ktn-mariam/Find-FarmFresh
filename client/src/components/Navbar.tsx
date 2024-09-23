@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
@@ -65,7 +65,7 @@ function Navbar() {
             </li>
           )}
           <li>
-            <NavLink to="/my-profile">
+            <NavLink to={logInData.loggedIn ? '/my-profile' : '/sign-up'}>
               <AccountCircleIcon fontSize="large" />
             </NavLink>
           </li>
