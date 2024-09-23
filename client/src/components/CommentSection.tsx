@@ -33,7 +33,7 @@ const CommentSection: React.FC<CommentSectionPropsType> = ({ comments }) => {
                 />
                 <h3 className="pt-0.5 text-sm">{comment.rating} out of 5</h3>
                 <h1 className="text-gray-500 text-sm pt-0.5 ">
-                  {`Reviewed on ${getFormattedDate(comment.createAt)}`}
+                  {`Reviewed on ${getFormattedDate(comment.createdAt)}`}
                 </h1>
               </div>
               <div className="mt-2">
@@ -43,9 +43,6 @@ const CommentSection: React.FC<CommentSectionPropsType> = ({ comments }) => {
             </div>
           )
         })}
-        {/* <div className="mt-3">
-          <Pagination count={4} />
-        </div> */}
       </div>
     </div>
   )
