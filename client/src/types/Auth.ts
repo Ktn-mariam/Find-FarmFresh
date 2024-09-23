@@ -1,4 +1,4 @@
-import { CartItem } from './Order'
+import { Comment } from './Comment'
 
 export enum Role {
   Farmer = 'Farmer',
@@ -26,12 +26,12 @@ export interface ProfileSidebarInformationType {
     }
     rating: number
   }
-  image: string
+  image: string | File
   name: string
   description?: string
   mobileNo: string
   location: string
-  ID: string
+  ID?: string
 }
 
 export interface UserProfileType {
@@ -61,7 +61,7 @@ export interface UserProfileType {
   description?: string
   mobileNo?: string
   location?: string
-  comments?: Comment[] | undefined
+  comments?: Comment[]
   role?: 'Farmer' | 'Consumer'
   loggedIn: boolean
   following?: {
