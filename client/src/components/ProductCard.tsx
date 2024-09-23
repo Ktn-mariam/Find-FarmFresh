@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -6,6 +6,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import Rating from '@mui/material/Rating'
 import { ProductDetailTypeForDisplay } from '../types/Product'
+import AuthenticationContext from '../context/authentication'
 
 interface ProductCardProps {
   height: number
@@ -28,7 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   setIsEditModal,
   setEditProduct,
 }) => {
-  const width = height - 8
+  const { token } = useContext(AuthenticationContext)
   const {
     parentCategory,
     category,
@@ -45,8 +46,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   } = product
 
   const handleProductUpdate = async (): Promise<void> => {
-    const token = localStorage.getItem('token')
-    const parsedToken = JSON.parse(token!)
     const updateDisplay = {
       isVisible: !product.isVisible,
     }
@@ -57,7 +56,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${parsedToken}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(updateDisplay),
       },
@@ -68,11 +67,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   }
 
   const handleProductDelete = async (): Promise<void> => {
-    const token = localStorage.getItem('token')
-    const parsedToken = JSON.parse(token!)
-    const updateDisplay = {
-      isVisible: !product.isVisible,
-    }
     const updateResponse = await fetch(
       `http://localhost:5000/api/v1/products/${product._id}`,
       {
@@ -80,7 +74,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${parsedToken}`,
+          Authorization: `Bearer ${token}`,
         },
       },
     )
@@ -103,8 +97,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <div
             className={
               height === 64
-                ? 'h-64 w-58 flex items-center justify-center overflow-hidden hover:cursor-pointer'
-                : 'h-48 w-40 flex items-center justify-center overflow-hidden hover:cursor-pointer'
+                ? 'h-64 w-56 flex items-center justify-center overflow-hidden hover:cursor-pointer'
+                : 'h-52 w-48 flex items-center justify-center overflow-hidden hover:cursor-pointer'
             }
           >
             <img
@@ -119,8 +113,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
             <h4
               className={
                 height === 64
-                  ? 'truncate w-58 hover:cursor-pointer'
-                  : 'truncate w-40 hover:cursor-pointer'
+                  ? 'truncate w-56 hover:cursor-pointer'
+                  : 'truncate w-48 hover:cursor-pointer'
               }
             >
               {title}
@@ -167,7 +161,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               </div>
               <Rating
                 defaultValue={productRating.rating}
-                precision={0.5}
+                precision={0.1}
                 size="small"
                 readOnly
               />
