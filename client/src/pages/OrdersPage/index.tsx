@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Order from './Order'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import AuthenticationContext from '../../context/authentication'
 import { OrderType } from '../../types/Order'
+import AuthenticationContext from '../../context/authentication'
 
 const OrdersPage = () => {
   const { logInData } = useContext(AuthenticationContext)
@@ -14,21 +14,29 @@ const OrdersPage = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('token')
       const parsedToken = JSON.parse(token!)
-      const orderResponse = await fetch('http://localhost:5000/api/v1/orders', {
-        mode: 'cors',
-        headers: {
-          Authorization: `Bearer ${parsedToken}`,
-        },
-      })
-      const orderData = await orderResponse.json()
-      console.log(orderData)
+      try {
+        const orderResponse = await fetch(
+          'http://localhost:5000/api/v1/orders',
+          {
+            mode: 'cors',
+            headers: {
+              Authorization: `Bearer ${parsedToken}`,
+            },
+          },
+        )
+        const orderData = await orderResponse.json()
 
-      setOrders(orderData.orders)
-      setRefetchOrders(false)
+        setOrders(orderData.orders)
+        setRefetchOrders(false)
+      } catch (error) {
+        console.log('Failed to fetch the orders', error)
+      }
     }
 
-    fetchData()
-  }, [refetchOrders])
+    if (logInData.loggedIn && logInData.role === 'Farmer') {
+      fetchData()
+    }
+  }, [refetchOrders, logInData.loggedIn, logInData.role])
 
   return (
     <div className="md:px-36 px-14 pt-10 pb-52">
@@ -60,8 +68,14 @@ const OrdersPage = () => {
           </AccordionSummary>
         </Accordion>
         {orders &&
-          orders.map((order) => {
-            return <Order setRefetchOrders={setRefetchOrders} order={order} />
+          orders.map((order, key) => {
+            return (
+              <Order
+                key={key}
+                setRefetchOrders={setRefetchOrders}
+                order={order}
+              />
+            )
           })}
       </div>
     </div>
