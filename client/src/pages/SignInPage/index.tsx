@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { useFormik } from 'formik'
 import AuthForm from '../../components/AuthForm'
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
@@ -61,7 +61,6 @@ const SignInPage = () => {
         )
 
         const responseData = await response.json()
-        console.log(responseData)
         localStorage.setItem('token', JSON.stringify(responseData.token))
         setToken(responseData.token)
         navigate('/my-profile')
@@ -107,7 +106,6 @@ const SignInPage = () => {
       })
 
       const responseData = await response.json()
-      console.log(responseData)
       localStorage.setItem('token', JSON.stringify(responseData.token))
       setToken(responseData.token)
       navigate('/my-profile')
