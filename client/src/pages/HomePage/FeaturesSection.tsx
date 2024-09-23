@@ -1,5 +1,3 @@
-import React from 'react'
-
 const FeaturesSection = () => {
   return (
     <div className="my-20 flex flex-col gap-10">
