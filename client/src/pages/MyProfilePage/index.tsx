@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import AuthenticationContext from '../../context/authentication'
 import { Role } from '../../types/Auth'
 import FarmerProfile from '../FarmerProfile'
@@ -8,17 +8,13 @@ const MyProfilePage = () => {
   const { logInData, loadingLogInData, token } = useContext(
     AuthenticationContext,
   )
-  const [loadPage, setLoadPage] = useState(false)
 
-  useEffect(() => {
-    if (logInData.loggedIn) {
-      setLoadPage(true)
-    }
-    console.log(logInData)
-  }, [logInData.loggedIn, loadingLogInData, token, logInData])
-
-  if (!logInData.loggedIn) {
-    return <div>Loading</div>
+  if (loadingLogInData) {
+    return (
+      <div className="h-110 flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    )
   }
 
   return (
