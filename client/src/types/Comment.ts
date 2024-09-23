@@ -4,6 +4,6 @@ export interface Comment {
   rating: number
   title: string
   description: string
-  createAt: Date
+  createdAt: Date
   _id: string
 }
