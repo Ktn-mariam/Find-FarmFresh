@@ -31,7 +31,7 @@ import { ProductType } from '../../types/Product'
 import { FarmerType } from '../../types/Farmer'
 import { Comment } from '../../types/Comment'
 import Snackbar from '@mui/material/Snackbar'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import MuiAlert from '@mui/material/Alert'
 import ShoppingCartContext from '../../context/shoppingCart'
 import AuthenticationContext from '../../context/authentication'
 
@@ -90,67 +90,86 @@ function ProductDetailPage() {
         )
         const productData = await productResponse.json()
         setProduct(productData.product)
-
-        let noOfCommentsInProduct = productData.product.comments.length
-        const noOfCommentResponse = await fetch(
-          `http://localhost:5000/api/v1/comments/product/${productID}/count`,
-        )
-
-        const noOfCommentsData = await noOfCommentResponse.json()
-        let noOfMoreComments = noOfCommentsData.count
-        let totalNoOfComments = noOfCommentsInProduct + noOfMoreComments
-        let totalNoOfPages = Math.ceil(totalNoOfComments / 3)
-
-        setPageCount(totalNoOfPages)
-        setIsLoading(false)
-
-        const farmerResponse = await fetch(
-          `http://localhost:5000/api/v1/farmers/${product?.farmerID}`,
-        )
-
-        const farmerData = await farmerResponse.json()
-        setFarmer(farmerData.farmer[0])
-
-        const parentCategoryRoute = getParentCategoryRoute(parentCategory)
-
-        const similarProductsResponse = await fetch(
-          `http://localhost:5000/api/v1/products/category/${parentCategoryRoute}?category=${category}`,
-        )
-
-        const similarProductsData = await similarProductsResponse.json()
-
-        const similarProductsDataWithoutTheSameProduct = similarProductsData.products.filter(
-          (product: ProductType) => {
-            return product._id !== productID
-          },
-        )
-        setSimilarProducts(similarProductsDataWithoutTheSameProduct)
       } catch (error) {
-        console.log(error)
+        console.log('Failed to fetch product detail: ', error)
+      }
+
+      if (product) {
+        try {
+          let noOfCommentsInProduct = product.comments.length
+          const noOfCommentResponse = await fetch(
+            `http://localhost:5000/api/v1/comments/product/${productID}/count`,
+          )
+
+          const noOfCommentsData = await noOfCommentResponse.json()
+          let noOfMoreComments = noOfCommentsData.count
+          let totalNoOfComments = noOfCommentsInProduct + noOfMoreComments
+          let totalNoOfPages = Math.ceil(totalNoOfComments / 3)
+
+          setPageCount(totalNoOfPages)
+          setIsLoading(false)
+        } catch (error) {
+          console.log('Failed to fetch count of comments for product: ', error)
+        }
+
+        try {
+          const farmerResponse = await fetch(
+            `http://localhost:5000/api/v1/farmers/${product.farmerID}`,
+          )
+
+          const farmerData = await farmerResponse.json()
+          setFarmer(farmerData.farmer[0])
+        } catch (error) {
+          console.log('Failed to fetch farmer details of product: ', error)
+        }
+
+        try {
+          const parentCategoryRoute = getParentCategoryRoute(parentCategory)
+
+          const similarProductsResponse = await fetch(
+            `http://localhost:5000/api/v1/products/category/${parentCategoryRoute}?category=${category}`,
+          )
+
+          const similarProductsData = await similarProductsResponse.json()
+
+          const similarProductsDataWithoutTheSameProduct = similarProductsData.products.filter(
+            (product: ProductType) => {
+              return product._id !== productID
+            },
+          )
+          setSimilarProducts(similarProductsDataWithoutTheSameProduct)
+        } catch (error) {
+          console.log('Failed to fetch similar products: ', error)
+        }
       }
     }
+
     fetchData()
-  }, [productID, product, category, parentCategory])
+  }, [product])
 
   useEffect(() => {
     const fetchComments = async () => {
       if (page === 1) {
         setComments(product?.comments.slice(0, 3))
         return
-      }
-      if (page === 2) {
+      } else if (page === 2) {
         setComments(product?.comments.slice(3, 6))
         return
-      }
-      const commentResponse = await fetch(
-        `http://localhost:5000/api/v1/comments/product/${productID}?page=${page}`,
-      )
-      const commentData = await commentResponse.json()
+      } else {
+        try {
+          const commentResponse = await fetch(
+            `http://localhost:5000/api/v1/comments/product/${productID}?page=${page}`,
+          )
+          const commentData = await commentResponse.json()
 
-      setComments(commentData.comments)
+          setComments(commentData.comments)
+        } catch (error) {
+          console.log('Failed to fetch product comments', error)
+        }
+      }
     }
     fetchComments()
-  }, [page, product?.comments, productID])
+  }, [page, product])
 
   const addToCartHandler = () => {
     const addToCartItem = {
@@ -158,7 +177,13 @@ function ProductDetailPage() {
       farmerName: product?.farmerName!,
       productID: product?._id!,
       quantity: quantity!,
-      productPrice: product?.price!,
+      productPrice: product?.hasDiscount
+        ? Math.round(
+            (product?.price -
+              product?.price * (product?.discountPercentage / 100)) *
+              100,
+          ) / 100
+        : product?.price!,
     }
 
     handleAddToCart(addToCartItem)
@@ -196,9 +221,9 @@ function ProductDetailPage() {
           <div className="py-6 w-full flex gap-x-7">
             <div className="w-40 md:w-96">
               <Slider {...settings}>
-                {product?.images.map((image) => {
+                {product?.images.map((image, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <div className="w-40 h-40 md:w-96 md:h-110 flex items-center justify-center overflow-hidden">
                         <img
                           className="object-cover w-full h-full"
@@ -316,8 +341,12 @@ function ProductDetailPage() {
                             setQuantity(Number(e.target.value))
                           }}
                         >
-                          {quantityOptions.map((option) => {
-                            return <option value={option}>{option}</option>
+                          {quantityOptions.map((option, index) => {
+                            return (
+                              <option key={index} value={option}>
+                                {option}
+                              </option>
+                            )
                           })}
                         </select>
                       </div>
@@ -364,7 +393,7 @@ function ProductDetailPage() {
                     </div>
                   )}
                 </div>
-                <div className="font-noto w-88 px-5 py-8 border border-1 border-zinc-300 rounded-2xl">
+                <div className="font-noto w-96 px-5 py-8 border border-1 border-zinc-300 rounded-2xl">
                   <RatingStats productRating={product?.productRating} />
                   {farmer && (
                     <div className="mt-6 border-t-1 border-gray-200">
@@ -372,7 +401,7 @@ function ProductDetailPage() {
                       <div className="flex items-center mt-1 gap-2">
                         <Rating
                           defaultValue={farmer?.farmerRating.rating}
-                          precision={0.5}
+                          precision={0.1}
                           readOnly
                         />
                         <h3>{farmer.farmerRating.rating} out of 5</h3>
@@ -384,7 +413,7 @@ function ProductDetailPage() {
             </div>
           </div>
           <div className="flex gap-16">
-            <div className="w-1/2 font-noto pt-10">
+            <div className="w-1/2 font-noto pt-10 flex flex-col justify-between">
               <CommentSection comments={comments} />
               <div className="mt-3">
                 <Pagination
