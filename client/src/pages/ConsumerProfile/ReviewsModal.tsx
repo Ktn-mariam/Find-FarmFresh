@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ReviewProduct from './ReviewProduct'
 import GratitudeModal from './GratitudeModal'
 import Modal from '@mui/material/Modal'
@@ -9,6 +9,7 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { OrderType, ProductInCartItem } from '../../types/Order'
+import AuthenticationContext from '../../context/authentication'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -54,12 +55,11 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
   openReviewModal,
   setOpenReviewModal,
 }) => {
+  const { token } = useContext(AuthenticationContext)
   const [openGratitudeModal, setOpenGratitudeModal] = useState(false)
   const [reviewOrders, setReviewOrders] = useState<OrderType | null>(null)
   const [comments, setComments] = useState<CommentType[] | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const token = localStorage.getItem('token')
-  const parsedToken = JSON.parse(token!)
 
   useEffect(() => {
     const fetchReviewOrders = async () => {
@@ -69,7 +69,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
           {
             mode: 'cors',
             headers: {
-              Authorization: `Bearer ${parsedToken}`,
+              Authorization: `Bearer ${token}`,
             },
           },
         )
@@ -117,9 +117,6 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
   ) => {
     setComments((prevComments) => {
       const updatedComments = [...(prevComments ?? [])]
-      // if (updatedComments[index] === undefined) {
-      //   return prevComments
-      // }
       if (field === 'description')
         updatedComments[index].description = value as string
       if (field === 'title') updatedComments[index].title = value as string
@@ -145,21 +142,18 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
         description: comments[0].description,
       }
 
-      const addCommentResponse = await fetch(
+      await fetch(
         `http://localhost:5000/api/v1/farmers/${comments[0].farmerID}/comments`,
         {
           method: 'PATCH',
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${parsedToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ comment: comment }),
         },
       )
-
-      const responseData = await addCommentResponse.json()
-      console.log('Comment added successfully:', responseData)
     } catch (error) {
       console.log(`Failed to add comment: ${error}`)
     }
@@ -176,20 +170,18 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
             description: comment.description,
             rating: comment.rating,
           }
-          const addCommentResponse = await fetch(
+          await fetch(
             `http://localhost:5000/api/v1/products/${comment.productID}`,
             {
               method: 'PATCH',
               mode: 'cors',
               headers: {
-                Authorization: `Bearer ${parsedToken}`,
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({ comment: commentJSON }),
             },
           )
-          const responseData = await addCommentResponse.json()
-          console.log('Comment added successfully:', responseData)
         }),
       )
     } catch (error) {
@@ -208,14 +200,14 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${parsedToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ notifyConsumer: false }),
         },
       )
 
       const responseData = await updateOrderResponse.json()
-      console.log('Comment added successfully:', responseData)
+      console.log('Comment updated successfully:', responseData)
     } catch (error) {
       console.log('Failed to update Order: ', error)
     }
@@ -290,8 +282,6 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                 <button
                   className="bg-night text-white rounded-md px-3 text-sm py-2"
                   onClick={() => {
-                    console.log(comments)
-
                     addCommentToFarmer()
                     addCommentToProducts()
                     updateOrderToReview()
