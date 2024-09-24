@@ -2,6 +2,8 @@ import 'dotenv/config'
 import 'express-async-errors'
 import express from 'express'
 import cors from 'cors'
+import helmet from 'helmet'
+import { rateLimit as rateLimiter } from 'express-rate-limit'
 
 import connectDB from './db/connect'
 
@@ -18,14 +20,20 @@ import notFoundMiddleware from './middleware/not-found'
 const app = express()
 
 // middleware
+// app.use(helmet())
+// app.set('trust proxy', 1)
+// app.use(
+//   rateLimiter({
+//     windowMs: 15 * 60 * 1000,
+//     limit: 1000,
+//     standardHeaders: 'draft-7',
+//     legacyHeaders: false,
+//   }),
+// )
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'))
-
-// middleware
-app.use(notFoundMiddleware)
-app.use(errorHandlerMiddleware)
 
 // routes
 app.use('/api/v1/auth', authRouter)
@@ -34,6 +42,10 @@ app.use('/api/v1/products', productRouter)
 app.use('/api/v1/comments', commentsRouter)
 app.use('/api/v1/consumers', consumerRouter)
 app.use('/api/v1/orders', ordersRouter)
+
+// middleware
+app.use(notFoundMiddleware)
+app.use(errorHandlerMiddleware)
 
 const PORT = process.env.PORT || 5000
 
