@@ -2,31 +2,31 @@ const getParentCategoryRoute = (parentCategory?: string) => {
   let result
   switch (parentCategory) {
     case 'Fruits':
-      result = 'fruits'
+      result = 'Fruits'
       break
     case 'Vegetables':
-      result = 'vegetables'
+      result = 'Vegetables'
       break
     case 'Coffee & Tea':
-      result = 'coffee&tea'
+      result = 'Coffee&Tea'
       break
     case 'Dairy & eggs':
-      result = 'diary&eggs'
+      result = 'Diary&Eggs'
       break
     case 'Meat':
-      result = 'meat'
+      result = 'Meat'
       break
     case 'Honey & Bee Products':
-      result = 'honey'
+      result = 'Honey&BeeProducts'
       break
     case 'Flowers':
-      result = 'flowers'
+      result = 'Flowers'
       break
     case 'Dried Fruits & Nuts':
-      result = 'driedFruits'
+      result = 'DriedFruits&Nuts'
       break
     default:
-      result = 'fruits'
+      result = 'Fruits'
       break
   }
 

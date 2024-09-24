@@ -25,7 +25,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import Pagination from '@mui/material/Pagination'
 import InfoIcon from '@mui/icons-material/Info'
 import getParentCategoryRoute from '../../utils/getParentCategoryRoute'
-import getCategory from '../../utils/getCategory'
+import getCategory from '../../utils/getParentCategory'
 import { ProductDetailTypeForDisplay } from '../../types/Product'
 import { ProductType } from '../../types/Product'
 import { FarmerType } from '../../types/Farmer'
@@ -124,10 +124,8 @@ function ProductDetailPage() {
         }
 
         try {
-          const parentCategoryRoute = getParentCategoryRoute(parentCategory)
-
           const similarProductsResponse = await fetch(
-            `http://localhost:5000/api/v1/products/category/${parentCategoryRoute}?category=${category}`,
+            `http://localhost:5000/api/v1/products/category/${parentCategory}?category=${category}`,
           )
 
           const similarProductsData = await similarProductsResponse.json()

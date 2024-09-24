@@ -6,7 +6,7 @@ function StoreNavbar() {
       <nav>
         <ul className="flex justify-between items-center font-workSans">
           <NavLink
-            to="/store/fruits"
+            to="/store/Fruits"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -14,7 +14,7 @@ function StoreNavbar() {
             <li>Fruits</li>
           </NavLink>
           <NavLink
-            to="/store/vegetables"
+            to="/store/Vegetables"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -22,7 +22,7 @@ function StoreNavbar() {
             <li>Vegetables</li>
           </NavLink>
           <NavLink
-            to="/store/coffee&tea"
+            to="/store/Coffee&Tea"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -30,7 +30,7 @@ function StoreNavbar() {
             <li>Coffee & Tea</li>
           </NavLink>
           <NavLink
-            to="/store/diary&eggs"
+            to="/store/Diary&Eggs"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -38,7 +38,7 @@ function StoreNavbar() {
             <li>Dairy & eggs</li>
           </NavLink>
           <NavLink
-            to="/store/meat"
+            to="/store/Meat"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -46,7 +46,7 @@ function StoreNavbar() {
             <li>Meat</li>
           </NavLink>
           <NavLink
-            to="/store/honey"
+            to="/store/Honey&BeeProducts"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -54,7 +54,7 @@ function StoreNavbar() {
             <li>Honey & Bee Products</li>
           </NavLink>
           <NavLink
-            to="/store/flowers"
+            to="/store/Flowers"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }
@@ -62,7 +62,7 @@ function StoreNavbar() {
             <li>Flowers</li>
           </NavLink>
           <NavLink
-            to="/store/driedFruits"
+            to="/store/DriedFruits&Nuts"
             className={({ isActive, isPending }) =>
               isPending ? 'text-md' : isActive ? 'text-bold' : ''
             }

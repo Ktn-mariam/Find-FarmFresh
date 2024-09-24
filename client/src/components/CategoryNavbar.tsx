@@ -5,7 +5,7 @@ const CategoryNavbar = () => {
   return (
     <nav>
       <ul className="grid grid-cols-4 md:grid-cols-8 gap-y-5 justify-between items-start font-roboto">
-        <NavLink to="/store/fruits">
+        <NavLink to="/store/Fruits">
           <li className="flex flex-col items-center">
             <img
               className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
@@ -15,7 +15,7 @@ const CategoryNavbar = () => {
             <p>Fruits</p>
           </li>
         </NavLink>
-        <NavLink to="/store/vegetables">
+        <NavLink to="/store/Vegetables">
           <li className="flex flex-col items-center">
             <img
               className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
@@ -25,7 +25,7 @@ const CategoryNavbar = () => {
             <p>Vegetables</p>
           </li>
         </NavLink>
-        <NavLink to="/store/coffee&tea">
+        <NavLink to="/store/Coffee&Tea">
           <li className="flex flex-col items-center">
             <img
               className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
@@ -35,7 +35,7 @@ const CategoryNavbar = () => {
             <p>Coffee & Tea</p>
           </li>
         </NavLink>
-        <NavLink to="/store/diary&eggs">
+        <NavLink to="/store/Diary&Eggs">
           <li className="flex flex-col items-center">
             <img
               className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
@@ -45,7 +45,7 @@ const CategoryNavbar = () => {
             <p>Diary & eggs</p>
           </li>
         </NavLink>
-        <NavLink to="/store/meat">
+        <NavLink to="/store/Meat">
           <li className="flex flex-col items-center">
             <img
               className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
@@ -55,7 +55,7 @@ const CategoryNavbar = () => {
             <p>Meat</p>
           </li>
         </NavLink>
-        <NavLink to="/store/honey">
+        <NavLink to="/store/Honey&BeeProducts">
           <li className="flex flex-col items-center">
             <img
               className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
@@ -65,7 +65,7 @@ const CategoryNavbar = () => {
             <p className="text-center">Honey & Bee Products</p>
           </li>
         </NavLink>
-        <NavLink to="/store/flowers">
+        <NavLink to="/store/Flowers">
           <li className="flex flex-col items-center">
             <img
               className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"
@@ -75,7 +75,7 @@ const CategoryNavbar = () => {
             <p>Flowers</p>
           </li>
         </NavLink>
-        <NavLink to="/store/driedFruits">
+        <NavLink to="/store/DriedFruits&Nuts">
           <li className="flex flex-col items-center">
             <img
               className="md:h-28 h-14 rounded-full hover:cursor-pointer transition-all duration-200 ease-in-out"

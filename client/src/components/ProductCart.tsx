@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { ProductDetailForOrder } from '../types/Product'
 import ShoppingCartContext from '../context/shoppingCart'
+import getParentCategoryRoute from '../utils/getParentCategoryRoute'
 
 interface ProductCartProps {
   isShoppingCart: boolean
@@ -55,10 +56,12 @@ const ProductCart: React.FC<ProductCartProps> = ({
     if (setRefetchProducts) setRefetchProducts(true)
   }
 
+  const parentCategoryRoute = getParentCategoryRoute(parentCategory)
+
   return (
     <div className="mx-1">
       <div className="flex font-workSans">
-        <NavLink to={`/store/${parentCategory}/${category}/${_id}`}>
+        <NavLink to={`/store/${parentCategoryRoute}/${category}/${_id}`}>
           <div className="h-40 mb-3 md:h-40 md:w-32 flex items-center justify-center overflow-hidden hover:cursor-pointer">
             <img
               className="object-cover w-full h-full"
@@ -69,7 +72,7 @@ const ProductCart: React.FC<ProductCartProps> = ({
         </NavLink>
         <div className="py-1 px-3 flex flex-col justify-between">
           <div className="">
-            <NavLink to={`/store/${parentCategory}/${category}/${_id}`}>
+            <NavLink to={`/store/${parentCategoryRoute}/${category}/${_id}`}>
               <h4 className="truncate w-98 text-lg hover:cursor-pointer hover:underline">
                 {title}
               </h4>

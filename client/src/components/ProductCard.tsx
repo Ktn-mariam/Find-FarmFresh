@@ -7,6 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import Rating from '@mui/material/Rating'
 import { ProductDetailTypeForDisplay } from '../types/Product'
 import AuthenticationContext from '../context/authentication'
+import getParentCategoryRoute from '../utils/getParentCategoryRoute'
 
 interface ProductCardProps {
   height: number
@@ -83,6 +84,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     if (setRefetchProducts) setRefetchProducts(true)
   }
 
+  const parentCategoryRoute = getParentCategoryRoute(parentCategory)
   return (
     <div className="mx-1">
       <div
@@ -93,7 +95,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         }
       >
         {/* 4:5 ratio */}
-        <NavLink to={`/store/${parentCategory}/${category}/${_id}`}>
+        <NavLink to={`/store/${parentCategoryRoute}/${category}/${_id}`}>
           <div
             className={
               height === 64
@@ -109,7 +111,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         </NavLink>
         <div>
-          <NavLink to={`/store/${parentCategory}/${category}/${_id}`}>
+          <NavLink to={`/store/${parentCategoryRoute}/${category}/${_id}`}>
             <h4
               className={
                 height === 64

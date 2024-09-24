@@ -1,28 +1,29 @@
-const getCategory = (parentCategory: string) => {
+const getParentCategory = (parentCategory: string) => {
   let result
+
   switch (parentCategory) {
-    case 'fruits':
+    case 'Fruits':
       result = 'Fruits'
       break
-    case 'vegetables':
+    case 'Vegetables':
       result = 'Vegetables'
       break
-    case 'coffee&tea':
+    case 'Coffee&Tea':
       result = 'Coffee & Tea'
       break
-    case 'diary&eggs':
+    case 'Dairy&eggs':
       result = 'Dairy & eggs'
       break
-    case 'meat':
+    case 'Meat':
       result = 'Meat'
       break
-    case 'honey':
+    case 'Honey&BeeProducts':
       result = 'Honey & Bee Products'
       break
-    case 'flowers':
+    case 'Flowers':
       result = 'Flowers'
       break
-    case 'driedFruits':
+    case 'DriedFruits&Nuts':
       result = 'Dried Fruits & Nuts'
       break
     default:
@@ -33,4 +34,4 @@ const getCategory = (parentCategory: string) => {
   return result
 }
 
-export default getCategory
+export default getParentCategory
