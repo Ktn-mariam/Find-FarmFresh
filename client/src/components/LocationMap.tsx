@@ -1,16 +1,6 @@
 import React from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
-
-interface LocationCoordinatesType {
-  latitude: {
-    coordinate: number
-    direction: 'N' | 'S'
-  }
-  longitude: {
-    coordinate: number
-    direction: 'E' | 'W'
-  }
-}
+import { LocationCoordinatesType } from '../types/Auth'
 
 interface LocationMapPropsType {
   locationCoordinates: LocationCoordinatesType
