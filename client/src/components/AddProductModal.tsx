@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import Modal from '@mui/material/Modal'
 import { FormControlLabel, FormGroup, Switch } from '@mui/material'
 import getChildCategories from '../utils/getChildCategories'
 import { ProductDetailTypeForDisplay } from '../types/Product'
-
-// https://stackoverflow.com/questions/74536534/react-js-how-to-upload-image-with-preview-and-display-the-processe-image
+import AuthenticationContext from '../context/authentication'
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
 interface AddProductFormValues {
   images: File | string[]
@@ -50,10 +51,15 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
   setIsEditModal,
   editProduct,
 }) => {
+  const { token } = useContext(AuthenticationContext)
   const [previewImage, setPreviewImage] = useState('/previewImage.jpg')
   const [previewImageFile, setPreviewImageFile] = useState<File | null>(null)
   const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null)
   const [uploadedImageURL, setUploadedImageURL] = useState<string | null>(null)
+  const [showErrorMessage, setShowErrorMessage] = useState({
+    message: '',
+    show: false,
+  })
   const [discountAvailable, setDiscountAvailable] = useState(false)
   const [childCategories, setChildCategories] = useState<string[]>([
     'Bananas',
@@ -122,6 +128,26 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     return errors
   }
 
+  useEffect(() => {
+    if (editProduct) {
+      formik.setValues({
+        images: editProduct.images,
+        title: editProduct.title,
+        parentCategory: editProduct.parentCategory,
+        category: editProduct.category,
+        price: editProduct.price,
+        hasDiscount: editProduct.hasDiscount,
+        discountPercentage: editProduct.discountPercentage,
+        delivery: editProduct.delivery,
+        organic: editProduct.organic,
+        transaction: editProduct.transaction,
+        cashOnDelivery: editProduct.cashOnDelivery,
+        returnableChoice: editProduct.returnableChoice,
+        onSiteShopping: editProduct.onSiteShopping,
+      })
+    }
+  }, [editProduct])
+
   const formik = useFormik({
     initialValues: isEditModal
       ? {
@@ -165,13 +191,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
         returnableChoice: values.returnableChoice,
         onSiteShopping: values.onSiteShopping,
         hasDiscount: discountAvailable,
-        discountPercentage: values.discountPercentage || 0,
+        discountPercentage: discountAvailable ? values.discountPercentage : 0,
         images: uploadedImageFile || editProduct?.images,
       }
-
-      // await alert(JSON.stringify(result, null, 2))
-      const token = localStorage.getItem('token')
-      const parsedToken = JSON.parse(token!)
 
       if (isEditModal) {
         const editProductFormData = new FormData()
@@ -180,19 +202,33 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
           editProductFormData.append(key, value)
         })
 
-        const editProductResponse = await fetch(
-          `http://localhost:5000/api/v1/products/${editProduct?._id}`,
-          {
-            method: 'PATCH',
-            mode: 'cors',
-            headers: {
-              Authorization: `Bearer ${parsedToken}`,
-            },
-            body: editProductFormData,
-          },
-        )
+        console.log(result)
 
-        const editProductResponseData = await editProductResponse.json()
+        try {
+          const editProductResponse = await fetch(
+            `http://localhost:5000/api/v1/products/${editProduct?._id}`,
+            {
+              method: 'PATCH',
+              mode: 'cors',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: editProductFormData,
+            },
+          )
+
+          const editProductResponseData = await editProductResponse.json()
+          if (!editProductResponseData.ok) {
+            throw new Error(
+              `Failed to edit Product: ${editProductResponseData.msg}`,
+            )
+          }
+        } catch (error) {
+          setShowErrorMessage({
+            message: `Failed to edit Product: ${error}`,
+            show: true,
+          })
+        }
       } else {
         const addProductFormData = new FormData()
         Object.keys(result).forEach((key) => {
@@ -200,17 +236,33 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
           addProductFormData.append(key, value)
         })
 
-        const addProductResponse = await fetch(
-          `http://localhost:5000/api/v1/products`,
-          {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              Authorization: `Bearer ${parsedToken}`,
+        try {
+          const addProductResponse = await fetch(
+            `http://localhost:5000/api/v1/products`,
+            {
+              method: 'POST',
+              mode: 'cors',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: addProductFormData,
             },
-            body: addProductFormData,
-          },
-        )
+          )
+
+          const addProductResponseData = await addProductResponse.json()
+          if (!addProductResponseData.ok) {
+            throw new Error(
+              `Failed to add Product: ${addProductResponseData.msg}`,
+            )
+          }
+        } catch (error) {
+          console.log(error)
+
+          setShowErrorMessage({
+            message: `Failed to add Product: ${error}`,
+            show: true,
+          })
+        }
       }
 
       if (setRefetchProducts) setRefetchProducts(true)
@@ -252,26 +304,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
   ]
 
   useEffect(() => {
-    if (editProduct) {
-      formik.setValues({
-        images: editProduct.images,
-        title: editProduct.title,
-        parentCategory: editProduct.parentCategory,
-        category: editProduct.category,
-        price: editProduct.price,
-        hasDiscount: editProduct.hasDiscount,
-        discountPercentage: editProduct.discountPercentage,
-        delivery: editProduct.delivery,
-        organic: editProduct.organic,
-        transaction: editProduct.transaction,
-        cashOnDelivery: editProduct.cashOnDelivery,
-        returnableChoice: editProduct.returnableChoice,
-        onSiteShopping: editProduct.onSiteShopping,
-      })
-    }
-  }, [editProduct, formik])
-
-  useEffect(() => {
     if (isEditModal) {
       const childCategories = getChildCategories(
         editProduct?.parentCategory || 'Fruits',
@@ -298,6 +330,19 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
 
       setUploadedImageFile(file)
     }
+  }
+
+  const handleCloseToast = (
+    event?: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setShowErrorMessage((prevState) => {
+      return { ...prevState, show: false }
+    })
   }
 
   return (
@@ -590,6 +635,24 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
               >
                 {isEditModal ? 'Save changes' : 'Add Product'}
               </button>
+              <Snackbar
+                open={showErrorMessage.show}
+                autoHideDuration={6000}
+                onClose={handleCloseToast}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <Alert
+                  onClose={handleCloseToast}
+                  severity="error"
+                  variant="outlined"
+                  sx={{ width: '100%' }}
+                >
+                  {showErrorMessage.message}
+                </Alert>
+              </Snackbar>
             </div>
           </form>
         </div>
