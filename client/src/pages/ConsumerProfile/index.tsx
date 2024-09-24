@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import StoreNavbar from '../../components/StoreNavbar'
 import { useNavigate } from 'react-router-dom'
 import ProfileSideBar from '../../components/ProfileSideBar'
@@ -11,25 +11,29 @@ import Order from './Order'
 const ConsumerProfile = () => {
   const navigate = useNavigate()
   const [openReviewModal, setOpenReviewModal] = useState(false)
-  const { logInData, loadingLogInData, setLogInData } = useContext(
+  const { logInData, loadingLogInData, setLogInData, token } = useContext(
     AuthenticationContext,
   )
   const [orders, setOrders] = useState<OrderType[] | null>(null)
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const token = localStorage.getItem('token')
-      const parsedToken = JSON.parse(token!)
+      try {
+        const orderResponse = await fetch(
+          `http://localhost:5000/api/v1/orders`,
+          {
+            mode: 'cors',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
 
-      const orderResponse = await fetch(`http://localhost:5000/api/v1/orders`, {
-        mode: 'cors',
-        headers: {
-          Authorization: `Bearer ${parsedToken}`,
-        },
-      })
-
-      const orderData = await orderResponse.json()
-      setOrders(orderData.orders)
+        const orderData = await orderResponse.json()
+        setOrders(orderData.orders)
+      } catch (error) {
+        console.log('Failed to fetch all orders of the consumer: ', error)
+      }
     }
 
     fetchOrders()
@@ -41,10 +45,6 @@ const ConsumerProfile = () => {
 
   if (loadingLogInData) {
     return <div>Loading</div>
-  }
-
-  if (!logInData.loggedIn && !loadingLogInData) {
-    navigate('/sign-in')
   }
 
   const profileInformation = {
@@ -64,31 +64,33 @@ const ConsumerProfile = () => {
         setOpenReviewModal={setOpenReviewModal}
       />
       <div className="md:px-36 px-14 pt-10 mb-32 font-noto">
-        <div className="flex">
+        <div className="flex flex-col gap-3">
+          <div className="flex justify-between">
+            <div className="text-2xl font-bold ml-2">My Profile</div>
+            <button
+              className="flex items-center gap-2 hover:cursor-pointer"
+              onClick={() => {
+                localStorage.removeItem('token')
+                setLogInData({ loggedIn: false })
+                navigate('/sign-in')
+              }}
+            >
+              <LogoutIcon />
+              <h3 className="text-xl">Logout</h3>
+            </button>
+          </div>
           <div className="grid grid-cols-3 gap-10">
-            {/* <div className="text-2xl font-bold">My Profile</div> */}
             <ProfileSideBar
               isFarmer={false}
               editable={true}
               profileInformation={profileInformation}
             />
             <div className="col-span-2">
-              <button
-                className="flex items-center gap-2 hover:cursor-pointer float-right"
-                onClick={() => {
-                  localStorage.removeItem('token')
-                  setLogInData({ loggedIn: false })
-                  navigate('/sign-in')
-                }}
-              >
-                <LogoutIcon />
-                <h3 className="text-xl">Logout</h3>
-              </button>
               <h1 className="text-lg font-bold mb-5">My Orders</h1>
               {orders ? (
                 <div className="flex flex-col gap-10">
-                  {orders.map((order) => {
-                    return <Order order={order} />
+                  {orders.map((order, index) => {
+                    return <Order key={index} order={order} />
                   })}
                 </div>
               ) : (
