@@ -1,17 +1,7 @@
 import React from 'react'
 import { Progress } from '@material-tailwind/react'
 import Rating from '@mui/material/Rating'
-
-interface RatingStatType {
-  voteCount: {
-    five: number
-    four: number
-    three: number
-    two: number
-    one: number
-  }
-  rating: number
-}
+import { RatingStatType } from '../types/Auth'
 
 interface RatingStatsPropType {
   productRating?: RatingStatType
