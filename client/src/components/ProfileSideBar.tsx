@@ -146,22 +146,24 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({
           <LocationOnIcon />
           {location}
         </div>
-        <div className="flex items-center gap-3 mt-3 text-sm">
-          <MyLocationIcon />
-          <div className="flex gap-3">
-            <div>
-              <span className="font-bold">Lat: </span>
-              {locationCoordinates.latitude.coordinate}°{' '}
-              {locationCoordinates.latitude.direction}
+        {!(locationCoordinates === undefined) && (
+          <div className="flex items-center gap-3 mt-3 text-sm">
+            <MyLocationIcon />
+            <div className="flex gap-3">
+              <div>
+                <span className="font-bold">Lat: </span>
+                {locationCoordinates.latitude.coordinate}°{' '}
+                {locationCoordinates.latitude.direction}
+              </div>
+              <div>
+                <span className="font-bold">Long: </span>
+                {locationCoordinates.longitude.coordinate}°{' '}
+                {locationCoordinates.longitude.direction}
+              </div>
+              <div></div>
             </div>
-            <div>
-              <span className="font-bold">Long: </span>
-              {locationCoordinates.longitude.coordinate}°{' '}
-              {locationCoordinates.longitude.direction}
-            </div>
-            <div></div>
           </div>
-        </div>
+        )}
         <div className="pt-10">
           {isFarmer && <RatingStats farmerRating={profileInformation.rating} />}
           {logInData.role === Role.Consumer && logInData.userID === ID && (
