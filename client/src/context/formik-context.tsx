@@ -1,27 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useFormik, FormikTouched, FormikErrors } from 'formik'
-import { ProfileSidebarInformationType, Role } from '../types/Auth'
+import {
+  ProfileSidebarInformationType,
+  Role,
+  SignUpDetailsType,
+  ProfileInformationType,
+} from '../types/Auth'
 import AuthenticationContext from './authentication'
-
-interface SignUpDetailsType {
-  name: string
-  image: string | File
-  email: string
-  password: string
-  description?: string
-  mobileNo: string
-  location: string
-  locationCoordinates: {
-    latitude: {
-      coordinate: number
-      direction: 'N' | 'S'
-    }
-    longitude: {
-      coordinate: number
-      direction: 'E' | 'W'
-    }
-  }
-}
 
 export interface FormikContextType {
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
@@ -56,18 +41,6 @@ interface Props {
   children: string | JSX.Element | JSX.Element[]
   setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>
   profileInformation?: ProfileSidebarInformationType
-}
-
-export interface ProfileInformationType {
-  name: string
-  image: File | string
-  description?: string
-  mobileNo: string
-  location: string
-  latitudeCoordinate: number | undefined
-  latitudeDirection: 'N' | 'S'
-  longitudeCoordinate: number | undefined
-  longitudeDirection: 'E' | 'W'
 }
 
 const FormikContext = createContext<FormikContextType>({

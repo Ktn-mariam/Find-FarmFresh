@@ -5,6 +5,38 @@ export enum Role {
   Consumer = 'Consumer',
 }
 
+export interface SignUpDetailsType {
+  name: string
+  image: string | File
+  email: string
+  password: string
+  description?: string
+  mobileNo: string
+  location: string
+  locationCoordinates: {
+    latitude: {
+      coordinate: number
+      direction: 'N' | 'S'
+    }
+    longitude: {
+      coordinate: number
+      direction: 'E' | 'W'
+    }
+  }
+}
+
+export interface ProfileInformationType {
+  name: string
+  image: File | string
+  description?: string
+  mobileNo: string
+  location: string
+  latitudeCoordinate: number | undefined
+  latitudeDirection: 'N' | 'S'
+  longitudeCoordinate: number | undefined
+  longitudeDirection: 'E' | 'W'
+}
+
 export interface ProfileSidebarInformationType {
   locationCoordinates: {
     latitude: {
@@ -68,4 +100,26 @@ export interface UserProfileType {
     farmerID: string
     name: string
   }[]
+}
+
+export interface LocationCoordinatesType {
+  latitude: {
+    coordinate: number
+    direction: 'N' | 'S'
+  }
+  longitude: {
+    coordinate: number
+    direction: 'E' | 'W'
+  }
+}
+
+export interface RatingStatType {
+  voteCount: {
+    five: number
+    four: number
+    three: number
+    two: number
+    one: number
+  }
+  rating: number
 }
