@@ -2,7 +2,7 @@
 
 <p display="flex" align="center" justify="center">
     <img src="https://github.com/Ktn-mariam/FarmFresh-Finder/assets/113761859/148e7c5a-ad43-480c-bb06-725f77eae9df" alt="farmfresh-logo" />
-    <h3 align="center">Farm Fresh Finder</h3>
+    <h3 align="center">Find Farm Fresh</h3>
 </p>
 <p align="center">
     <em>Connecting consumers with local farmers for a direct and fresh produce experience</em> 🧑‍🌾
