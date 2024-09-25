@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "nodemon app.ts",
+    "start": "npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
