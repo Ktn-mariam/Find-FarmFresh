@@ -42,6 +42,9 @@ app.use('/api/v1/products', productRouter)
 app.use('/api/v1/comments', commentsRouter)
 app.use('/api/v1/consumers', consumerRouter)
 app.use('/api/v1/orders', ordersRouter)
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello World' })
+})
 
 // middleware
 app.use(notFoundMiddleware)
