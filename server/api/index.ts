@@ -1,21 +1,21 @@
 import 'dotenv/config'
-import 'express-async-errors'
+// import 'express-async-errors'
 import express from 'express'
-import cors from 'cors'
+// import cors from 'cors'
 // import helmet from 'helmet'
 // import { rateLimit as rateLimiter } from 'express-rate-limit'
 
-import connectDB from '../db/connect'
+// import connectDB from '../db/connect'
 
-import authRouter from '../routes/auth'
-import farmerRouter from '../routes/farmers'
-import productRouter from '../routes/products'
-import commentsRouter from '../routes/comments'
-import ordersRouter from '../routes/orders'
-import consumerRouter from '../routes/consumers'
+// import authRouter from '../routes/auth'
+// import farmerRouter from '../routes/farmers'
+// import productRouter from '../routes/products'
+// import commentsRouter from '../routes/comments'
+// import ordersRouter from '../routes/orders'
+// import consumerRouter from '../routes/consumers'
 
-import errorHandlerMiddleware from '../middleware/error-handler'
-import notFoundMiddleware from '../middleware/not-found'
+// import errorHandlerMiddleware from '../middleware/error-handler'
+// import notFoundMiddleware from '../middleware/not-found'
 
 const app = express()
 
@@ -29,31 +29,31 @@ const app = express()
 //     legacyHeaders: false,
 //   }),
 // )
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use('/uploads', express.static('uploads'))
+// app.use(cors())
+// app.use(express.json())
+// app.use(express.urlencoded({ extended: true }))
+// app.use('/uploads', express.static('uploads'))
 
-// routes
-app.use('/api/v1/auth', authRouter)
-app.use('/api/v1/farmers', farmerRouter)
-app.use('/api/v1/products', productRouter)
-app.use('/api/v1/comments', commentsRouter)
-app.use('/api/v1/consumers', consumerRouter)
-app.use('/api/v1/orders', ordersRouter)
+// // routes
+// app.use('/api/v1/auth', authRouter)
+// app.use('/api/v1/farmers', farmerRouter)
+// app.use('/api/v1/products', productRouter)
+// app.use('/api/v1/comments', commentsRouter)
+// app.use('/api/v1/consumers', consumerRouter)
+// app.use('/api/v1/orders', ordersRouter)
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-// middleware
-app.use(notFoundMiddleware)
-app.use(errorHandlerMiddleware)
+// // middleware
+// app.use(notFoundMiddleware)
+// app.use(errorHandlerMiddleware)
 
 const PORT = process.env.PORT || 5000
 
-connectDB(process.env.MONGO_URI as string).catch((error) => {
-  console.error('Database connection error:', error)
-})
+// connectDB(process.env.MONGO_URI as string).catch((error) => {
+//   console.error('Database connection error:', error)
+// })
 
 // Vercel will automatically handle requests to /api
 app.listen(PORT, () => {
