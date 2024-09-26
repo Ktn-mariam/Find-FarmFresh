@@ -2,8 +2,8 @@ import 'dotenv/config'
 import 'express-async-errors'
 import express from 'express'
 import cors from 'cors'
-import helmet from 'helmet'
-import { rateLimit as rateLimiter } from 'express-rate-limit'
+// import helmet from 'helmet'
+// import { rateLimit as rateLimiter } from 'express-rate-limit'
 
 import connectDB from '../db/connect'
 
