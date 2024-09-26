@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "api/app.ts",
+  "main": "app.ts",
   "scripts": {
     "start": "nodemon api/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
