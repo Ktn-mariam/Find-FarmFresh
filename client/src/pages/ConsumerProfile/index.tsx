@@ -12,30 +12,48 @@ import { APIURL } from '../../App'
 const ConsumerProfile = () => {
   const navigate = useNavigate()
   const [openReviewModal, setOpenReviewModal] = useState(false)
-  const { logInData, loadingLogInData, setLogInData, token } = useContext(
-    AuthenticationContext,
-  )
+  const {
+    logInData,
+    loadingLogInData,
+    setLogInData,
+    token,
+    setToken,
+  } = useContext(AuthenticationContext)
   const [orders, setOrders] = useState<OrderType[] | null>(null)
+  const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const orderResponse = await fetch(`${APIURL}/api/v1/orders`, {
-          mode: 'cors',
-          headers: {
-            Authorization: `Bearer ${token}`,
+        console.log('Fetching orders')
+
+        const orderResponse = await fetch(
+          `${APIURL}/api/v1/orders?page=${pageNumber}`,
+          {
+            mode: 'cors',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+        )
 
         const orderData = await orderResponse.json()
-        setOrders(orderData.orders)
+        console.log(orderData.orders)
+
+        setOrders((prevOrders) => {
+          if (prevOrders) {
+            return [...prevOrders, ...orderData.orders]
+          } else {
+            return orderData.orders
+          }
+        })
       } catch (error) {
         console.log('Failed to fetch all orders of the consumer: ', error)
       }
     }
 
     fetchOrders()
-  }, [])
+  }, [pageNumber])
 
   useEffect(() => {
     setOpenReviewModal(true)
@@ -70,6 +88,7 @@ const ConsumerProfile = () => {
               onClick={() => {
                 localStorage.removeItem('token')
                 setLogInData({ loggedIn: false })
+                setToken(null)
                 navigate('/sign-in')
               }}
             >
@@ -90,6 +109,18 @@ const ConsumerProfile = () => {
                   {orders.map((order, index) => {
                     return <Order key={index} order={order} />
                   })}
+                  <div className="flex justify-center">
+                    <button
+                      className="px-4 py-1 bg-gray-300 rounded-3xl hover:cursor-pointer"
+                      onClick={() => {
+                        setPageNumber((prevPageNo) => {
+                          return prevPageNo + 1
+                        })
+                      }}
+                    >
+                      Load more
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div>No Orders to Display</div>
