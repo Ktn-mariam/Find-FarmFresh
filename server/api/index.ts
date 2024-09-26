@@ -5,17 +5,17 @@ import cors from 'cors'
 import helmet from 'helmet'
 import { rateLimit as rateLimiter } from 'express-rate-limit'
 
-import connectDB from './db/connect'
+import connectDB from '../db/connect'
 
-import authRouter from './routes/auth'
-import farmerRouter from './routes/farmers'
-import productRouter from './routes/products'
-import commentsRouter from './routes/comments'
-import ordersRouter from './routes/orders'
-import consumerRouter from './routes/consumers'
+import authRouter from '../routes/auth'
+import farmerRouter from '../routes/farmers'
+import productRouter from '../routes/products'
+import commentsRouter from '../routes/comments'
+import ordersRouter from '../routes/orders'
+import consumerRouter from '../routes/consumers'
 
-import errorHandlerMiddleware from './middleware/error-handler'
-import notFoundMiddleware from './middleware/not-found'
+import errorHandlerMiddleware from '../middleware/error-handler'
+import notFoundMiddleware from '../middleware/not-found'
 
 const app = express()
 
@@ -64,3 +64,5 @@ const start = async () => {
 }
 
 start()
+
+export default app
