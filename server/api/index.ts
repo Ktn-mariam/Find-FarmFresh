@@ -51,18 +51,13 @@ app.use(errorHandlerMiddleware)
 
 const PORT = process.env.PORT || 5000
 
-const start = async () => {
-  try {
-    // connectDB
-    await connectDB(process.env.MONGO_URI as string)
-    app.listen(PORT, () => {
-      console.log(`Server is listening at port ${PORT}...`)
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
+connectDB(process.env.MONGO_URI as string).catch((error) => {
+  console.error('Database connection error:', error)
+})
 
-start()
+// Vercel will automatically handle requests to /api
+app.listen(PORT, () => {
+  console.log(`Server is listening at port ${PORT}...`)
+})
 
 export default app
