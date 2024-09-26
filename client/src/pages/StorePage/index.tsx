@@ -3,6 +3,7 @@ import ProductSlider from '../../components/ProductSlider'
 import CategoryNavbar from '../../components/CategoryNavbar'
 import { ProductDetailTypeForDisplay } from '../../types/Product'
 import AuthenticationContext from '../../context/authentication'
+import { APIURL } from '../../App'
 
 const StorePage = () => {
   const [topRatedProducts, setTopRatedProducts] = useState<
@@ -20,7 +21,7 @@ const StorePage = () => {
     const fetchTopRatedProducts = async () => {
       try {
         const topRatedProductsResponse = await fetch(
-          `http://localhost:5000/api/v1/products/topRatedProducts`,
+          `${APIURL}/api/v1/products/topRatedProducts`,
         )
 
         const topRatedProductData = await topRatedProductsResponse.json()
@@ -33,7 +34,7 @@ const StorePage = () => {
     const fetchDiscountedProducts = async () => {
       try {
         const discountedProductsResponse = await fetch(
-          `http://localhost:5000/api/v1/products/discountedProducts`,
+          `${APIURL}/api/v1/products/discountedProducts`,
         )
 
         const discountedProductsData = await discountedProductsResponse.json()
@@ -49,7 +50,7 @@ const StorePage = () => {
           const products = await Promise.all(
             logInData.following.map(async (farmer) => {
               const orderResponse = await fetch(
-                `http://localhost:5000/api/v1/products/lastThirtyDayProducts/${farmer.farmerID}`,
+                `${APIURL}/api/v1/products/lastThirtyDayProducts/${farmer.farmerID}`,
               )
 
               const productsData = await orderResponse.json()

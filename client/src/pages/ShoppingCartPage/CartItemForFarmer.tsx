@@ -7,6 +7,7 @@ import { CartItem } from '../../types/Order'
 import { NavLink } from 'react-router-dom'
 import { ProductDetailForOrder } from '../../types/Product'
 import ShoppingCartContext from '../../context/shoppingCart'
+import { APIURL } from '../../App'
 
 interface CartItemForFarmerPropsType {
   cartItem: CartItem
@@ -31,7 +32,7 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
         const productDetails = await Promise.all(
           cartItem.products.map(async (product) => {
             const productDetailResponse = await fetch(
-              `http://localhost:5000/api/v1/products/orderDetail/${product.productID}`,
+              `${APIURL}/api/v1/products/orderDetail/${product.productID}`,
             )
             const productDetailData = await productDetailResponse.json()
 
@@ -77,7 +78,7 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
       const token = localStorage.getItem('token')
       const parsedToken = JSON.parse(token!)
 
-      const orderResponse = await fetch(`http://localhost:5000/api/v1/orders`, {
+      const orderResponse = await fetch(`${APIURL}/api/v1/orders`, {
         method: 'POST',
         mode: 'cors',
         headers: {

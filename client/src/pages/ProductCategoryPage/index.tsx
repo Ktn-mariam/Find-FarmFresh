@@ -6,6 +6,7 @@ import Rating from '@mui/material/Rating'
 import Pagination from '@mui/material/Pagination'
 import getChildCategories from '../../utils/getChildCategories'
 import { ProductType } from '../../types/Product'
+import { APIURL } from '../../App'
 
 const ProductCategoryPage = () => {
   const { parentCategory, category } = useParams()
@@ -19,7 +20,7 @@ const ProductCategoryPage = () => {
   useEffect(() => {
     const fetchProductData = async () => {
       try {
-        let fetchDataRoute = `http://localhost:5000/api/v1/products/category/${parentCategory}?page=${page}&rating=${ratingFilter}&sortBy=${sortFilter}`
+        let fetchDataRoute = `${APIURL}/api/v1/products/category/${parentCategory}?page=${page}&rating=${ratingFilter}&sortBy=${sortFilter}`
         if (childCategory) {
           fetchDataRoute = fetchDataRoute + `&category=${childCategory}`
         }

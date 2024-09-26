@@ -13,6 +13,7 @@ import AuthenticationContext from '../context/authentication'
 import { Role } from '../types/Auth'
 import { ProfileSidebarInformationType } from '../types/Auth'
 import { NavLink } from 'react-router-dom'
+import { APIURL } from '../App'
 
 interface ProductCardProps {
   editable: boolean
@@ -59,7 +60,7 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({
     }
     if (isFollowing) {
       try {
-        await fetch(`http://localhost:5000/api/v1/consumers/unFollowFarmer`, {
+        await fetch(`${APIURL}/api/v1/consumers/unFollowFarmer`, {
           method: 'PATCH',
           mode: 'cors',
           headers: {
@@ -74,7 +75,7 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({
       }
     } else {
       try {
-        await fetch(`http://localhost:5000/api/v1/consumers/followFarmer`, {
+        await fetch(`${APIURL}/api/v1/consumers/followFarmer`, {
           method: 'PATCH',
           mode: 'cors',
           headers: {
@@ -99,7 +100,7 @@ const ProfileSideBar: React.FC<ProductCardProps> = ({
         <div className="w-74 h-64 flex items-center justify-center overflow-hidden">
           <img
             className="object-cover w-full h-full"
-            src={`http://localhost:5000/uploads/${image}`}
+            src={`${APIURL}/uploads/${image}`}
             alt=""
           />
         </div>

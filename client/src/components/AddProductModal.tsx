@@ -7,6 +7,7 @@ import { ProductDetailTypeForDisplay } from '../types/Product'
 import AuthenticationContext from '../context/authentication'
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
+import { APIURL } from '../App'
 
 interface AddProductFormValues {
   images: File | string[]
@@ -91,7 +92,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
 
   useEffect(() => {
     if (isEditModal) {
-      setPreviewImage(`http://localhost:5000/uploads/${editProduct?.images[0]}`)
+      setPreviewImage(`${APIURL}/uploads/${editProduct?.images[0]}`)
     }
   }, [isEditModal, setPreviewImage, editProduct?.images])
 
@@ -206,7 +207,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
 
         try {
           const editProductResponse = await fetch(
-            `http://localhost:5000/api/v1/products/${editProduct?._id}`,
+            `${APIURL}/api/v1/products/${editProduct?._id}`,
             {
               method: 'PATCH',
               mode: 'cors',
@@ -237,17 +238,14 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
         })
 
         try {
-          const addProductResponse = await fetch(
-            `http://localhost:5000/api/v1/products`,
-            {
-              method: 'POST',
-              mode: 'cors',
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              body: addProductFormData,
+          const addProductResponse = await fetch(`${APIURL}/api/v1/products`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
-          )
+            body: addProductFormData,
+          })
 
           const addProductResponseData = await addProductResponse.json()
           if (!addProductResponseData.ok) {

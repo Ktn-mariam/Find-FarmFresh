@@ -18,6 +18,8 @@ import { Role } from './types/Auth'
 import { ShoppingCartContextProvider } from './context/shoppingCart'
 import MyProfilePage from './pages/MyProfilePage'
 
+export const APIURL = 'http://localhost:5000/'
+
 function App() {
   const { logInData } = useContext(AuthenticationContext)
   return (

@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { Role } from '../types/Auth'
 import { UserProfileType } from '../types/Auth'
+import { APIURL } from '../App'
 
 interface AuthenticationContextType {
   logInData: UserProfileType
@@ -47,7 +48,7 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userResponse = await fetch('http://localhost:5000/api/v1/auth', {
+        const userResponse = await fetch(`${APIURL}/api/v1/auth`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

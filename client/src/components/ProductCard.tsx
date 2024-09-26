@@ -8,6 +8,7 @@ import Rating from '@mui/material/Rating'
 import { ProductDetailTypeForDisplay } from '../types/Product'
 import AuthenticationContext from '../context/authentication'
 import getParentCategoryRoute from '../utils/getParentCategoryRoute'
+import { APIURL } from '../App'
 
 interface ProductCardProps {
   height: number
@@ -51,7 +52,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       isVisible: !product.isVisible,
     }
     const updateResponse = await fetch(
-      `http://localhost:5000/api/v1/products/${product._id}`,
+      `${APIURL}/api/v1/products/${product._id}`,
       {
         method: 'PATCH',
         mode: 'cors',
@@ -69,7 +70,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleProductDelete = async (): Promise<void> => {
     const updateResponse = await fetch(
-      `http://localhost:5000/api/v1/products/${product._id}`,
+      `${APIURL}/api/v1/products/${product._id}`,
       {
         method: 'DELETE',
         mode: 'cors',
@@ -105,7 +106,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           >
             <img
               className="object-cover w-full h-full"
-              src={`http://localhost:5000/uploads/${images[0]}`}
+              src={`${APIURL}/uploads/${images[0]}`}
               alt=""
             />
           </div>

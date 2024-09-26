@@ -7,6 +7,7 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined'
 import { Role } from '../../types/Auth'
 import AuthenticationContext from '../../context/authentication'
 import { useNavigate } from 'react-router-dom'
+import { APIURL } from '../../App'
 
 interface LogInInformation {
   email: string
@@ -48,17 +49,14 @@ const SignInPage = () => {
     validate,
     onSubmit: async (values, { setValues, setErrors, setTouched }) => {
       try {
-        const response = await fetch(
-          'http://localhost:5000/api/v1/auth/login',
-          {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(values),
+        const response = await fetch(`${APIURL}/api/v1/auth/login`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        )
+          body: JSON.stringify(values),
+        })
 
         const responseData = await response.json()
         localStorage.setItem('token', JSON.stringify(responseData.token))
@@ -96,7 +94,7 @@ const SignInPage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/v1/auth/login', {
+      const response = await fetch(`${APIURL}/api/v1/auth/login`, {
         method: 'POST',
         mode: 'cors',
         headers: {

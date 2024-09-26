@@ -7,6 +7,7 @@ import {
   ProfileInformationType,
 } from '../types/Auth'
 import AuthenticationContext from './authentication'
+import { APIURL } from '../App'
 
 export interface FormikContextType {
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
@@ -100,13 +101,11 @@ export const FormikContextProvider = ({
   const [uploadedImageURL, setUploadedImageURL] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [signUpInfo, setSignUpInfo] = useState<SignUpInformation | null>(null)
-  const { logInData, setLogInData } = useContext(AuthenticationContext)
+  const { logInData, setLogInData, token } = useContext(AuthenticationContext)
 
   useEffect(() => {
     if (profileInformation) {
-      setPreviewImage(
-        `http://localhost:5000/uploads/${profileInformation.image}`,
-      )
+      setPreviewImage(`${APIURL}/uploads/${profileInformation.image}`)
     }
   }, [setPreviewImage, profileInformation])
 
@@ -119,7 +118,7 @@ export const FormikContextProvider = ({
 
     if (values.name) {
       const userexistsResponse = await fetch(
-        `http://localhost:5000/api/v1/auth/userExists/name/${values.name}`,
+        `${APIURL}/api/v1/auth/userExists/name/${values.name}`,
       )
       const userExistsData = await userexistsResponse.json()
       if (userExistsData.nameExists && !profileInformation) {
@@ -284,9 +283,9 @@ export const FormikContextProvider = ({
   ): Promise<void> => {
     let url
     if (signUpInfo?.role === Role.Farmer) {
-      url = 'http://localhost:5000/api/v1/auth/register/farmer'
+      url = `${APIURL}/api/v1/auth/register/farmer`
     } else {
-      url = 'http://localhost:5000/api/v1/auth/register/consumer'
+      url = `${APIURL}/api/v1/auth/register/consumer`
     }
 
     const formDataSignUp = new FormData()
@@ -325,13 +324,10 @@ export const FormikContextProvider = ({
   ): Promise<void> => {
     let url
     if (logInData?.role === Role.Farmer) {
-      url = 'http://localhost:5000/api/v1/farmers'
+      url = `${APIURL}/api/v1/farmers`
     } else {
-      url = 'http://localhost:5000/api/v1/consumers'
+      url = `${APIURL}/api/v1/consumers`
     }
-
-    const token = localStorage.getItem('token')
-    const parsedToken = JSON.parse(token!)
 
     const formDataSignUp = new FormData()
 
@@ -350,7 +346,7 @@ export const FormikContextProvider = ({
         method: 'PATCH',
         mode: 'cors',
         headers: {
-          Authorization: `Bearer ${parsedToken}`,
+          Authorization: `Bearer ${token}`,
         },
         body: formDataSignUp,
       })

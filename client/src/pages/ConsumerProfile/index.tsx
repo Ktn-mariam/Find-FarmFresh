@@ -7,6 +7,7 @@ import AuthenticationContext from '../../context/authentication'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { OrderType } from '../../types/Order'
 import Order from './Order'
+import { APIURL } from '../../App'
 
 const ConsumerProfile = () => {
   const navigate = useNavigate()
@@ -19,15 +20,12 @@ const ConsumerProfile = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const orderResponse = await fetch(
-          `http://localhost:5000/api/v1/orders`,
-          {
-            mode: 'cors',
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const orderResponse = await fetch(`${APIURL}/api/v1/orders`, {
+          mode: 'cors',
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        )
+        })
 
         const orderData = await orderResponse.json()
         setOrders(orderData.orders)

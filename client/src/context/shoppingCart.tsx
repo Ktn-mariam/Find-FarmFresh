@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { CartItem } from '../types/Order'
 import AuthenticationContext from './authentication'
 import { Role } from '../types/Auth'
+import { APIURL } from '../App'
 
 interface UpdateQuantityItemType {
   farmerID: string
@@ -72,7 +73,7 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
     const fetchCart = async () => {
       try {
         const cartResponse = await fetch(
-          `http://localhost:5000/api/v1/consumers/shoppingCart`,
+          `${APIURL}/api/v1/consumers/shoppingCart`,
           {
             mode: 'cors',
             headers: {
@@ -93,7 +94,7 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
                   _id: string
                 }) => {
                   const productResponse = await fetch(
-                    `http://localhost:5000/api/v1/products/${product.productID}`,
+                    `${APIURL}/api/v1/products/${product.productID}`,
                   )
                   const productData = await productResponse.json()
 
@@ -136,18 +137,15 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
   useEffect(() => {
     const updateCartForConsumer = async () => {
       try {
-        const consumerResponse = await fetch(
-          `http://localhost:5000/api/v1/consumers`,
-          {
-            method: 'PATCH',
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ cart }),
+        const consumerResponse = await fetch(`${APIURL}/api/v1/consumers`, {
+          method: 'PATCH',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-        )
+          body: JSON.stringify({ cart }),
+        })
 
         const consumerData = await consumerResponse.json()
       } catch (error) {
@@ -287,18 +285,15 @@ export const ShoppingCartContextProvider: React.FC<ShoppingCartContextProviderPr
     try {
       const orders = await Promise.all(
         cart.map(async (cartItem) => {
-          const orderResponse = await fetch(
-            'http://localhost:5000/api/v1/orders',
-            {
-              method: 'POST',
-              mode: 'cors',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify(cartItem),
+          const orderResponse = await fetch(`${APIURL}/api/v1/orders`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
             },
-          )
+            body: JSON.stringify(cartItem),
+          })
 
           const orderData = await orderResponse.json()
         }),

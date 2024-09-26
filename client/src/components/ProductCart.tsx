@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { ProductDetailForOrder } from '../types/Product'
 import ShoppingCartContext from '../context/shoppingCart'
 import getParentCategoryRoute from '../utils/getParentCategoryRoute'
+import { APIURL } from '../App'
 
 interface ProductCartProps {
   isShoppingCart: boolean
@@ -65,7 +66,7 @@ const ProductCart: React.FC<ProductCartProps> = ({
           <div className="h-40 mb-3 md:h-40 md:w-32 flex items-center justify-center overflow-hidden hover:cursor-pointer">
             <img
               className="object-cover w-full h-full"
-              src={`http://localhost:5000/uploads/${images[0]}`}
+              src={`${APIURL}/uploads/${images[0]}`}
               alt=""
             />
           </div>

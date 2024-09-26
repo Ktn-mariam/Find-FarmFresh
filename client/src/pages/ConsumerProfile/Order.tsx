@@ -8,6 +8,7 @@ import { OrderType } from '../../types/Order'
 import { getFormattedDate } from '../../utils/getFormattedDate'
 import { ProductDetailForOrder } from '../../types/Product'
 import AuthenticationContext from '../../context/authentication'
+import { APIURL } from '../../App'
 
 enum Status {
   Waiting = 'Waiting',
@@ -41,7 +42,7 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
         const productDetails = await Promise.all(
           order.products.map(async (product) => {
             const productDetailResponse = await fetch(
-              `http://localhost:5000/api/v1/products/orderDetail/${product.productID}`,
+              `${APIURL}/api/v1/products/orderDetail/${product.productID}`,
             )
             const productDetailData = await productDetailResponse.json()
             return {
@@ -65,7 +66,7 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
 
   const cancelOrder = async () => {
     try {
-      await fetch(`http://localhost:5000/api/v1/orders/${_id}`, {
+      await fetch(`${APIURL}/api/v1/orders/${_id}`, {
         method: 'PATCH',
         mode: 'cors',
         headers: {

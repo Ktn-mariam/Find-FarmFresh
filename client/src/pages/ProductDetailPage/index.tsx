@@ -24,7 +24,6 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import Pagination from '@mui/material/Pagination'
 import InfoIcon from '@mui/icons-material/Info'
-import getParentCategoryRoute from '../../utils/getParentCategoryRoute'
 import getCategory from '../../utils/getParentCategory'
 import { ProductDetailTypeForDisplay } from '../../types/Product'
 import { ProductType } from '../../types/Product'
@@ -34,6 +33,7 @@ import Snackbar from '@mui/material/Snackbar'
 import MuiAlert from '@mui/material/Alert'
 import ShoppingCartContext from '../../context/shoppingCart'
 import AuthenticationContext from '../../context/authentication'
+import { APIURL } from '../../App'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -86,7 +86,7 @@ function ProductDetailPage() {
     const fetchData = async () => {
       try {
         const productResponse = await fetch(
-          `http://localhost:5000/api/v1/products/${productID}`,
+          `${APIURL}/api/v1/products/${productID}`,
         )
         const productData = await productResponse.json()
         setProduct(productData.product)
@@ -98,7 +98,7 @@ function ProductDetailPage() {
         try {
           let noOfCommentsInProduct = product.comments.length
           const noOfCommentResponse = await fetch(
-            `http://localhost:5000/api/v1/comments/product/${productID}/count`,
+            `${APIURL}/api/v1/comments/product/${productID}/count`,
           )
 
           const noOfCommentsData = await noOfCommentResponse.json()
@@ -114,7 +114,7 @@ function ProductDetailPage() {
 
         try {
           const farmerResponse = await fetch(
-            `http://localhost:5000/api/v1/farmers/${product.farmerID}`,
+            `${APIURL}/api/v1/farmers/${product.farmerID}`,
           )
 
           const farmerData = await farmerResponse.json()
@@ -125,7 +125,7 @@ function ProductDetailPage() {
 
         try {
           const similarProductsResponse = await fetch(
-            `http://localhost:5000/api/v1/products/category/${parentCategory}?category=${category}`,
+            `${APIURL}/api/v1/products/category/${parentCategory}?category=${category}`,
           )
 
           const similarProductsData = await similarProductsResponse.json()
@@ -156,7 +156,7 @@ function ProductDetailPage() {
       } else {
         try {
           const commentResponse = await fetch(
-            `http://localhost:5000/api/v1/comments/product/${productID}?page=${page}`,
+            `${APIURL}/api/v1/comments/product/${productID}?page=${page}`,
           )
           const commentData = await commentResponse.json()
 
@@ -225,7 +225,7 @@ function ProductDetailPage() {
                       <div className="w-40 h-40 md:w-96 md:h-110 flex items-center justify-center overflow-hidden">
                         <img
                           className="object-cover w-full h-full"
-                          src={`http://localhost:5000/uploads/${image}`}
+                          src={`${APIURL}/uploads/${image}`}
                           alt=""
                         />
                       </div>

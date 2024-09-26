@@ -4,26 +4,22 @@ import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import { OrderType } from '../../types/Order'
 import AuthenticationContext from '../../context/authentication'
+import { APIURL } from '../../App'
 
 const OrdersPage = () => {
-  const { logInData } = useContext(AuthenticationContext)
+  const { logInData, token } = useContext(AuthenticationContext)
   const [orders, setOrders] = useState<OrderType[] | null>(null)
   const [refetchOrders, setRefetchOrders] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('token')
-      const parsedToken = JSON.parse(token!)
       try {
-        const orderResponse = await fetch(
-          'http://localhost:5000/api/v1/orders',
-          {
-            mode: 'cors',
-            headers: {
-              Authorization: `Bearer ${parsedToken}`,
-            },
+        const orderResponse = await fetch(`${APIURL}/api/v1/orders`, {
+          mode: 'cors',
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        )
+        })
         const orderData = await orderResponse.json()
 
         setOrders(orderData.orders)

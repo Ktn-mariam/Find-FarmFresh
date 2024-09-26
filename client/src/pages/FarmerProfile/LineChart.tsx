@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2'
 import 'chart.js/auto'
 import { getFormattedDateWithoutYear } from '../../utils/getFormattedDate'
 import AuthenticationContext from '../../context/authentication'
+import { APIURL } from '../../App'
 
 const LineChart = () => {
   const { token } = useContext(AuthenticationContext)
@@ -29,7 +30,7 @@ const LineChart = () => {
         const totalAmountLast30Days = await Promise.all(
           dates.map(async (date) => {
             const response = await fetch(
-              `http://localhost:5000/api/v1/orders/date/${date}`,
+              `${APIURL}/api/v1/orders/date/${date}`,
               {
                 mode: 'cors',
                 headers: {

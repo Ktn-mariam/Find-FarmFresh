@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Rating from '@mui/material/Rating'
+import { APIURL } from '../../App'
 
 interface ReviewProductProps {
   isProduct: boolean
@@ -29,7 +30,7 @@ const ReviewProduct: React.FC<ReviewProductProps> = ({
     const fetchProductDetails = async () => {
       try {
         const productDetailResponse = await fetch(
-          `http://localhost:5000/api/v1/products/orderDetail/${ID}`,
+          `${APIURL}/api/v1/products/orderDetail/${ID}`,
         )
         const productDetailData = await productDetailResponse.json()
         const reviewItemDetails = {
@@ -44,9 +45,7 @@ const ReviewProduct: React.FC<ReviewProductProps> = ({
 
     const fetchFarmerDetails = async () => {
       try {
-        const farmerResponse = await fetch(
-          `http://localhost:5000/api/v1/farmers/${ID}`,
-        )
+        const farmerResponse = await fetch(`${APIURL}/api/v1/farmers/${ID}`)
         const farmerData = await farmerResponse.json()
         const reviewItemDetails = {
           name: farmerData.farmer[0].name,
@@ -71,7 +70,7 @@ const ReviewProduct: React.FC<ReviewProductProps> = ({
           <div className="w-32 h-32 flex items-center justify-center overflow-hidden">
             <img
               className="object-cover w-full h-full"
-              src={`http://localhost:5000/uploads/${details.image}`}
+              src={`${APIURL}/uploads/${details.image}`}
               alt=""
             />
           </div>

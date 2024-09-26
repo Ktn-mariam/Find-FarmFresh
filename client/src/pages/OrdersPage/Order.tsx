@@ -10,6 +10,7 @@ import { ProductDetailForOrder } from '../../types/Product'
 import { getFormattedDateAndTime } from '../../utils/getFormattedDate'
 import AuthenticationContext from '../../context/authentication'
 import { Role } from '../../types/Auth'
+import { APIURL } from '../../App'
 
 interface OrderPropsType {
   order: OrderType
@@ -44,7 +45,7 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
     const fetchConsumerDetail = async () => {
       try {
         const consumerResponse = await fetch(
-          `http://localhost:5000/api/v1/consumers/${order.consumerID}`,
+          `${APIURL}/api/v1/consumers/${order.consumerID}`,
           {
             mode: 'cors',
             headers: {
@@ -72,7 +73,7 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
           order.products.map(async (product) => {
             try {
               const productDetailResponse = await fetch(
-                `http://localhost:5000/api/v1/products/orderDetail/${product.productID}`,
+                `${APIURL}/api/v1/products/orderDetail/${product.productID}`,
               )
 
               if (!productDetailResponse.ok) {
@@ -115,7 +116,7 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
         deliveryStatus,
         paymentStatus,
       }
-      await fetch(`http://localhost:5000/api/v1/orders/${order._id}`, {
+      await fetch(`${APIURL}/api/v1/orders/${order._id}`, {
         method: 'PATCH',
         mode: 'cors',
         headers: {
@@ -130,7 +131,7 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
   }, [deliveryStatus, paymentStatus, order.consumerID, token, order._id])
 
   const handleDeleteOrder = async () => {
-    await fetch(`http://localhost:5000/api/v1/orders/${order._id}`, {
+    await fetch(`${APIURL}/api/v1/orders/${order._id}`, {
       method: 'DELETE',
       mode: 'cors',
       headers: {
@@ -227,7 +228,7 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
                       <div className="h-14 w-12 flex items-center justify-center overflow-hidden rounded-md">
                         <img
                           className="object-cover w-full h-full"
-                          src={`http://localhost:5000/uploads/${product.images[0]}`}
+                          src={`${APIURL}/uploads/${product.images[0]}`}
                           alt=""
                         />
                       </div>

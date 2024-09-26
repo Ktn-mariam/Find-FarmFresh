@@ -13,6 +13,7 @@ import { FarmerType } from '../../types/Farmer'
 import { Comment } from '../../types/Comment'
 import Pagination from '@mui/material/Pagination'
 import AuthenticationContext from '../../context/authentication'
+import { APIURL } from '../../App'
 
 interface FarmerProfileProps {
   editable: boolean
@@ -36,7 +37,7 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
   const fetchProductData = async (farmerID: string) => {
     try {
       const productsResponse = await fetch(
-        `http://localhost:5000/api/v1/farmers/${farmerID}/products`,
+        `${APIURL}/api/v1/farmers/${farmerID}/products`,
       )
 
       const productData = await productsResponse.json()
@@ -61,7 +62,7 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
     const fetchProfileData = async () => {
       try {
         const farmerResponse = await fetch(
-          `http://localhost:5000/api/v1/farmers/${farmerID}`,
+          `${APIURL}/api/v1/farmers/${farmerID}`,
         )
         const farmerData = await farmerResponse.json()
         setFarmerDetails(farmerData.farmer[0])
@@ -75,7 +76,7 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
         let noOfCommentsInFarmer = farmerDetails?.comments.length
 
         const noOfCommentResponse = await fetch(
-          `http://localhost:5000/api/v1/comments/farmer/${farmerID}/count`,
+          `${APIURL}/api/v1/comments/farmer/${farmerID}/count`,
         )
 
         const noOfCommentsData = await noOfCommentResponse.json()
@@ -133,7 +134,7 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
       const ID = farmerID ? farmerID : logInData.userID
       try {
         const commentResponse = await fetch(
-          `http://localhost:5000/api/v1/comments/farmer/${ID}?page=${page}`,
+          `${APIURL}/api/v1/comments/farmer/${ID}?page=${page}`,
         )
         const commentData = await commentResponse.json()
 

@@ -10,6 +10,7 @@ import AgricultureIcon from '@mui/icons-material/Agriculture'
 import FormikContext from '../../context/formik-context'
 import { useNavigate } from 'react-router-dom'
 import AuthenticationContext from '../../context/authentication'
+import { APIURL } from '../../App'
 
 const steps = ['Create your account', 'Add required Information']
 
@@ -71,7 +72,7 @@ const SignUpPage = () => {
 
     if (values.email) {
       const userexistsResponse = await fetch(
-        `http://localhost:5000/api/v1/auth/userExists/email/${values.email}`,
+        `${APIURL}/api/v1/auth/userExists/email/${values.email}`,
       )
       const userExistsData = await userexistsResponse.json()
       if (userExistsData.emailExists) {

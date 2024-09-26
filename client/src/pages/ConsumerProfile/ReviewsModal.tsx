@@ -10,6 +10,7 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { OrderType, ProductInCartItem } from '../../types/Order'
 import AuthenticationContext from '../../context/authentication'
+import { APIURL } from '../../App'
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -65,7 +66,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
     const fetchReviewOrders = async () => {
       try {
         const orderResponse = await fetch(
-          'http://localhost:5000/api/v1/orders/reviewOrders',
+          `${APIURL}/api/v1/orders/reviewOrders`,
           {
             mode: 'cors',
             headers: {
@@ -142,18 +143,15 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
         description: comments[0].description,
       }
 
-      await fetch(
-        `http://localhost:5000/api/v1/farmers/${comments[0].farmerID}/comments`,
-        {
-          method: 'PATCH',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ comment: comment }),
+      await fetch(`${APIURL}/api/v1/farmers/${comments[0].farmerID}/comments`, {
+        method: 'PATCH',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      )
+        body: JSON.stringify({ comment: comment }),
+      })
     } catch (error) {
       console.log(`Failed to add comment: ${error}`)
     }
@@ -170,18 +168,15 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
             description: comment.description,
             rating: comment.rating,
           }
-          await fetch(
-            `http://localhost:5000/api/v1/products/${comment.productID}`,
-            {
-              method: 'PATCH',
-              mode: 'cors',
-              headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ comment: commentJSON }),
+          await fetch(`${APIURL}/api/v1/products/${comment.productID}`, {
+            method: 'PATCH',
+            mode: 'cors',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
             },
-          )
+            body: JSON.stringify({ comment: commentJSON }),
+          })
         }),
       )
     } catch (error) {
@@ -194,7 +189,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
 
     try {
       const updateOrderResponse = await fetch(
-        `http://localhost:5000/api/v1/orders/${reviewOrders._id}`,
+        `${APIURL}/api/v1/orders/${reviewOrders._id}`,
         {
           method: 'PATCH',
           mode: 'cors',

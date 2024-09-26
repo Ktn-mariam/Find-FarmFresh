@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 import Rating from '@mui/material/Rating'
 import { ProductType } from '../../types/Product'
 import getParentCategoryRoute from '../../utils/getParentCategoryRoute'
+import { APIURL } from '../../App'
 
 interface ProductPropType {
   product: ProductType
@@ -20,7 +21,7 @@ const Product: React.FC<ProductPropType> = ({ product }) => {
           <div className="w-40 h-40 md:w-64 md:h-64 mb-3 flex items-center justify-center overflow-hidden">
             <img
               className="object-cover w-full h-full"
-              src={`http://localhost:5000/uploads/${product.images[0]}`}
+              src={`${APIURL}/uploads/${product.images[0]}`}
               alt=""
             />
           </div>
