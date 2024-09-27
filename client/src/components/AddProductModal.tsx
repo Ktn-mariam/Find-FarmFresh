@@ -203,8 +203,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
           editProductFormData.append(key, value)
         })
 
-        console.log(result)
-
         try {
           const editProductResponse = await fetch(
             `${APIURL}/api/v1/products/${editProduct?._id}`,
