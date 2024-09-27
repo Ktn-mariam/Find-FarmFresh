@@ -42,7 +42,7 @@ app.use('/api/v1/comments', commentsRouter)
 app.use('/api/v1/consumers', consumerRouter)
 app.use('/api/v1/orders', ordersRouter)
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Find Fresh Farmer API')
 })
 
 // middleware
@@ -51,12 +51,18 @@ app.use(errorHandlerMiddleware)
 
 const PORT = process.env.PORT || 5000
 
-connectDB(process.env.MONGO_URI as string).catch((error) => {
-  console.error('Database connection error:', error)
-})
+const start = async () => {
+  try {
+    // connectDB
+    await connectDB(process.env.MONGO_URI as string)
+    app.listen(PORT, () => {
+      console.log(`Server is listening at port ${PORT}...`)
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
 
-app.listen(PORT, () => {
-  console.log(`Server is listening at port ${PORT}...`)
-})
+start()
 
 export default app
