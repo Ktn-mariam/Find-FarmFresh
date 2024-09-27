@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom'
 import { ProductDetailForOrder } from '../../types/Product'
 import ShoppingCartContext from '../../context/shoppingCart'
 import { APIURL } from '../../App'
+import AuthenticationContext from '../../context/authentication'
 
 interface CartItemForFarmerPropsType {
   cartItem: CartItem
@@ -18,6 +19,7 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
   cartItem,
   findTotalPriceAndItems,
 }) => {
+  const { token } = useContext(AuthenticationContext)
   const { updateTotalPrice, deleteAllItemsFromCartofFarmer } = useContext(
     ShoppingCartContext,
   )
@@ -75,21 +77,17 @@ const CartItemForFarmer: React.FC<CartItemForFarmerPropsType> = ({
       return
     }
     try {
-      const token = localStorage.getItem('token')
-      const parsedToken = JSON.parse(token!)
-
       const orderResponse = await fetch(`${APIURL}/api/v1/orders`, {
         method: 'POST',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${parsedToken}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(cartItem),
       })
 
       const orderData = await orderResponse.json()
-      console.log(orderData)
 
       deleteAllItemsFromCartofFarmer(cartItem.farmerID)
       setRefetchProducts(true)
