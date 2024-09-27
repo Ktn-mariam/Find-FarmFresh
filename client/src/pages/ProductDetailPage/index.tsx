@@ -83,7 +83,7 @@ function ProductDetailPage() {
   const parentCategoryDisplay = getCategory(parentCategory || 'Fruits')
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProductDetail = async () => {
       try {
         const productResponse = await fetch(
           `${APIURL}/api/v1/products/${productID}`,
@@ -93,56 +93,68 @@ function ProductDetailPage() {
       } catch (error) {
         console.log('Failed to fetch product detail: ', error)
       }
+    }
 
-      if (product) {
-        try {
-          let noOfCommentsInProduct = product.comments.length
-          const noOfCommentResponse = await fetch(
-            `${APIURL}/api/v1/comments/product/${productID}/count`,
-          )
+    const fetchSimilarProducts = async () => {
+      try {
+        const similarProductsResponse = await fetch(
+          `${APIURL}/api/v1/products/category/${parentCategory}?category=${category}`,
+        )
 
-          const noOfCommentsData = await noOfCommentResponse.json()
-          let noOfMoreComments = noOfCommentsData.count
-          let totalNoOfComments = noOfCommentsInProduct + noOfMoreComments
-          let totalNoOfPages = Math.ceil(totalNoOfComments / 3)
+        const similarProductsData = await similarProductsResponse.json()
 
-          setPageCount(totalNoOfPages)
-          setIsLoading(false)
-        } catch (error) {
-          console.log('Failed to fetch count of comments for product: ', error)
-        }
-
-        try {
-          const farmerResponse = await fetch(
-            `${APIURL}/api/v1/farmers/${product.farmerID}`,
-          )
-
-          const farmerData = await farmerResponse.json()
-          setFarmer(farmerData.farmer[0])
-        } catch (error) {
-          console.log('Failed to fetch farmer details of product: ', error)
-        }
-
-        try {
-          const similarProductsResponse = await fetch(
-            `${APIURL}/api/v1/products/category/${parentCategory}?category=${category}`,
-          )
-
-          const similarProductsData = await similarProductsResponse.json()
-
-          const similarProductsDataWithoutTheSameProduct = similarProductsData.products.filter(
-            (product: ProductType) => {
-              return product._id !== productID
-            },
-          )
-          setSimilarProducts(similarProductsDataWithoutTheSameProduct)
-        } catch (error) {
-          console.log('Failed to fetch similar products: ', error)
-        }
+        const similarProductsDataWithoutTheSameProduct = similarProductsData.products.filter(
+          (product: ProductType) => {
+            return product._id !== productID
+          },
+        )
+        setSimilarProducts(similarProductsDataWithoutTheSameProduct)
+      } catch (error) {
+        console.log('Failed to fetch similar products: ', error)
       }
     }
 
-    fetchData()
+    fetchProductDetail()
+    fetchSimilarProducts()
+  }, [])
+
+  useEffect(() => {
+    const fetchNoOfPages = async () => {
+      try {
+        let noOfCommentsInProduct = product!.comments.length
+        const noOfCommentResponse = await fetch(
+          `${APIURL}/api/v1/comments/product/${productID}/count`,
+        )
+
+        const noOfCommentsData = await noOfCommentResponse.json()
+        let noOfMoreComments = noOfCommentsData.count
+        let totalNoOfComments = noOfCommentsInProduct + noOfMoreComments
+        let totalNoOfPages = Math.ceil(totalNoOfComments / 3)
+
+        setPageCount(totalNoOfPages)
+        setIsLoading(false)
+      } catch (error) {
+        console.log('Failed to fetch count of comments for product: ', error)
+      }
+    }
+
+    const fetchFarmerDetail = async () => {
+      try {
+        const farmerResponse = await fetch(
+          `${APIURL}/api/v1/farmers/${product!.farmerID}`,
+        )
+
+        const farmerData = await farmerResponse.json()
+        setFarmer(farmerData.farmer[0])
+      } catch (error) {
+        console.log('Failed to fetch farmer details of product: ', error)
+      }
+    }
+
+    if (product) {
+      fetchFarmerDetail()
+      fetchNoOfPages()
+    }
   }, [product])
 
   useEffect(() => {
@@ -155,6 +167,8 @@ function ProductDetailPage() {
         return
       } else {
         try {
+          console.log('Fetch comments of product')
+
           const commentResponse = await fetch(
             `${APIURL}/api/v1/comments/product/${productID}?page=${page}`,
           )
