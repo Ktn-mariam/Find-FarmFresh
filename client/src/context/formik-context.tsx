@@ -189,7 +189,6 @@ export const FormikContextProvider = ({
         profileInformation?.locationCoordinates?.longitude?.direction || 'E',
     }
   } else {
-    console.log('no here')
     initialValues = {
       name: '',
       image: '',

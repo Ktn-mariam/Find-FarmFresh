@@ -27,8 +27,6 @@ const LineChart = () => {
         }
 
         const totalAmountLast30DaysData = await totalAmountLast30DaysResponse.json()
-        console.log(totalAmountLast30DaysData)
-
         setLabels(totalAmountLast30DaysData.data[0])
         setDataset(totalAmountLast30DaysData.data[1])
       } catch (error) {

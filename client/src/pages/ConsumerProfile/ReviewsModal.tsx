@@ -202,7 +202,6 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
       )
 
       const responseData = await updateOrderResponse.json()
-      console.log('Comment updated successfully:', responseData)
     } catch (error) {
       console.log('Failed to update Order: ', error)
     }
