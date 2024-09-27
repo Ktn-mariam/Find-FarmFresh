@@ -6,7 +6,7 @@ import {
   addOrder,
   updateOrder,
   deleteOrder,
-  getOrderByDate,
+  getEarningsForLast30Days,
   getOrderToReview,
 } from '../controllers/orders'
 import authenticateMiddleware from '../middleware/authentication'
@@ -21,8 +21,8 @@ router
   .route('/reviewOrders')
   .get(authenticateMiddleware, authorizeConsumer, getOrderToReview)
 router
-  .route('/date/:date')
-  .get(authenticateMiddleware, authorizeFarmer, getOrderByDate)
+  .route('/getEarningsForLast30Days')
+  .get(authenticateMiddleware, authorizeFarmer, getEarningsForLast30Days)
 router
   .route('/:orderID')
   .patch(authenticateMiddleware, updateOrder)

@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import { Role } from '../middleware/authentication'
 import UnAuthorizedError from '../errors/unauthorized'
 import moment from 'moment'
+import { getFormattedDateWithoutYear } from '../utils/getFormattedDate'
 
 const getOrders = async (req: Request, res: Response) => {
   const { userID, role } = req.user
@@ -102,26 +103,44 @@ const deleteOrder = async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ order })
 }
 
-const getOrderByDate = async (req: Request, res: Response) => {
-  const { date } = req.params
+const getEarningsForLast30Days = async (req: Request, res: Response) => {
+  const dateArray = []
+  const totalAmountArray = []
+  const today = new Date()
+  const farmerID = req.user.userID
 
-  const startDate = new Date(date)
-  startDate.setHours(0, 0, 0, 0)
+  // Loop for the last 30 days
+  for (let i = 0; i < 30; i++) {
+    // Create start and end dates for each day
+    const currentDate = new Date()
+    currentDate.setDate(today.getDate() - 30 + i + 1)
+    currentDate.setHours(0, 0, 0, 0)
 
-  const endDate = new Date(date)
-  endDate.setHours(23, 59, 59, 999)
+    const startDate = new Date(currentDate)
+    const endDate = new Date(currentDate)
+    endDate.setHours(23, 59, 59, 999)
 
-  const query = {
-    orderDate: {
-      $gte: startDate,
-      $lt: endDate,
-    },
-    farmerID: req.user.userID,
+    // Query for orders on that day
+    const query = {
+      orderDate: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+      farmerID,
+    }
+
+    const results = await Order.find(query)
+    const totalAmount = results.reduce(
+      (sum, order) => sum + order.totalPrice,
+      0,
+    )
+
+    // Push date and total amount into array
+    dateArray.push(getFormattedDateWithoutYear(currentDate))
+    totalAmountArray.push(totalAmount)
   }
 
-  const results = await Order.find(query)
-  const totalAmount = results.reduce((sum, order) => sum + order.totalPrice, 0)
-  res.status(StatusCodes.OK).json({ totalAmount })
+  res.status(StatusCodes.OK).json({ data: [dateArray, totalAmountArray] })
 }
 
 const getOrderToReview = async (req: Request, res: Response) => {
@@ -139,6 +158,6 @@ export {
   addOrder,
   updateOrder,
   deleteOrder,
-  getOrderByDate,
+  getEarningsForLast30Days,
   getOrderToReview,
 }

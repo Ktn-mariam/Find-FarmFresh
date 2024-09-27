@@ -1,77 +1,71 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import 'chart.js/auto'
-import { getFormattedDateWithoutYear } from '../../utils/getFormattedDate'
 import AuthenticationContext from '../../context/authentication'
 import { APIURL } from '../../App'
 
 const LineChart = () => {
   const { token } = useContext(AuthenticationContext)
-  let initialArray: Number[] = []
-  for (let i = 0; i < 30; i++) {
-    initialArray.push(0)
-  }
-  const [dataArray, setDataArray] = useState<Number[]>(initialArray)
-  let dates: Date[] = []
-  let today = new Date()
-
-  for (let i = 29; i >= 0; i--) {
-    dates.push(new Date(today.getTime() - i * 24 * 60 * 60 * 1000))
-  }
-
-  let labels: string[] = []
-  for (let i = 0; i < 30; i++) {
-    labels.push(getFormattedDateWithoutYear(dates[i]))
-  }
+  const [labels, setLabels] = useState<string[] | undefined>(undefined)
+  const [dataset, setDataset] = useState<number[] | undefined>(undefined)
 
   useEffect(() => {
     const fetchTotalAmountOfEachDay = async () => {
       try {
-        const totalAmountLast30Days = await Promise.all(
-          dates.map(async (date) => {
-            const response = await fetch(
-              `${APIURL}/api/v1/orders/date/${date}`,
-              {
-                mode: 'cors',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${token}`,
-                },
-              },
-            )
-            if (!response.ok) {
-              throw new Error(
-                `Error fetching data for ${date}: ${response.statusText}`,
-              )
-            }
-
-            const totalAmountByDate = await response.json()
-            return totalAmountByDate.totalAmount
-          }),
+        const totalAmountLast30DaysResponse = await fetch(
+          `${APIURL}/api/v1/orders/getEarningsForLast30Days`,
+          {
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
         )
-        setDataArray(totalAmountLast30Days)
+        if (!totalAmountLast30DaysResponse.ok) {
+          throw new Error(`Error fetching amount array for last 30 days array`)
+        }
+
+        const totalAmountLast30DaysData = await totalAmountLast30DaysResponse.json()
+        console.log(totalAmountLast30DaysData)
+
+        setLabels(totalAmountLast30DaysData.data[0])
+        setDataset(totalAmountLast30DaysData.data[1])
       } catch (error) {
         console.log('Failed to fetch orders of last 30 days', error)
       }
     }
 
     fetchTotalAmountOfEachDay()
-  }, [])
+  }, [token])
 
   const data = {
-    labels: labels,
+    labels: labels || [],
     datasets: [
       {
-        label: 'My First Dataset',
-        data: dataArray,
+        label: 'Analysis for earnings in the past 30 days',
+        data: dataset || [],
       },
     ],
   }
   const chartOptions = {
-    scale: {
+    scales: {
       x: {
+        title: {
+          display: true,
+          text: 'Date',
+        },
         grid: {
           display: false,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Amount earned',
+        },
+        grid: {
+          display: true,
         },
       },
     },
@@ -84,7 +78,11 @@ const LineChart = () => {
 
   return (
     <div className="h-96">
-      <Line data={data} options={chartOptions} />
+      {labels && dataset ? (
+        <Line data={data} options={chartOptions} />
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   )
 }
