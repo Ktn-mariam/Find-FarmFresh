@@ -62,7 +62,7 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
     }
 
     fetchProductDetails()
-  })
+  }, [])
 
   const cancelOrder = async () => {
     try {
