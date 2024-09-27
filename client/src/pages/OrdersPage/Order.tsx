@@ -11,6 +11,8 @@ import { getFormattedDateAndTime } from '../../utils/getFormattedDate'
 import AuthenticationContext from '../../context/authentication'
 import { Role } from '../../types/Auth'
 import { APIURL } from '../../App'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert from '@mui/material/Alert'
 
 interface OrderPropsType {
   order: OrderType
@@ -38,6 +40,7 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
   const [deliveryStatus, setDeliveryStatus] = useState(order.deliveryStatus)
   const [paymentStatus, setPaymentStatus] = useState(order.paymentStatus)
   const { logInData, token, setOrders } = useContext(AuthenticationContext)
+  const [openToast, setOpenToast] = useState(false)
 
   useEffect(() => {
     if (logInData.role !== Role.Farmer) return
@@ -162,6 +165,7 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
         }
       })
     } else {
+      setOpenToast(true)
     }
   }
 
@@ -220,6 +224,29 @@ const Order: React.FC<OrderPropsType> = ({ order }) => {
             >
               <DeleteIcon />
             </button>
+            <Snackbar
+              open={openToast}
+              autoHideDuration={6000}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              onClose={() => {
+                setOpenToast(false)
+              }}
+            >
+              <MuiAlert
+                onClose={() => {
+                  setOpenToast(false)
+                }}
+                severity="warning"
+                sx={{ width: '100%' }}
+                elevation={6}
+                variant="filled"
+              >
+                You cannot delete orders that are less than 30 days old!
+              </MuiAlert>
+            </Snackbar>
           </div>
         ) : (
           <div>Loading...</div>
