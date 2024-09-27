@@ -22,9 +22,14 @@ interface FarmerProfileProps {
 const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
   const { farmerID } = useParams()
   const navigate = useNavigate()
-  const { logInData, loadingLogInData, setLogInData, logInError } = useContext(
-    AuthenticationContext,
-  )
+  const {
+    logInData,
+    loadingLogInData,
+    setLogInData,
+    logInError,
+    setPageNumberForOrder,
+    setOrders,
+  } = useContext(AuthenticationContext)
   const [farmerDetails, setFarmerDetails] = useState<FarmerType | null>(null)
   const [refetchProducts, setRefetchProducts] = useState(false)
   const [page, setPage] = useState(1)
@@ -36,6 +41,8 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
 
   const fetchProductData = async (farmerID: string) => {
     try {
+      console.log('Fetching product of farmer API')
+
       const productsResponse = await fetch(
         `${APIURL}/api/v1/farmers/${farmerID}/products`,
       )
@@ -61,6 +68,8 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
+        console.log('Fetch Farmer Profile Data')
+
         const farmerResponse = await fetch(
           `${APIURL}/api/v1/farmers/${farmerID}`,
         )
@@ -74,6 +83,8 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
     const fetchCommentData = async (farmerID: string) => {
       try {
         let noOfCommentsInFarmer = farmerDetails?.comments.length
+
+        console.log('Fetch count of farmer comments API')
 
         const noOfCommentResponse = await fetch(
           `${APIURL}/api/v1/comments/farmer/${farmerID}/count`,
@@ -133,6 +144,8 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
       }
       const ID = farmerID ? farmerID : logInData.userID
       try {
+        console.log('Fetch comments of farmer API')
+
         const commentResponse = await fetch(
           `${APIURL}/api/v1/comments/farmer/${ID}?page=${page}`,
         )
@@ -199,6 +212,8 @@ const FarmerProfile: React.FC<FarmerProfileProps> = ({ editable }) => {
               onClick={() => {
                 localStorage.removeItem('token')
                 setLogInData({ loggedIn: false })
+                setPageNumberForOrder(1)
+                setOrders(null)
                 navigate('/sign-in')
               }}
             >

@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from 'react'
 import { Role } from '../types/Auth'
 import { UserProfileType } from '../types/Auth'
 import { APIURL } from '../App'
+import { OrderType } from '../types/Order'
 
 interface AuthenticationContextType {
   logInData: UserProfileType
@@ -10,6 +11,10 @@ interface AuthenticationContextType {
   logInError: boolean
   token: string | null
   setToken: React.Dispatch<React.SetStateAction<string | null>>
+  orders: OrderType[] | null
+  setOrders: React.Dispatch<React.SetStateAction<OrderType[] | null>>
+  pageNumberForOrder: number
+  setPageNumberForOrder: React.Dispatch<React.SetStateAction<number>>
 }
 
 const AuthenticationContext = createContext<AuthenticationContextType>({
@@ -21,6 +26,10 @@ const AuthenticationContext = createContext<AuthenticationContextType>({
   logInError: false,
   token: null,
   setToken: () => {},
+  orders: null,
+  setOrders: () => {},
+  pageNumberForOrder: 1,
+  setPageNumberForOrder: () => {},
 })
 
 interface AuthenticationContextProviderPropsType {
@@ -36,10 +45,12 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
   })
   const [logInError, setLogInError] = useState(false)
   const [token, setToken] = useState<string | null>(null)
+  const [orders, setOrders] = useState<OrderType[] | null>(null)
+  const [pageNumberForOrder, setPageNumberForOrder] = useState(1)
 
   useEffect(() => {
     const getToken = localStorage.getItem('token')
-    if (getToken && !(getToken === undefined)) {
+    if (getToken) {
       const parsedToken = JSON.parse(getToken)
       setToken(parsedToken)
     }
@@ -48,6 +59,7 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('AUth fetching User data')
         const userResponse = await fetch(`${APIURL}/api/v1/auth`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,6 +104,41 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
     }
   }, [token])
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        console.log('Fetching orders')
+
+        const orderResponse = await fetch(
+          `${APIURL}/api/v1/orders?page=${pageNumberForOrder}`,
+          {
+            mode: 'cors',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+
+        const orderData = await orderResponse.json()
+        console.log(orderData.orders)
+
+        if (orderData.orders) {
+          setOrders((prevOrders) => {
+            if (prevOrders) {
+              return [...prevOrders, ...orderData.orders]
+            } else {
+              return orderData.orders
+            }
+          })
+        }
+      } catch (error) {
+        console.log('Failed to fetch all orders of the consumer: ', error)
+      }
+    }
+
+    fetchOrders()
+  }, [pageNumberForOrder, token])
+
   let contextValue = {
     logInData,
     loadingLogInData,
@@ -99,6 +146,10 @@ export const AuthenticationContextProvider: React.FC<AuthenticationContextProvid
     logInError,
     token,
     setToken,
+    orders,
+    setOrders,
+    pageNumberForOrder,
+    setPageNumberForOrder,
   }
 
   return (

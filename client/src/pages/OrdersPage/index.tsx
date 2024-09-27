@@ -1,39 +1,11 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import Order from './Order'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import { OrderType } from '../../types/Order'
 import AuthenticationContext from '../../context/authentication'
-import { APIURL } from '../../App'
 
 const OrdersPage = () => {
-  const { logInData, token } = useContext(AuthenticationContext)
-  const [orders, setOrders] = useState<OrderType[] | null>(null)
-  const [refetchOrders, setRefetchOrders] = useState(false)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const orderResponse = await fetch(`${APIURL}/api/v1/orders`, {
-          mode: 'cors',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        const orderData = await orderResponse.json()
-
-        setOrders(orderData.orders)
-        setRefetchOrders(false)
-      } catch (error) {
-        console.log('Failed to fetch the orders', error)
-      }
-    }
-
-    if (logInData.loggedIn && logInData.role === 'Farmer') {
-      fetchData()
-    }
-  }, [refetchOrders, logInData.loggedIn, logInData.role])
-
+  const { orders, setPageNumberForOrder } = useContext(AuthenticationContext)
   return (
     <div className="md:px-36 px-14 pt-10 pb-52">
       <h1 className="text-2xl font-bold mb-6">Your Orders</h1>
@@ -65,14 +37,20 @@ const OrdersPage = () => {
         </Accordion>
         {orders &&
           orders.map((order, key) => {
-            return (
-              <Order
-                key={key}
-                setRefetchOrders={setRefetchOrders}
-                order={order}
-              />
-            )
+            return <Order key={key} order={order} />
           })}
+      </div>
+      <div className="flex justify-center mt-4">
+        <button
+          className="px-4 py-1 bg-gray-200 rounded-3xl hover:cursor-pointer"
+          onClick={() => {
+            setPageNumberForOrder((prevPageNo) => {
+              return prevPageNo + 1
+            })
+          }}
+        >
+          Load more
+        </button>
       </div>
     </div>
   )

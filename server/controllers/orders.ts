@@ -7,12 +7,20 @@ import moment from 'moment'
 
 const getOrders = async (req: Request, res: Response) => {
   const { userID, role } = req.user
-  let orders
+  const page = parseInt(req.query.page as string, 10) || 1
+  const limit = parseInt(req.query.limit as string, 10) || 5
+  const skip = (page - 1) * limit
+
+  let query
+
   if (role === Role.Farmer) {
-    orders = await Order.find({ farmerID: userID }).sort({ orderDate: -1 })
+    query = Order.find({ farmerID: userID }).sort({ orderDate: -1 })
   } else {
-    orders = await Order.find({ consumerID: userID }).sort({ orderDate: -1 })
+    query = Order.find({ consumerID: userID }).sort({ orderDate: -1 })
   }
+
+  const orders = await query.skip(skip).limit(limit)
+
   res.status(StatusCodes.OK).json({ orders })
 }
 
@@ -91,7 +99,7 @@ const deleteOrder = async (req: Request, res: Response) => {
     farmerID: req.user.userID,
   })
 
-  res.status(StatusCodes.GONE).json({ order })
+  res.status(StatusCodes.OK).json({ order })
 }
 
 const getOrderByDate = async (req: Request, res: Response) => {

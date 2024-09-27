@@ -14,7 +14,6 @@ import { APIURL } from '../../App'
 
 interface OrderPropsType {
   order: OrderType
-  setRefetchOrders: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 enum deliveryStatusesType {
@@ -28,7 +27,7 @@ enum paymentStatusesType {
   Paid = 'Paid',
 }
 
-const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
+const Order: React.FC<OrderPropsType> = ({ order }) => {
   const [
     consumerDetail,
     setConsumerDetail,
@@ -38,12 +37,14 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
   >(null)
   const [deliveryStatus, setDeliveryStatus] = useState(order.deliveryStatus)
   const [paymentStatus, setPaymentStatus] = useState(order.paymentStatus)
-  const { logInData, token } = useContext(AuthenticationContext)
+  const { logInData, token, setOrders } = useContext(AuthenticationContext)
 
   useEffect(() => {
     if (logInData.role !== Role.Farmer) return
     const fetchConsumerDetail = async () => {
       try {
+        console.log('Fetch consumer details API')
+
         const consumerResponse = await fetch(
           `${APIURL}/api/v1/consumers/${order.consumerID}`,
           {
@@ -72,6 +73,8 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
         const productDetails = await Promise.all(
           order.products.map(async (product) => {
             try {
+              console.log('Fetch product details API', product)
+
               const productDetailResponse = await fetch(
                 `${APIURL}/api/v1/products/orderDetail/${product.productID}`,
               )
@@ -116,6 +119,8 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
         deliveryStatus,
         paymentStatus,
       }
+      console.log('Update order API')
+
       await fetch(`${APIURL}/api/v1/orders/${order._id}`, {
         method: 'PATCH',
         mode: 'cors',
@@ -128,10 +133,12 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
     }
 
     updateOrder()
-  }, [deliveryStatus, paymentStatus, order.consumerID, token, order._id])
+  }, [deliveryStatus, paymentStatus])
 
   const handleDeleteOrder = async () => {
-    await fetch(`${APIURL}/api/v1/orders/${order._id}`, {
+    console.log('Delete order API')
+
+    const orderResponse = await fetch(`${APIURL}/api/v1/orders/${order._id}`, {
       method: 'DELETE',
       mode: 'cors',
       headers: {
@@ -140,7 +147,22 @@ const Order: React.FC<OrderPropsType> = ({ order, setRefetchOrders }) => {
       },
     })
 
-    setRefetchOrders(true)
+    if (orderResponse.ok) {
+      setOrders((prevOrders) => {
+        if (prevOrders) {
+          console.log('Setting new state')
+
+          const newOrders = prevOrders?.filter((orderState) => {
+            return order._id !== orderState._id
+          })
+
+          return newOrders
+        } else {
+          return prevOrders
+        }
+      })
+    } else {
+    }
   }
 
   return (

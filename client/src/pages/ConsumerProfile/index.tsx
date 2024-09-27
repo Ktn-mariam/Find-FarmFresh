@@ -5,9 +5,7 @@ import ProfileSideBar from '../../components/ProfileSideBar'
 import ReviewsModal from './ReviewsModal'
 import AuthenticationContext from '../../context/authentication'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { OrderType } from '../../types/Order'
 import Order from './Order'
-import { APIURL } from '../../App'
 
 const ConsumerProfile = () => {
   const navigate = useNavigate()
@@ -16,44 +14,11 @@ const ConsumerProfile = () => {
     logInData,
     loadingLogInData,
     setLogInData,
-    token,
     setToken,
+    orders,
+    setOrders,
+    setPageNumberForOrder,
   } = useContext(AuthenticationContext)
-  const [orders, setOrders] = useState<OrderType[] | null>(null)
-  const [pageNumber, setPageNumber] = useState(1)
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        console.log('Fetching orders')
-
-        const orderResponse = await fetch(
-          `${APIURL}/api/v1/orders?page=${pageNumber}`,
-          {
-            mode: 'cors',
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        )
-
-        const orderData = await orderResponse.json()
-        console.log(orderData.orders)
-
-        setOrders((prevOrders) => {
-          if (prevOrders) {
-            return [...prevOrders, ...orderData.orders]
-          } else {
-            return orderData.orders
-          }
-        })
-      } catch (error) {
-        console.log('Failed to fetch all orders of the consumer: ', error)
-      }
-    }
-
-    fetchOrders()
-  }, [pageNumber])
 
   useEffect(() => {
     setOpenReviewModal(true)
@@ -89,6 +54,8 @@ const ConsumerProfile = () => {
                 localStorage.removeItem('token')
                 setLogInData({ loggedIn: false })
                 setToken(null)
+                setPageNumberForOrder(1)
+                setOrders(null)
                 navigate('/sign-in')
               }}
             >
@@ -113,7 +80,7 @@ const ConsumerProfile = () => {
                     <button
                       className="px-4 py-1 bg-gray-300 rounded-3xl hover:cursor-pointer"
                       onClick={() => {
-                        setPageNumber((prevPageNo) => {
+                        setPageNumberForOrder((prevPageNo) => {
                           return prevPageNo + 1
                         })
                       }}
